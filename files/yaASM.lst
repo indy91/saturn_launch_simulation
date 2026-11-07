@@ -1,0 +1,1937 @@
+                                                   * ***************************************
+                                                   * *                                     *
+                                                   * *         PREFLIGHT PROGRAM           *
+                                                   * *                                     *
+                                                   * *                                     *
+                                                   * ***************************************
+                                                   P.CMSR EQU     (4.063492)   MS TO RTC PULSES
+                                                          DOGS    0,4,227
+            227  0 04                  372402510   PFSCHC HPCDD   0,11,0,005,2,17
+                                                          DOGS    0,7,006
+            006  0 07                  372401110   GCFIHC HPCDD   0,11,0,002,2,17
+                                                          DOGS    0,17,157
+            157  0 17                  372400110   GRIHC  HPCDD   0,11,0,000,2,17
+                                                          DOGS    0,7,253
+            253  0 07                  374536174   OCRLHC HPCDD   4,17,0,274,4,17
+                                                          DOGS    0,5,371
+            371  0 05                  332405110   AZCHC  HPCDD   0,11,0,012,2,13
+                                                          DOGS    0,5,372
+            372  0 05                  362402510   IBOLHC HPCDD   0,11,0,005,2,16
+                                                          DOGS    0,7,007
+            007  0 07                              FIRMC  BSS     1
+                                                          DOGS    0,17,154
+            154  0 17                  030062000   CRAIHC HPC     SPARE,D.DATA
+                                                          DOGS    0,17,210
+            210  0 17                              INACC  BSS     1
+                                                          DOGS    0,17,212
+            212  0 17                              INHC   BSS     1
+                                                          DOGS    0,17,214
+            214  0 17                              INPQ   BSS     1
+                                                          DOGS    0,17,216
+            216  0 17                              INTH   BSS     1
+                                                          DOGS    0,3,000
+                                                   D.DATA TABLE   1
+            000  0 03                              LVOVFL BSS     2            RESERVATION FOR LV BUFFER OVERFLOW
+                                                   * THE FOLLOWING DATA MUST BE IN SPECIFIED LOCATIONS
+                                                          DOG     D.DATA
+                                                          DOG     *,*,*+(249)  LOC = 371
+                                                 +        DOG     *,*,*+249  LOC = 371
+            371  0 03                              V.EMW  BSS     1            ERROR MESSAGE WORD
+                                                          DOG     D.DATA
+            002  0 03                  000000000   GCOTST OCT     000000000
+                                                          DOGS    0,4,234
+            234  0 04                              LVBUF  BSS     100
+                                                          DOGS    0,6,234
+            234  0 06                              GENBUF BSS     100
+                                                   * THE FOLLOWING DATA MUST BE IN SPECIFIED LOCATIONS
+                                                          DOGS    0,17,000
+                                                   D.RESD TABLE   1
+            000  0 17                                     BSS     1            HOP 400 RESERVATION
+                                                          DOG     D.RESD
+                                                          DOG     *,*,*+(185)  LOC = 271
+                                                 +        DOG     *,*,*+185  LOC = 271
+            271  0 17                              V.STAT BSS     1            STATUS WORD FOR TELEMETRY
+                                                          DOG     D.RESD
+                                                          DOG     *,*,*+(186)  LOC = 272
+                                                 +        DOG     *,*,*+186  LOC = 272
+            272  0 17                              D.VIH  BSS     1            INTERRUPT INHIBIT IMAGE
+                                                          DOG     D.RESD
+                                                          DOG     *,*,*+(193)  LOC = 301
+                                                 +        DOG     *,*,*+193  LOC = 301
+            301  0 17                              V.EMR  BSS     1            RAW EMR CONTENTS
+                                                          DOG     D.RESD
+            001  0 17                  776000000   MESMAP OCT     776000000
+W           002  0 17                  777775777   EMCON1 OCT     777775777
+                                                          DOG     D.RESD
+                                                          LIT
+            003  0 17                  400000000   D.KBSG OCT     400000000
+W           004  0 17                  200000000   D.KB1  OCT     200000000
+            005  0 17                  100000000   D.KB2  OCT     100000000
+            006  0 17                  040000000   D.KB3  OCT     040000000
+            007  0 17                  020000000   D.KB4  OCT     020000000
+            010  0 17                  010000000   D.KB5  OCT     010000000
+            011  0 17                  004000000   D.KB6  OCT     004000000
+            012  0 17                  002000000   D.KB7  OCT     002000000
+            013  0 17                  001000000   D.KB8  OCT     001000000
+            014  0 17                  000400000   D.KB9  OCT     000400000
+            015  0 17                  000200000   D.KB10 OCT     000200000
+            016  0 17                  000100000   D.KB11 OCT     000100000
+            017  0 17                  000040000   D.KB12 OCT     000040000
+            020  0 17                  000020000   D.KB13 OCT     000020000
+            021  0 17                  000010000   D.KB14 OCT     000010000
+            022  0 17                  000004000   D.KB15 OCT     000004000
+            023  0 17                  000002000   D.KB16 OCT     000002000
+            024  0 17                  000001000   D.KB17 OCT     000001000
+            025  0 17                  000000400   D.KB18 OCT     000000400
+            026  0 17                  000000200   D.KB19 OCT     000000200
+            027  0 17                  000000100   D.KB20 OCT     000000100
+            030  0 17                  000000040   D.KB21 OCT     000000040
+            031  0 17                  000000020   D.KB22 OCT     000000020
+            032  0 17                  000000010   D.KB23 OCT     000000010
+            033  0 17                  000000004   D.KB24 OCT     000000004
+            034  0 17                  000000002   D.KB25 OCT     000000002
+            035  0 17                  777740000   D.KSY1 OCT     777740000
+            036  0 17                  000037776   D.KSY0 OCT     000037776
+            037  0 17                  777777776   D.KONS OCT     777777776
+            040  0 17                  000000000   D.KZRO DEC     0            ZERO
+            041  0 17                  030040000   INHOPC HPC     INTP,D.DATA
+            042  0 17                              INPTL  BSS     1
+                                                   *              MODE SORT
+            043  0 17                  000000000   MSEM0  OCT     000000000    NO ERROR
+            044  0 17                  001000000   MSEM1  OCT     001000000    DATA INDICATED WHEN MODE EXPECTED
+            045  0 17                  001100000   MSEM2  OCT     001100000    UNACCEPTABLE EMR BIT SET
+            046  0 17                  001200000   MSEM3  OCT     001200000    INVALID MODE SELECTED
+                                                   *              VERIFY AND PREPARE TO LOAD
+            047  0 17                  211000000   LVEM1  OCT     211000000    CHARACTER COUNTER 1 FAILURE
+            050  0 17                  212000000   LVEM2  OCT     212000000    CHARACTER COUNTER 2 FAILURE
+            051  0 17                  213000000   LVEM3  OCT     213000000    CHARACTER COUNTER 3 FAILURE
+            052  0 17                  214000000   LVEM4  OCT     214000000    CHARACTER COUNTER 4 FAILURE
+            053  0 17                  215000000   LVEM5  OCT     215000000    V BITS DISAGREE
+            054  0 17                  216000000   LVEM6  OCT     216000000    TEMP STORAGE ACCIDENTALLY OVERFLOWED
+            055  0 17                  217000000   LVEM7  OCT     217000000    MEMORY ERROR DETECTED
+                                                   *              LOAD
+            056  0 17                  231000000   LDEM1  OCT     231000000    LOAD ENTERED WHEN NOT PREP TO LOAD
+            057  0 17                  231200000   LDEM2  OCT     231200000    TRIED TO LOAD ILLEGAL ADDRESS
+                                                   *              INTERRUPT PROCESSING
+            060  0 17                  331000000   INEM1  OCT     331000000    UNKNOWN INTERRUPT OCCURRED
+            061  0 17                  332000000   INEM2  OCT     332000000    TLC DETECTED
+                                                   *              READ INPUT DATA
+            062  0 17                  451000000   RIEM1  OCT     451000000    MODE INDICATED WHEN DATA EXPECTED
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      POWER UP AND INITIALIZE ROUTINE                               *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THIS ROUTINE PERFORMS THE NECESSARY INITIALIZATION AFTER
+                                                   *            POWER HAS BEEN APPLIED TO THE LVDA AND LVDC. THE ROUTINE
+                                                   *            IS AUTOMATICALLY ENTERED UPON THE RELEASE OF THE HALT
+                                                   *            SIGNAL.
+                                                   * ENTRIES    START    LOCATED AT 0-00-0-000 AND ENTERED UPON RELEASE
+                                                   *                     OF THE HALT SIGNAL.
+                                                          ORG     0,0,0,000,0,0,0
+     0 00 0 000  0 00    034  1  03    000000002   START  DIV     =1           DIVIDE TO INHIBIT INTERRUPTS              B
+     0 00 0 001  0 00    077  0  17                       CLA     OBFLAG       DID PROGRAM COME FROM ORBITAL FLIGHT      Q
+     0 00 0 002  0 00    004  0  04                       TNZ     *+2                                                    Y
+     0 00 0 003  0 00    015  0  10                       TRA     INIT                                                   N
+     0 00 0 004  0 00    057  0  12                       PIO     057          IS RCA-110 SYNC PRESENT?                  Q
+     0 00 0 005  0 00    032  1  06                       AND     D.KB23
+     0 00 0 006  0 00    010  0  04                       TNZ     *+2
+     0 00 0 007  0 00    007  0  10                EXIT   TRA     *            ABORT RUN                                 B
+     0 00 0 010  0 00    043  0  12                       PIO     043          READ RCA-100 COMMAND                      Y
+     0 00 0 011  0 00    061  0  06    777760000          AND     =O77776
+     0 00 0 012  0 00    034  1  03    000000002          DIV     =1           DIVIDE TO INHIBIT INTERRUPTS              B
+     0 00 0 013  0 00    003  1  11                       XOR     D.KBSG
+     0 00 0 014  0 00    007  0  04                       TNZ     EXIT
+     0 00 0 015  0 00    062  0  17    377740000   INIT   CLA     =O37774
+     0 00 0 016  0 00    032  0  12                       PIO     032          RESET ALL INITIAL INTERRUPTS              I
+     0 00 0 017  0 00    062  0  17    377740000          CLA     =O37774
+     0 00 0 020  0 00    072  0  12                       PIO     072          INHIBIT ALL INITIAL INTERRUPTS            I
+     0 00 0 021  0 00    034  1  17                       CLA     D.KB25
+     0 00 0 022  0 00    022  0  12                       PIO     022          PLACE DOM UNDER G-SYNC CONTROL            I
+     0 00 0 023  0 00    066  0  12                       PIO     066          PLACE THE COD ERROR WORD IN THE DOM       I
+     0 00 0 024  0 00    077  0  17                       CLA     OBFLAG       IS THE PROGRAM FROM ORBITAL FLIGHT        Q
+     0 00 0 025  0 00    027  0  04                       TNZ     MEMOK                                                  Y
+     0 00 0 026  0 00    375  1  17                       CLA     775          FIXME: RESTORE MEMORY TEST LOCATIONS
+     0 00 0 027  0 00    063  0  17    357740000   MEMOK  CLA     =O35774
+     0 00 0 030  0 00    072  0  12                       PIO     072          INHIBIT ALL INTERRUPTS EXCEPT TLC         I
+     0 00 0 031  0 00    057  0  12                       PIO     057          IS RCA-110 SYNC PRESENT
+     0 00 0 032  0 00    032  1  06                       AND     D.KB23
+     0 00 0 033  0 00    035  0  04                       TNZ     *+2
+     0 00 0 034  0 00    043  0  10                       TRA     NORMPF
+     0 00 0 035  0 00    043  0  12                       PIO     043          IS SPECIAL LOADER COMMANDED               Q
+     0 00 0 036  0 00    061  0  06    777760000          AND     =O77776
+     0 00 0 037  0 00    003  1  11                       XOR     D.KBSG
+     0 00 0 040  0 00    043  0  04                       TNZ     NORMPF                                                 N
+     0 00 0 041  0 00    064  0  00                       HOP*    RINIT        REGISTER INITIALIZE                       P
+     0 00 0 042  0 00    042  0  10                       TRA     *            FIXME: SET UP SPECIAL LOADER
+     0 00 0 043          060  0  16                NORMPF CDS     D.DATA       INITIALIZE DATA SECTOR                    B
+     0 00 0 044  0 03    003  1  17                       CLA     D.KBSG
+     0 00 0 045  0 03    271  1  13                       STO     V.STAT
+     0 00 0 046  0 03    271  1  12                       PIO     671          TELEMETER S.C. 40, LOAD MODE REG. TO 40
+     0 00 0 047  0 03    006  0  12                       PIO     006
+     0 00 0 050  0 03    066  0  00                       HOP*    RINIT        REGISTER INITIALIZE                       P
+     0 00 0 051  0 03    067  0  00                       HOP*    KIN400       HOP 400 INITIALIZE
+     0 00 0 052  0 03    023  0  12                       PIO     023          DUMMY EMR READ                            I
+     0 00 0 053  0 03    070  0  17    357540000          CLA     =O35754
+     0 00 0 054  0 03    072  0  12                       PIO     072          INHIBIT ALL INTERRUPTS EXCEPT TLC, RCA    I
+     0 00 0 055  0 03    216  1  13                       STO     INTH         INITIALIZE ALL NECESSARY PROGRAM CONSTANTS
+                                                   *                           FIXME: WHAT DOES THIS MEAN
+     0 00 0 056  0 03    040  1  17                       CLA     D.KZRO
+     0 00 0 057  0 03    014  0  13                       STO     LDPEND
+     0 00 0 060  0 03    071  0  00                       HOP*    FBR1         HOP TO FBR                                X
+                                                          DOG     0,0,77
+            077  0 00                  000000000   OBFLAG OCT     0
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      FORCED BEGIN AND INITIALIZE ROUTINE                           *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THE PURPOSE OF THIS ROUTINE IS TO INITIALIZE CERTAIN
+                                                   *            PROGRAM CONSTANTS AND LVDA REGISTERS PRIOR TO EXECUTING
+                                                   *            ANY PREFLIGHT ROUTINE. THIS ROUTINE SHALL BE ENTERED ONLY
+                                                   *            FROM THE POWER UP ROUTINE, OR AS A RESULT OF AN RCA-110
+                                                   *            INTERRUPT. THIS INTERRUPT IS USED WHEN THE LAUNCH COM-
+                                                   *            PUTER TERMINATES AN LVDC ROUTINE PRIOR TO COMPLETION, OR
+                                                   *            RE-INITIALIZES PROGRAM CONSTANTS AND CERTAIN LVDA REG-
+                                                   *            ISTERS.
+                                                   * ENTRIES    FBR1     ENTERED FROM POWER UP INITIALIZE
+                                                   *            FBR2     ENTERED FROM RCA-110 INTERRUPT
+                                                          ORGSS   0,1,0,000,0,3,0
+            003  0 03                              EMCON  BSS     1
+W    0 01 0 000  0 03    023  0  12                FBR1   PIO     023          READ EMR AND SAVE                         B
+     0 01 0 001  0 03    007  0  10                       TRA     FBR3
+     0 01 0 002  0 03    070  0  17    357540000   FBR2   CLA     =O35754
+     0 01 0 003  0 03    072  0  12                       PIO     072          INHIBIT ALL INTERRUPTS EXCEPT TLC AND RCA I
+     0 01 0 004  0 03    216  1  13                       STO     INTH
+     0 01 0 005  0 03    023  0  12                       PIO     023
+     0 01 0 006  0 03    072  0  06    777775366          AND     =O777775366  READ EMR, MASK EM8, EM3 AND 2 SPARE BITS  B
+     0 01 0 007  0 03    301  1  13                FBR3   STO     V.EMR        AND SAVE                                  B
+                                                   *                           FIXME: LVDA MANUAL ONLY SHOWS ONE SPARE
+     0 01 0 010  0 03    067  0  00                       HOP*    KIN400       HOP 400 INITIALIZE
+     0 01 0 011  0 03    073  0  17    000001002          CLA     =O000001002
+     0 01 0 012  0 03    022  0  12                       PIO     022          SET ICR'S 1 + 9, RESET ALL ICR'S EXCEPT   B
+     0 01 0 013  0 03    037  1  11                       XOR     D.KONS       1 AND 9                                   B
+     0 01 0 014  0 03    026  0  12                       PIO     026
+     0 01 0 015  0 03    074  0  17    265252260          CLA     =O265252260
+     0 01 0 016  0 03    075  0  00                       HOP*    ISS          ISSUE STATUS CODE                         P
+     0 01 0 017  0 03    066  0  00                       HOP*    RINIT        REGISTER INITIALIZE                       P
+     0 01 0 020  0 03    002  1  17                       CLA     EMCON1       INITIALIZE EMCON = EMCON1                 B
+     0 01 0 021  0 03    003  0  13                       STO     EMCON
+     0 01 0 022  0 03    002  0  17                       CLA     GCOTST       IS GCO TEST ON                            Q
+     0 01 0 023  0 03    036  0  04                       TNZ     FBR4                                                   Y
+     0 01 0 024  0 03    203  0  12                       PIO     203          STOP COD COUNTERS WITH A DUMMY GROUP 5 PIOI
+     0 01 0 025  0 03    301  1  17                       CLA     V.EMR
+     0 01 0 026  0 03    003  0  06                       AND     EMCON        IS SAVED EMR (MASKED) EQUAL ERROR         Q
+     0 01 0 027  0 03    031  0  04                       TNZ     *+2                                                    Y
+     0 01 0 030  0 03    041  0  10                       TRA     FBR5                                                   N
+     0 01 0 031  0 03    076  0  17    512525510          CLA     =O512525510
+     0 01 0 032  0 03    075  0  00                       HOP*    ISS          ISSUE STATUS CODE 51                      P
+     0 01 0 033  0 03    301  1  12                       PIO     701          TELEMETER EMR CONTENTS                    I
+     0 01 0 034  0 03    077  0  00                       HOP*    OIGS         GENERATE OUTPUT INT.                      P
+     0 01 0 035  0 03    037  0  10                       TRA     *+2
+     0 01 0 036  0 03    041  0  14                FBR4   TMI     FBR5         IS GCO TEST LOCATION MINUS                Q
+     0 01 0 037  0 03    076  0  17    512525510          CLA     =O512525510                                            N
+     0 01 0 040  0 03    075  0  00                       HOP*    ISS          ISSUE STATUS CODE 51                      P
+     0 01 0 041  0 03    057  0  12                FBR5   PIO     057
+     0 01 0 042  0 03    032  1  06                       AND     D.KB23       IS SYNC ON                                Q
+     0 01 0 043  0 03    045  0  04                       TNZ     *+2                                                    Y
+     0 01 0 044  0 03    041  0  10                       TRA     FBR5
+     0 01 0 045  0 03    100  0  00                       HOP*    SRS          SYNC RESET                                P
+     0 01 0 046  0 03    015  1  17                FBR6   CLA     D.KB10
+     0 01 0 047  0 03    032  0  12                       PIO     032          RESET RCA-110 INTERRUPT CONDITION         I
+                                                   *                           INITIALIZE PROGRAM CONSTANT
+                                                   *                           FIXME: WHAT DOES THIS MEAN
+     0 01 0 050  0 03    040  1  17                       CLA     D.KZRO
+     0 01 0 051  0 03    042  1  13                       STO     INPTL
+     0 01 0 052  0 03    101  0  00                       HOP*    MDSRT        HOP TO MD SRT                             X
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      MODE SORT                                                     *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION
+                                                   * ENTRIES    MDSRT    ENTERED FROM FORCED BEGIN AND INITIALIZE
+                                                          ORGSS   0,2,0,000,0,3,
+            004  0 03                              MODCMD BSS     1
+W                                                         USE     DAT
+          1 005  0 03    022  0  16                MODPTR CDS     MODTAB       POINTER TO MODE TABLE
+          0 005  0 03    000  0  00                       HOP     MODTAB
+                                                          USE     INST
+     0 02 0 000  0 03    040  1  17                MDSRT  CLA     D.KZRO
+     0 02 0 001  0 03    075  0  00                       HOP*    ISS          ISSUE STATUS CODE                         P
+     0 02 0 002  0 03    102  0  00                MDSRT1 HOP*    AMS          ACCELEROMETER MONITOR                     P
+     0 02 0 003  0 03    043  1  17                       CLA     MSEM0
+     0 02 0 004  0 03    103  0  00                       HOP*    EMS          ERROR MONITOR                             P
+     0 02 0 005  0 03    104  0  00                       HOP*    STS          LVDC SELFTEST                             P
+     0 02 0 006  0 03    015  1  17                       CLA     D.KB10
+     0 02 0 007  0 03    037  1  11                       XOR     D.KONS
+     0 02 0 010  0 03    216  1  06                       AND     INTH
+     0 02 0 011  0 03    015  1  11                       XOR     D.KB10
+     0 02 0 012  0 03    072  0  12                       PIO     072          INHIBIT RCA-110 INTERRUPT                 I
+     0 02 0 013  0 03    105  0  00                       HOP*    DAS          DATA ADAPTER TEST                         P
+     0 02 0 014  0 03    216  1  17                       CLA     INTH
+     0 02 0 015  0 03    072  0  12                       PIO     072          RESTORE NORMAL INHIBITS                   I
+     0 02 0 016  0 03    003  0  17                       CLA     EMCON
+     0 02 0 017  0 03    002  1  11                       XOR     EMCON1       IS EMR MASK SET TO SPECIAL VALUE          Q
+     0 02 0 020  0 03    027  0  04                       TNZ     MDSRT2                                                 Y
+     0 02 0 021  0 03    023  0  12                       PIO     023
+     0 02 0 022  0 03    003  0  06                       AND     EMCON        IS ANY UNACCEPTABLE EMR BIT ON            Q
+     0 02 0 023  0 03    025  0  04                       TNZ     *+2                                                    Y
+     0 02 0 024  0 03    027  0  10                       TRA     MDSRT2                                                 N
+     0 02 0 025  0 03    045  1  17                       CLA     MSEM2
+     0 02 0 026  0 03    103  0  00                       HOP*    EMS          ISSUE ERROR MESSAGE                       P
+     0 02 0 027  0 03    057  0  12                MDSRT2 PIO     057
+     0 02 0 030  0 03    032  1  06                       AND     D.KB23       IS SYNC ON                                Q
+     0 02 0 031  0 03    033  0  04                       TNZ     *+2                                                    Y
+     0 02 0 032  0 03    002  0  10                       TRA     MDSRT1                                                 N
+     0 02 0 033  0 03    043  0  12                       PIO     043          READ RCA-110A INPUT WORD                  I
+     0 02 0 034  0 03    004  0  13                       STO     MODCMD
+     0 02 0 035  0 03    100  0  00                       HOP*    SRS          SYNC RESET                                P
+     0 02 0 036  0 03    004  0  17                       CLA     MODCMD
+     0 02 0 037  0 03    044  0  14                       TMI     MDSRT3       IS INPUT WORD MODE INFORMATION            Q
+     0 02 0 040  0 03    301  1  13                       STO     V.EMR
+     0 02 0 041  0 03    044  1  17                       CLA     MSEM1
+     0 02 0 042  0 03    106  0  00                       HOP*    EMSR         ERROR MONITOR                             P
+     0 02 0 043  0 03    000  0  10                       TRA     MDSRT
+     0 02 0 044  0 03    107  0  06    176000000   MDSRT3 AND     =O176
+     0 02 0 045  0 03    020  1  05                       MPH     D.KB13       SHIFT RIGHT 13 PLACES
+     0 02 0 046  0 03    005  0  07                       ADD     MODPTR
+     0 02 0 047  0 03    110  0  00                       HOP*    IEDA         INSTRUCTION EXECUTE                       P
+                                                   *                           HOP TO CR                                 X
+     0 02 0 050  0 03    046  1  17                BADMOD CLA     MSEM3
+     0 02 0 051  0 03    103  0  00                       HOP*    EMS
+     0 02 0 052  0 03    000  0  10                       TRA     MDSRT
+                                                          DOGS    1,1,
+                                                          TABLE   64
+            000  1 01                  030024020   MODTAB HPC     BADMOD       SPECIAL LOADER MODE SORT           MODE 00
+            001  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 01
+            002  1 01                  030024020          HPC     BADMOD       ACCELEROMETER PULSE COUNT          MODE 02
+            003  1 01                  030024020          HPC     BADMOD       GIMBAL ANGLE MONITOR               MODE 03
+            004  1 01                  030024020          HPC     BADMOD       DISCRETE INPUT ROUTINE             MODE 04
+            005  1 01                  030024020          HPC     BADMOD       DISCRETE OUTPUT ROUTINE            MODE 05
+            006  1 01                  030024020          HPC     BADMOD       G & C STEERING TEST                MODE 06
+            007  1 01                  030024020          HPC     BADMOD       DOM TEST                           MODE 07
+            010  1 01                  030024020          HPC     BADMOD       LADDER ERROR TEST                  MODE 10
+            011  1 01                  030024020          HPC     BADMOD       PREPARE TO LAUNCH SIM FLT W/O PLAT MODE 11
+            012  1 01                  030024020          HPC     BADMOD       PREPARE TO LAUNCH FLIGHT W/ PLAT   MODE 12
+            013  1 01                  030024020          HPC     BADMOD       EXERCISE ATTITUDE CMD MODE 1       MODE 13
+            014  1 01                  030024020          HPC     BADMOD       COMPUTER INTERFACE UNIT READ       MODE 14
+            015  1 01                  030024020          HPC     BADMOD       SWITCH SELECTOR ROUTINE            MODE 15
+            016  1 01                  030024020          HPC     BADMOD       SECTOR SUMCHECK                    MODE 16
+            017  1 01                  030024020          HPC     BADMOD       EXERCISE ATTITUDE CMD MODE 2       MODE 17
+            020  1 01                  030024020          HPC     BADMOD       SECTOR DUMP                        MODE 20
+            021  1 01                  030000210          HPC     VPLD         VERIFY AND PREPARE TO LOAD         MODE 21
+            022  1 01                  030024020          HPC     BADMOD       MEMORY ERROR TEST                  MODE 22
+            023  1 01                  030025410          HPC     LD           LOAD ROUTINE                       MODE 23
+            024  1 01                  030024020          HPC     BADMOD       ML, SS, AND RTC COUNTER TESTS      MODE 24
+            025  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 25
+            026  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 26
+            027  1 01                  030024020          HPC     BADMOD       SIB TARGET DUMP ROUTINE            MODE 27
+            030  1 01                  030024020          HPC     BADMOD       PREPARE TO LAUNCH SIM FLT W/ PLAT  MODE 30
+            031  1 01                  030046010          HPC     PFDA         REPEATABLE FLIGHT SIM              MODE 31
+            032  1 01                  030024020          HPC     BADMOD       TELEMETRY TEST                     MODE 32
+            033  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 33
+            034  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 34
+            035  1 01                  030024020          HPC     BADMOD       COMMAND RECEIVER LINKAGE           MODE 35
+            036  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 36
+            037  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 37
+            040  1 01                  000000000          HPC     START        POWER UP AND INITIALIZE            MODE 40
+            041  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 41
+            042  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 42
+            043  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 43
+            044  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 44
+            045  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 45
+            046  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 46
+            047  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 47
+            050  1 01                  030024020          HPC     BADMOD       SIB TARGET DUMP ROUTINE            MODE 50
+            051  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 51
+            052  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 52
+            053  1 01                  030024020          HPC     BADMOD       ML, SS, AND RTC COUNTER TESTS      MODE 53
+            054  1 01                  030025410          HPC     LD           LOAD ROUTINE                       MODE 54
+            055  1 01                  030024020          HPC     BADMOD       MEMORY ERROR TEST                  MODE 55
+            056  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 56
+            057  1 01                  030024020          HPC     BADMOD       SECTOR DUMP                        MODE 57
+            060  1 01                  030024020          HPC     BADMOD       EXERCISE ATTITUDE CMD MODE 2       MODE 60
+            061  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 61
+            062  1 01                  030024020          HPC     BADMOD       SWITCH SELECTOR ROUTINE            MODE 62
+            063  1 01                  030024020          HPC     BADMOD       COMPUTER INTERFACE UNIT READ       MODE 63
+            064  1 01                  030024020          HPC     BADMOD       EXERCISE ATTITUDE CMD MODE 1       MODE 64
+            065  1 01                  030024020          HPC     BADMOD       PREPARE TO LAUNCH FLIGHT W/ PLAT   MODE 65
+            066  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 66
+            067  1 01                  030024020          HPC     BADMOD       LADDER ERROR TEST                  MODE 67
+            070  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 70
+            071  1 01                  030024020          HPC     BADMOD       G & C STEERING TEST                MODE 71
+            072  1 01                  030024020          HPC     BADMOD       DISCRETE OUTPUT ROUTINE            MODE 72
+            073  1 01                  030024020          HPC     BADMOD       DISCRETE INPUT ROUTINE             MODE 73
+            074  1 01                  030024020          HPC     BADMOD       GIMBAL ANGLE MONITOR               MODE 74
+            075  1 01                  030024020          HPC     BADMOD       ACCELEROMETER PULSE COUNT          MODE 75
+            076  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 76
+            077  1 01                  030024020          HPC     BADMOD       ERROR - ILLEGAL MODE               MODE 77
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      VERIFY AND PREPARE TO LOAD                                    *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THIS ROUTINE HAS TWO DISTINCT MODES. THE PURPOSE OF MODE
+                                                   *            1 (VERIFY) IS TO ALLOW THE LAUNCH COMPUTER TO EXAMINE THE
+                                                   *            CONTENTS OF ANY LVDC MEMORY LOCATION. MODE 2 (PREPARE TO
+                                                   *            LOAD) REQUIRES THE RCA-110A TO SUPPLY FOUR WORDS FOR EACH
+                                                   *            LVDC MEMORY LOCATION WHICH IT WISHES TO LOAD.
+                                                   * ENTRIES    VPLD     ENTERED FROM MODE SORT, PREPARE TO LAUNCH
+                                                          ORGSS   0,1,1,000,0,3,0
+            006  0 03                              WORDNO BSS     1
+W           007  0 03                              LVWORD BSS     1
+            010  0 03                              LVCW   BSS     1
+            011  0 03                              LVDATA BSS     1
+            012  0 03                              LVLAST BSS     1
+            013  0 03                              LVV    BSS     1
+            014  0 03                              LDPEND BSS     1
+            015  0 03                              STOCW  BSS     1
+                                                          USE     DAT
+          1 016  0 03    000  0  16                LVINST CDSS    0,0
+          0 016  0 03    000  0  13                       STO     000
+          1 017  0 03    100  0  16                LVSTO  CDS     LVBUF
+          0 017  0 03    234  0  13                       STO     LVBUF
+                                                          USE     INST
+     0 01 1 000  0 03    014  0  17                VPLD   CLA     LDPEND       TRYING TO VERIFY OR PREP TO LOAD WITHOUT  Q
+                                                   *                           PREV LOAD                                 Q
+     0 01 1 001  0 03    004  1  04                       TNZ     VPLD1
+     0 01 1 002  0 03    111  0  17    210000000          CLA     =O21         PREPARE TO TELEMETER STATUS CODE          N
+     0 01 1 003  0 03    005  1  10                       TRA     *+2
+     0 01 1 004  0 03    112  0  17    560000000   VPLD1  CLA     =O56         PREPARE TO TELEMETER STATUS CODE WITH     Y
+                                                   *                           ERROR MESSAGE                             Y
+     0 01 1 005  0 03    075  0  00                       HOP*    ISS          ISSUE STATUS CODE                         P
+     0 01 1 006  0 03    007  1  17                       CLA     D.KB4
+     0 01 1 007  0 03    037  1  11                       XOR     D.KONS
+     0 01 1 010  0 03    216  1  06                       AND     INTH
+     0 01 1 011  0 03    007  1  11                       XOR     D.KB4
+     0 01 1 012  0 03    072  0  12                       PIO     072          INHIBIT TLC INTERRUPT
+     0 01 1 013  0 03    003  1  17                       CLA     D.KBSG       INITIALIZE CONSTANTS                      B
+     0 01 1 014  0 03    013  0  13                       STO     LVV
+     0 01 1 015  0 03    017  0  17                       CLA     LVSTO
+     0 01 1 016  0 03    015  0  13                       STO     STOCW
+     0 01 1 017  0 03    040  1  17                       CLA     D.KZRO
+     0 01 1 020  0 03    014  0  13                       STO     LDPEND
+     0 01 1 021  0 03    006  0  13                       STO     WORDNO
+     0 01 1 022  0 03    011  0  13                       STO     LVDATA
+     0 01 1 023  0 03    012  0  13                       STO     LVLAST
+     0 01 1 024  0 03    027  1  10                       TRA     VPLD3
+     0 01 1 025  0 03    006  0  17                VPLD2  CLA     WORDNO
+     0 01 1 026  0 03    020  1  07                       ADD     D.KB13
+     0 01 1 027  0 03    006  0  13                VPLD3  STO     WORDNO
+     0 01 1 030  0 03    113  0  00                       HOP*    RIS          READ INPUT DATA                           P
+     0 01 1 031  0 03    007  0  13                       STO     LVWORD
+     0 01 1 032  0 03    114  0  06    000060000          AND     =O00006
+     0 01 1 033  0 03    006  0  02                       SUB     WORDNO
+     0 01 1 034  0 03    177  1  04                       TNZ     VPCCE
+     0 01 1 035  0 03    006  0  17                VPWD1  CLA     WORDNO       WAS FIRST RCA WORD JUST READ              Q
+     0 01 1 036  0 03    054  1  04                       TNZ     VPWD2                                                  N
+     0 01 1 037  0 03    007  0  17                       CLA     LVWORD       SAVE SECTOR, MODULE, DATA BITS            B
+     0 01 1 040  0 03    115  0  06    376000000          AND     =O376
+     0 01 1 041          020  1  16                       SHL     1
+     0 01 1 042  0 03    016  0  11                       XOR     LVINST
+     0 01 1 043  0 03    010  0  13                       STO     LVCW
+     0 01 1 044  0 03    007  0  17                       CLA     LVWORD
+     0 01 1 045  0 03    116  0  06    001700000          AND     =O0017
+                                                          SHL     8
+     0 01 1 046          040  1  16              +        SHL     2
+     0 01 1 047          040  1  16              +        SHL     2
+     0 01 1 050          040  1  16              +        SHL     2
+     0 01 1 051          040  1  16              +        SHL     2
+     0 01 1 052  0 03    011  0  13                       STO     LVDATA
+     0 01 1 053  0 03    025  1  10                       TRA     VPLD2
+     0 01 1 054  0 03    020  1  02                VPWD2  SUB     D.KB13       WAS SECOND RCA WORD JUST READ             Q
+     0 01 1 055  0 03    126  1  04                       TNZ     VPWD3                                                  N
+     0 01 1 056  0 03    007  0  17                       CLA     LVWORD       SAVE ADDRESS BITS L, V, AND S/D
+     0 01 1 057  0 03    117  0  06    377000000          AND     =O377        ADDRESS BITS
+     0 01 1 060  0 03    017  1  05                       MPH     D.KB12
+     0 01 1 061  0 03    010  0  11                       XOR     LVCW
+     0 01 1 062  0 03    010  0  13                       STO     LVCW
+     0 01 1 063  0 03    007  0  17                       CLA     LVWORD
+     0 01 1 064  0 03    016  1  06                       AND     D.KB11       S/D
+                                                          SHL     4
+     0 01 1 065          040  1  16              +        SHL     2
+     0 01 1 066          040  1  16              +        SHL     2
+     0 01 1 067  0 03    010  0  11                       XOR     LVCW
+     0 01 1 070  0 03    010  0  13                       STO     LVCW
+     0 01 1 071  0 03    007  0  17                       CLA     LVWORD       L
+     0 01 1 072  0 03    014  1  06                       AND     D.KB9
+     0 01 1 073  0 03    012  0  13                       STO     LVLAST
+     0 01 1 074  0 03    013  0  17                       CLA     LVV          IS THIS THE FIRST V BIT
+     0 01 1 075  0 03    113  1  14                       TMI     VPWD2B
+     0 01 1 076  0 03    007  0  17                       CLA     LVWORD
+     0 01 1 077  0 03    015  1  06                       AND     D.KB10
+     0 01 1 100  0 03    013  0  11                       XOR     LVV          IS V BIT SAME AS INITIAL V BIT            Q
+     0 01 1 101  0 03    175  1  04                       TNZ     VMSMCH                                                 N
+     0 01 1 102  0 03    013  0  17                VPWD2A CLA     LVV          V
+     0 01 1 103  0 03    020  1  05                       MPH     D.KB13
+     0 01 1 104  0 03    010  0  11                       XOR     LVCW
+     0 01 1 105  0 03    375  1  13                       STO     775
+     0 01 1 106  0 03    015  0  17                       CLA     STOCW        STORE THE NEWLY FORMED CONTROL WORD IN
+     0 01 1 107  0 03    110  0  00                       HOP*    IEDA         THE TEMPORARY BUFFER
+     0 01 1 110  0 03    013  0  17                       CLA     LVV          WAS THIS ROUTINE ENTERED TO VERIFY AND    Q
+     0 01 1 111  0 03    117  1  04                       TNZ     VPWD2C       PREP TO LOAD                              Q
+     0 01 1 112  0 03    025  1  10                       TRA     VPLD2
+     0 01 1 113  0 03    007  0  17                VPWD2B CLA     LVWORD
+     0 01 1 114  0 03    015  1  06                       AND     D.KB10
+     0 01 1 115  0 03    013  0  13                       STO     LVV
+     0 01 1 116  0 03    102  1  10                       TRA     VPWD2A
+                                                   *      ROUTINE WAS ENTERED TO VERIFY ONLY
+     0 01 1 117  0 03    120  0  00                VPWD2C HOP*    CWS          READ WORD TO BE VERIFIED AND PLACE IN     B
+     0 01 1 120  0 03    375  1  13                       STO     775          TEMP STORAGE                              B
+     0 01 1 121  0 03    121  0  00                       HOP*    TLC          TLC MONITOR                               P
+     0 01 1 122  0 03    015  0  17                       CLA     STOCW
+     0 01 1 123  0 03    027  1  07                       ADD     D.KB20
+     0 01 1 124  0 03    110  0  00                       HOP*    IEDA
+     0 01 1 125  0 03    147  1  10                       TRA     VPLD4
+     0 01 1 126  0 03    020  1  02                VPWD3  SUB     D.KB13       WAS THIRD RCA WORD JUST READ              Q
+     0 01 1 127  0 03    137  1  04                       TNZ     VPWD4                                                  N
+     0 01 1 130  0 03    007  0  17                       CLA     LVWORD       SAVE DATA BITS                            B
+     0 01 1 131  0 03    122  0  06    377700000          AND     =O3777
+                                                          SHR     3
+     0 01 1 132          002  1  16              +        SHR     2
+     0 01 1 133          001  1  16              +        SHR     1
+     0 01 1 134  0 03    011  0  11                       XOR     LVDATA
+     0 01 1 135  0 03    011  0  13                       STO     LVDATA
+     0 01 1 136  0 03    025  1  10                       TRA     VPLD2
+     0 01 1 137  0 03    007  0  17                VPWD4  CLA     LVWORD       SAVE DATA BITS                            B
+     0 01 1 140  0 03    122  0  06    377700000          AND     =O3777
+     0 01 1 141  0 03    021  1  05                       MPH     D.KB14
+     0 01 1 142  0 03    011  0  11                       XOR     LVDATA       COMBINE DATA BITS OF FIRST, THIRD, FOURTH B
+     0 01 1 143  0 03    375  1  13                       STO     775          RCA WRDS
+     0 01 1 144  0 03    015  0  17                       CLA     STOCW
+     0 01 1 145  0 03    027  1  07                       ADD     D.KB20
+     0 01 1 146  0 03    110  0  00                       HOP*    IEDA         STORE IN TEMPORARY STORAGE
+     0 01 1 147  0 03    015  0  17                VPLD4  CLA     STOCW
+     0 01 1 150  0 03    123  0  06    000077700          AND     =O0000777
+     0 01 1 151  0 03    017  1  02                       SUB     D.KB12       WAS TEMPORARY STORAGE ACCIDENTALLY        Q
+     0 01 1 152  0 03    155  1  14                       TMI     VPLD5        OVERFLOWED                                Q
+     0 01 1 153  0 03    054  1  17                       CLA     LVEM6        PREP ERR MESSAGE TEMP STORAGE ACCIDENTALLYB
+     0 01 1 154  0 03    204  1  10                       TRA     VPERR        OVERFLOWED                                B
+     0 01 1 155  0 03    015  0  17                VPLD5  CLA     STOCW        INCREMENT BUFFER POINTER BY TWO
+     0 01 1 156  0 03    026  1  07                       ADD     D.KB19
+     0 01 1 157  0 03    015  0  13                       STO     STOCW
+     0 01 1 160  0 03    012  0  17                       CLA     LVLAST       HAS LAST WORD BEEN READ                   Q
+     0 01 1 161  0 03    164  1  04                       TNZ     VPLD6
+     0 01 1 162  0 03    040  1  17                       CLA     D.KZRO
+     0 01 1 163  0 03    027  1  10                       TRA     VPLD3                                                  N
+     0 01 1 164  0 03    015  0  17                VPLD6  CLA     STOCW
+     0 01 1 165  0 03    017  0  02                       SUB     LVSTO
+     0 01 1 166  0 03    124  0  00                       HOP*    OSLV         OUTPUT                                    P
+     0 01 1 167  0 03    013  0  17                       CLA     LVV
+     0 01 1 170  0 03    205  1  04                       TNZ     VPEXIT
+     0 01 1 171  0 03    015  0  17                       CLA     STOCW        SET NUMBER OF WORDS PENDING LOAD          B
+     0 01 1 172  0 03    017  0  02                       SUB     LVSTO
+     0 01 1 173  0 03    014  0  13                       STO     LDPEND
+     0 01 1 174  0 03    205  1  10                       TRA     VPEXIT
+     0 01 1 175  0 03    053  1  17                VMSMCH CLA     LVEM5        PREP ERR MESSAGE V BITS DIAGREE           B
+     0 01 1 176  0 03    204  1  10                       TRA     VPERR
+     0 01 1 177  0 03    006  0  17                VPCCE  CLA     WORDNO
+                                                          SHL     5
+     0 01 1 200          040  1  16              +        SHL     2
+     0 01 1 201          040  1  16              +        SHL     2
+     0 01 1 202          020  1  16              +        SHL     1
+     0 01 1 203  0 03    047  1  07                       ADD     LVEM1
+     0 01 1 204  0 03    103  0  00                VPERR  HOP*    EMS
+     0 01 1 205  0 03    216  1  17                VPEXIT CLA     INTH         RESTORE NORMAL INTERRUPTS
+     0 01 1 206  0 03    072  0  12                       PIO     072
+     0 01 1 207  0 03    042  1  17                       CLA     INPTL        IS EXIT TO MODE SORT                      Q
+     0 01 1 210  0 03    212  1  04                       TNZ     *+2                                                    N
+     0 01 1 211  0 03    101  0  00                       HOP*    MDSRT        EXIT TO MODE SORT                         X
+     0 01 1 212  0 03    101  0  00                       HOP*    MDSRT        FIXME: EXIT PREP TO LNCH                  X
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      LOAD ROUTINE                                                  *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THIS ROUTINE ALLOWS THE INFORMATION PREVIOUSLY PLACED IN
+                                                   *            TEMPORARY STORAGE BY THE VERIFY AND PREPARE TO LOAD
+                                                   *            ROUTINE TO BE TRANSFERRED TO THE PERMANENT MEMORY
+                                                   *            LOCATIONS SPECIFIED.
+                                                   * ENTRIES    LD       ENTER TO LOAD PREPARED INFORMATION
+                                                          ORG     FBR1,D.DATA
+            020  0 03                              LDPTR  BSS     1
+W           021  0 03                              LDEND  BSS     1
+                                                          USE     DAT
+          1 022  0 03    341  0  16                LDAREA CDSD    0,16
+          0 022  0 03    360  0  13                       STO     360
+                                                          USE     INST
+            023  0 03                  777776076   LDMASK OCT     777776076
+     0 01 0 053  0 03    125  0  17    230000000   LD     CLA     =O23
+     0 01 0 054  0 03    075  0  00                       HOP*    ISS          ISSUE STATUS CODE                         P
+     0 01 0 055  0 03    014  0  17                       CLA     LDPEND       PREPARED TO LOAD                          Q
+     0 01 0 056  0 03    065  0  04                       TNZ     LD1                                                    Y
+     0 01 0 057  0 03    056  1  17                       CLA     LDEM1        PREPARE ERROR MESSAGE, ENTERED THIS       N
+                                                   *                           ROUTINE WHEN NOT PREP TO LOAD OR WHILE IN B
+                                                   *                           VERIFY ONLY                               B
+     0 01 0 060  0 03    103  0  00                       HOP*    EMS          ERROR MONITOR                             P
+     0 01 0 061  0 03    042  1  17                LDOUT  CLA     INPTL        IS RETURN TO MODE SORT                    Q
+     0 01 0 062  0 03    064  0  04                       TNZ     *+2                                                    N
+     0 01 0 063  0 03    101  0  00                       HOP*    MDSRT        EXIT TO MODE SORT                         X
+     0 01 0 064  0 03    101  0  00                       HOP*    MDSRT        FIXME: EXIT PREP TO LAUNCH                X
+     0 01 0 065  0 03    042  1  17                LD1    CLA     INPTL        CALLED FROM PREPARE TO LAUNCH             Q
+     0 01 0 066  0 03    071  0  04                       TNZ     LD2                                                    Y
+     0 01 0 067  0 03    120  0  00                       HOP*    CWS          CW EXECUTE                                P
+                                                   *                           LOAD TEMPORARY STORED DATA INTO           B
+                                                   *                           DESIGNATED LOC                            B
+     0 01 0 070  0 03    061  0  10                       TRA     LDOUT
+     0 01 0 071  0 03    050  0  17                LD2    CLA     CWCLA        ARE ALL LOADS SET FOR RIGHT AREA          Q
+     0 01 0 072  0 03    020  0  13                       STO     LDPTR
+     0 01 0 073  0 03    014  0  07                       ADD     LDPEND
+     0 01 0 074  0 03    021  0  13                       STO     LDEND
+     0 01 0 075  0 03    020  0  17                LD3    CLA     LDPTR
+     0 01 0 076  0 03    110  0  00                       HOP*    IEDA         PICK UP NEXT CONTROL WORD                 P
+     0 01 0 077  0 03    022  0  11                       XOR     LDAREA
+     0 01 0 100  0 03    023  0  06                       AND     LDMASK
+     0 01 0 101  0 03    111  0  04                       TNZ     LDBAD
+     0 01 0 102  0 03    020  0  17                       CLA     LDPTR
+     0 01 0 103  0 03    026  1  07                       ADD     D.KB19
+     0 01 0 104  0 03    020  0  13                       STO     LDPTR
+     0 01 0 105  0 03    021  0  02                       SUB     LDEND
+     0 01 0 106  0 03    075  0  04                       TNZ     LD3
+     0 01 0 107  0 03    120  0  00                       HOP*    CWS          CONT WORD EXEC                            P
+     0 01 0 110  0 03    101  0  00                       HOP*    MDSRT        FIXME: EXIT PREP TO LNCH                  X
+     0 01 0 111  0 03    057  1  17                LDBAD  CLA     LDEM2        PREP ERR MSG-TRIED TO LOAD ILLEGAL ADDRESSB
+     0 01 0 112  0 03    103  0  00                       HOP*    EMS          ERROR MONITOR                             P
+     0 01 0 113  0 03    101  0  00                       HOP*    MDSRT        FIXME: EXIT PREP TO LNCH                  X
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      INTERRUPT PROCESSING ROUTINE                                  *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THE PURPOSE OF THE INTERRUPT PROCESSING ROUTINE IS TO
+                                                   *            DETERMINE WHICH INTERRUPT OCCURRED AND TO DIRECT THE LVDC
+                                                   *            TO THE CORRESPONDING PROCESSING ROUTINE.
+                                                   * ENTRY      INTP     ENTERED AUTOMATICALLY EVERY TIME AN INTERRUPT
+                                                   *                     HOP 400 IS GENERATED.
+                                                          ORG     0,0,0,100,0,16,
+     0 00 0 100  0 16    376  1  13                INTP   STO     776
+     0 00 0 101  0 16    210  1  13                       STO     INACC        SAVE PARTIAL RESULTS IF ANY FROM          B
+     0 00 0 102  0 16    375  1  17                       CLA     775          INTERRUPTED PRGM                          B
+     0 00 0 103  0 16    214  1  13                       STO     INPQ
+     0 00 0 104  0 16    376  1  17                       CLA     776
+     0 00 0 105  0 16    212  1  13                       STO     INHC
+     0 00 0 106  0 16    216  1  17                       CLA     INTH
+     0 00 0 107  0 16    037  1  11                       XOR     D.KONS       ELIMINATE INTERRUPT BITS WITH SET INHIBITSB
+     0 00 0 110          020  1  16                       SHL     1
+     0 00 0 111  0 16    375  1  13                       STO     775
+     0 00 0 112  0 16    137  0  12                       PIO     137          GET CONTENTS OF INTERRUPT STORAGE REGISTERI
+     0 00 0 113  0 16    375  1  06                       AND     775
+     0 00 0 114  0 16    375  1  13                       STO     775
+     0 00 0 115  0 16    006  1  06                       AND     D.KB3
+     0 00 0 116  0 16    153  0  04                       TNZ     TLCI         TLC INTERRUPT                             Q
+     0 00 0 117  0 16    375  1  17                       CLA     775                                                    N
+     0 00 0 120  0 16    010  1  06                       AND     D.KB5
+     0 00 0 121  0 16    170  0  04                       TNZ     GRR1         GUID REF REL INTERRUPT                    Q
+     0 00 0 122  0 16    375  1  17                       CLA     775                                                    N
+     0 00 0 123  0 16    200  0  14                       TMI     MLC          MINOR LOOP CONTROL INTERRUPT              Q
+     0 00 0 124          020  1  16                       SHL     1                                                      N
+     0 00 0 125  0 16    201  0  14                       TMI     SSC          SWITCH SELECTOR CONTROL INTERRUPT         Q
+     0 00 0 126          020  1  16                       SHL     1                                                      N
+     0 00 0 127  0 16    202  0  14                       TMI     CIU          ORB C.O.(CIU) INTERRUPT                   Q
+     0 00 0 130          040  1  16                       SHL     2                                                      N
+     0 00 0 131  0 16    203  0  14                       TMI     CRI          COMMAND RECEIVER INTERRUPT                Q
+     0 00 0 132          040  1  16                       SHL     2                                                      N
+     0 00 0 133  0 16    204  0  14                       TMI     S2PD         SII PROPEL DELETION INTERRUPT             Q
+     0 00 0 134          020  1  16                       SHL     1                                                      N
+     0 00 0 135  0 16    205  0  14                       TMI     S1PD         SI PROPEL DELETION INTERRUPT              Q
+     0 00 0 136          020  1  16                       SHL     1                                                      N
+     0 00 0 137  0 16    206  0  14                       TMI     S4BEO        S-IVB ENG OUT INTERRUPT                   Q
+     0 00 0 140          020  1  16                       SHL     1                                                      N
+     0 00 0 141  0 16    207  0  14                       TMI     RCAI         RCA 110 INTERRUPT                         Q
+     0 00 0 142          020  1  16                       SHL     1                                                      N
+     0 00 0 143  0 16    210  0  14                       TMI     LLS          LOW LEVEL SENSE INTERRUPT                 Q
+     0 00 0 144  0 16    007  0  17    377740000   SPARE  CLA     =O37774
+     0 00 0 145  0 16    032  0  12                       PIO     032          RESET INTERRUPT LATCH                     I
+     0 00 0 146  0 16    060  1  17                       CLA     INEM1
+     0 00 0 147  0 16    010  0  00                       HOP*    EMS          ERROR MONITOR                             P
+     0 00 0 150  0 16    040  1  17                       CLA     D.KZRO
+     0 00 0 151  0 16    172  0  12                       PIO     172          PIO LADDER CLAMP                          I
+     0 00 0 152  0 16    011  0  00                       HOP*    MDSRT        EXIT TO MODE SORT                         X
+     0 00 0 153  0 16    007  0  17    377740000   TLCI   CLA     =O37774      RESET ALL DISCRETE OUTPUTS EXCEPT D.O     I
+     0 00 0 154  0 16    012  0  12                       PIO     012          NUMBER 13                                 I
+     0 00 0 155  0 16    012  0  17    357740000          CLA     =O35774
+     0 00 0 156  0 16    072  0  12                       PIO     072          INHIBIT ALL INT BUT TLC                   I
+     0 00 0 157  0 16    007  1  17                       CLA     D.KB4
+     0 00 0 160  0 16    032  0  12                       PIO     032          ISSUE TLC LIMITING BIT TO RESET INTERRUPT I
+     0 00 0 161  0 16    061  1  17                       CLA     INEM2
+     0 00 0 162  0 16    010  0  00                       HOP*    EMS          ERROR MONITOR-ISSUE TLC ERROR MSG         P
+     0 00 0 163  0 16    216  1  17                       CLA     INTH
+     0 00 0 164  0 16    072  0  12                       PIO     072          RESTORE TO NORMAL INHIBITS                I
+     0 00 0 165  0 16    040  1  17                       CLA     D.KZRO
+     0 00 0 166  0 16    172  0  12                       PIO     172          CLAMP LADDERS TO ZERO                     I
+     0 00 0 167  0 16    011  0  00                       HOP*    MDSRT        EXIT TO MODE SORT                         X
+     0 00 0 170  0 16    271  1  17                GRR1   CLA     V.STAT
+     0 00 0 171  0 16    013  0  02    120000000          SUB     =O12         IS EXIT FROM MODE 12 OF PREPARE TO LAUNCH Q
+     0 00 0 172  0 16    174  0  04                       TNZ     *+2                                                    N
+     0 00 0 173  0 16    040  1  17                       CLA     D.KZRO       ARM THE ABORT TEST FLAG (MSFLT) FIXME     B
+     0 00 0 174  0 16    040  1  17                       CLA     D.KZRO       STORE DELTA TIME CLOCK RDNG IN FLIGHT DATAB
+                                                   *                           SECTOR (FIXME)                            B
+     0 00 0 175  0 16    034  1  17                       CLA     D.KB25
+     0 00 0 176  0 16    026  0  12                       PIO     026          SELECT T-SYNC DOM CONTROL                 I
+     0 00 0 177  0 16    157  1  00                       HOP     GRIHC        EXIT HOP GRIHC                            X
+     0 00 0 200  0 16    000  0  00                MLC    HOP     MLHC
+     0 00 0 201  0 16    001  0  00                SSC    HOP     SSHC
+     0 00 0 202  0 16    002  0  00                CIU    HOP     CIUHC
+     0 00 0 203  0 16    154  1  00                CRI    HOP     CRAIHC
+     0 00 0 204  0 16    003  0  00                S2PD   HOP     PDHC
+     0 00 0 205  0 16    003  0  00                S1PD   HOP     PDHC
+     0 00 0 206  0 16    004  0  00                S4BEO  HOP     EOHC
+     0 00 0 207  0 16    005  0  00                RCAI   HOP     FBHC
+     0 00 0 210  0 16    006  0  00                LLS    HOP     LLSHC
+            000  0 16                  030062000   MLHC   HPC     SPARE,D.DATA  FIXME
+            001  0 16                  030062000   SSHC   HPC     SPARE,D.DATA  FIXME
+            002  0 16                  030062000   CIUHC  HPC     SPARE,D.DATA  FIXME
+            003  0 16                  030062000   PDHC   HPC     SPARE,D.DATA  FIXME
+            004  0 16                  030062000   EOHC   HPC     SPARE,D.DATA  FIXME
+            005  0 16                  030001010   FBHC   HPC     FBR2,D.DATA
+            006  0 16                  030062000   LLSHC  HPC     SPARE,D.DATA  FIXME
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      REPEATABLE FLIGHT SIM LINKAGE                                 *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THE PURPOSE OF THIS ROUTINE IS TO PROVIDE THE CAPABILITY
+                                                   *            TO EXECUTE THE FLIGHT PROGRAM IN ITS REPEATABLE FLIGHT
+                                                   *            SIM MODE
+                                                   * ENTRIES    PFDA     ENTERED FROM MODE SORT
+                                                          ORG     FBR1,D.DATA
+     0 01 0 114  0 03    126  0  17    310000000   PFDA   CLA     =O31
+     0 01 0 115  0 03    075  0  00                       HOP*    ISS          ISSUE STATUS CODE                         P
+     0 01 0 116  0 03    034  1  17                       CLA     D.KB25
+     0 01 0 117  0 03    026  0  12                       PIO     026          SELECT T-SYNC DOM CONTROL                 I
+     0 01 0 120  0 03    157  1  00                       HOP     GRIHC        EXIT TO FLT PROG                          X
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      READ INPUT DATA SUBROUTINE                                    *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   IT IS THE PURPOSE OF THE READ INPUT DATA SUBROUTINE TO
+                                                   *            HANDLE DATA SENT TO THE LVDC/LVDA VIA THE FOURTEEN
+                                                   *            RCA-110A INPUT LINES.
+                                                   * ENTRIES    RIS      ENTERED FROM VERIFY AND PREPARE TO LOAD
+                                                          ORG     VPLD,D.DATA
+            024  0 03                              RISRT  BSS     1
+W           025  0 03                              RISDT  BSS     1
+            026  0 03                              RISCMD BSS     1
+            027  0 03                              RISTAT BSS     1
+     0 01 1 213  0 03    377  1  13                RIS    STO     777          ENTER FROM CALL RT                        B
+     0 01 1 214  0 03    377  1  17                       CLA     777
+     0 01 1 215  0 03    024  0  13                       STO     RISRT
+     0 01 1 216  0 03    271  1  17                       CLA     V.STAT
+     0 01 1 217  0 03    027  0  13                       STO     RISTAT
+     0 01 1 220  0 03    040  1  17                RIS1   CLA     D.KZRO       INITIALIZE TO OBTAIN DELTA TIME           B
+     0 01 1 221  0 03    025  0  13                       STO     RISDT
+     0 01 1 222  0 03    103  0  12                       PIO     103
+     0 01 1 223  0 03    375  1  13                       STO     775
+     0 01 1 224  0 03    057  0  12                RIS2   PIO     057
+     0 01 1 225  0 03    032  1  06                       AND     D.KB23       IS SYNC ON                                Q
+     0 01 1 226  0 03    240  1  04                       TNZ     RIS3                                                   Y
+     0 01 1 227  0 03    127  0  00                       HOP*    ATS          ABORT TEST                                P
+     0 01 1 230  0 03    130  0  00                       HOP*    RTS          REAL TIME DELTA                           P
+     0 01 1 231  0 03    025  0  07                       ADD     RISDT        UPDATE DELTA TIME                         B
+     0 01 1 232  0 03    025  0  13                       STO     RISDT
+                                                          SUB     =(256000.0*P.CMSR) HAVE 256 SECONDS ELAPSED YET?       Q
+     0 01 1 233  0 03    131  0  02    007737374 +        SUB     =1040253.952 HAVE 256 SECONDS ELAPSED YET?       Q
+     0 01 1 234  0 03    224  1  14                       TMI     RIS2                                                   N
+     0 01 1 235  0 03    132  0  17    450000000          CLA     =O45
+     0 01 1 236  0 03    075  0  00                       HOP*    ISS          ISSUE OVERTIME STATUS CODE                P
+     0 01 1 237  0 03    220  1  10                       TRA     RIS1
+     0 01 1 240  0 03    043  0  12                RIS3   PIO     043          READ IN RCA-110A INPUT DATA               I
+     0 01 1 241  0 03    133  0  06    777760000          AND     =O77776
+     0 01 1 242  0 03    026  0  13                       STO     RISCMD
+     0 01 1 243  0 03    100  0  00                       HOP*    SRS          SYNC RESET                                P
+     0 01 1 244  0 03    026  0  17                       CLA     RISCMD       IS INPUT DATA                             Q
+     0 01 1 245  0 03    256  1  14                       TMI     RIS5                                                   N
+     0 01 1 246  0 03    027  0  17                       CLA     RISTAT
+     0 01 1 247  0 03    271  1  02                       SUB     V.STAT
+     0 01 1 250  0 03    252  1  04                       TNZ     *+2
+     0 01 1 251  0 03    254  1  10                       TRA     RIS4
+     0 01 1 252  0 03    027  0  17                       CLA     RISTAT       RE-ESTABLISH STATUS CODE OF CALLING PGM
+     0 01 1 253  0 03    075  0  00                       HOP*    ISS
+     0 01 1 254  0 03    026  0  17                RIS4   CLA     RISCMD       PLACE RCA-110A DATA IN ACCUMULATOR        B
+     0 01 1 255  0 03    024  0  00                       HOP     RISRT        HOP ON HOP SV                             X
+     0 01 1 256  0 03    026  0  17                RIS5   CLA     RISCMD
+     0 01 1 257  0 03    301  1  13                       STO     V.EMR
+     0 01 1 260  0 03    062  1  17                       CLA     RIEM1        INPUT IS MODE                             B
+     0 01 1 261  0 03    106  0  00                       HOP*    EMSR         ERROR MESSAGE                             P
+     0 01 1 262  0 03    042  1  17                       CLA     INPTL        IS PREPARE TO LAUNCH INDICATED?           Q
+     0 01 1 263  0 03    265  1  04                       TNZ     *+2
+     0 01 1 264  0 03    101  0  00                       HOP*    MDSRT        EXIT TO MODE SORT                         X
+     0 01 1 265  0 03    101  0  00                       HOP*    MDSRT        FIXME: THIS SHOULD GO TO PTL
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      SYNC RESET SUBROUTINE                                         *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION  THE PURPOSE OF THIS SUBROUTINE IS TO TURN OFF THE RCA-110A
+                                                   *           SYNC SIGNALS TO THE LVDC. THIS WILL BE ACCOMPLISHED BY
+                                                   *           SETTING DISCRETE OUTPUT 1, WHICH CAUSES THE SYNC LOGIC TO
+                                                   *           BE RESET. THE LVDC WILL THEN CYCLE WAITING FOR THE SYNC
+                                                   *           INPUT TO RESET. WHEN SYNC IS RESET AND FOUND OFF, THE LVDC
+                                                   *           WILL RETURN TO THE CALLING ROUTINE.
+                                                   * ENTRY     SRS      ENTER TO RESET RCA-110 SYNC
+                                                          ORG     FBR1,D.DATA
+            030  0 03                              SRSRT  BSS     1
+W    0 01 0 121  0 03    377  1  13                SRS    STO     777
+     0 01 0 122  0 03    377  1  17                       CLA     777
+     0 01 0 123  0 03    030  0  13                       STO     SRSRT
+     0 01 0 124  0 03    017  1  17                       CLA     D.KB12
+     0 01 0 125  0 03    016  0  12                       PIO     016          SET DISCRETE OUTPUT 1                     I
+     0 01 0 126  0 03    057  0  12                SRS1   PIO     057
+     0 01 0 127  0 03    032  1  06                       AND     D.KB23       IS SYNC OFF                               Q
+     0 01 0 130  0 03    134  0  04                       TNZ     SRS2                                                   N
+     0 01 0 131  0 03    017  1  17                       CLA     D.KB12                                                 Y
+     0 01 0 132  0 03    012  0  12                       PIO     012          RESET DISCRETE OUTPUT 1                   I
+     0 01 0 133  0 03    030  0  00                       HOP     SRSRT        RET TO CAL RT                             X
+     0 01 0 134  0 03    134  0  00                SRS2   HOP*    PRUS         PTL REALTIME UPDATE SUBR.                 P
+     0 01 0 135  0 03    126  0  10                       TRA     SRS1
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      ERROR MONITOR SUBROUTINE                                      *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THE PURPOSE OF THIS SUBROUTINE IS TO INTERROGATE THE
+                                                   *            CONTENTS OF THE ERROR MONITOR REGISTER, AND TO OUTPUT
+                                                   *            ERROR MESSAGES WHEN AN ERROR IS DETECTED DURING THE
+                                                   *            PERFORMANCE OF A PREFLIGHT ROUTINE.
+                                                   * ENTRIES    EMS      ENTER WITH ERROR CODE IN ACCUMULATOR TO OUTPUT
+                                                   *                     ERROR MESSAGE.
+                                                   *                     ENTER WITH ZERO IN ACCUMULATOR TO INTERROGATE
+                                                   *                     EMR.
+                                                   *            EMSR     ENTER WITH ERROR CODE IN ACCUMULATOR AND ERROR
+                                                   *                     IN V.EMR.
+                                                          ORG     INTP,D.DATA
+            031  0 03                              DISR   BSS     1
+W           032  0 03                              EMRM   BSS     1
+            033  0 03                              EMSCMD BSS     1
+            034  0 03                              EMSTAT BSS     1
+            035  0 03                              EMSRT  BSS     1
+     0 00 0 211  0 03    377  1  13                EMSR   STO     777          ENTER WITH EMW IN ACC, ERROR IN V.EMR
+     0 00 0 212  0 03    371  0  13                       STO     V.EMW
+     0 00 0 213  0 03    377  1  17                       CLA     777
+     0 00 0 214  0 03    035  0  13                       STO     EMSRT
+     0 00 0 215  0 03    247  0  10                       TRA     EMS1
+     0 00 0 216  0 03    377  1  13                EMS    STO     777          SAVE RETURN HOP CONSTANT                  B
+     0 00 0 217  0 03    371  0  13                       STO     V.EMW        SAVE ERROR MESSAGE WORD
+     0 00 0 220  0 03    377  1  17                       CLA     777
+     0 00 0 221  0 03    035  0  13                       STO     EMSRT
+     0 00 0 222  0 03    053  0  12                       PIO     053          READ DISR                                 I
+     0 00 0 223  0 03    135  0  06    000000600          AND     =O0000006    MASK OUT UNWANTED DISR BITS AND SAVE      B
+     0 00 0 224  0 03    031  0  13                       STO     DISR
+     0 00 0 225  0 03    023  0  12                       PIO     023          READ ERROR MONITOR REGISTER               I
+     0 00 0 226  0 03    301  1  13                       STO     V.EMR
+     0 00 0 227  0 03    003  0  06                       AND     EMCON        MASK OUT UNWANTED EMR BITS AND SAVE       B
+     0 00 0 230  0 03    032  0  13                       STO     EMRM
+     0 00 0 231  0 03    371  0  17                       CLA     V.EMW        WAS ENTRY TO TELEMETER ERROR MESSAGE      Q
+     0 00 0 232  0 03    247  0  04                       TNZ     EMS1                                                   Y
+     0 00 0 233  0 03    032  0  17                       CLA     EMRM         DOES MASKED EMR INDICATE BITS OTHER       Q
+     0 00 0 234  0 03    136  0  06    777776776          AND     =O777776776  THAN SCB
+     0 00 0 235  0 03    247  0  04                       TNZ     EMS1                                                   Y
+     0 00 0 236  0 03    032  0  17                       CLA     EMRM
+     0 00 0 237  0 03    024  1  06                       AND     D.KB17
+     0 00 0 240  0 03    031  0  07                       ADD     DISR
+     0 00 0 241  0 03    137  0  11    000001200          XOR     =O0000012    DO BOTH EMR + DISR INDICATE SCB           Q
+     0 00 0 242  0 03    244  0  04                       TNZ     *+2                                                    N
+     0 00 0 243  0 03    247  0  10                       TRA     EMS1                                                   Y
+     0 00 0 244  0 03    032  0  17                       CLA     EMRM         WAS THE MASKED EMR ZERO                   Q
+     0 00 0 245  0 03    247  0  04                       TNZ     EMS1                                                   N
+     0 00 0 246  0 03    035  0  00                       HOP     EMSRT        HOP RETURN                                X
+     0 00 0 247  0 03    034  1  17                EMS1   CLA     D.KB25
+     0 00 0 250  0 03    022  0  12                       PIO     022          SET ICR1 SELECT G-SYNC CONTROL            I
+     0 00 0 251  0 03    271  1  17                       CLA     V.STAT       SAVE CALLING ROUTINE STATUS CODE          B
+     0 00 0 252  0 03    034  0  13                       STO     EMSTAT
+     0 00 0 253  0 03    042  1  17                       CLA     INPTL        WAS ENTRY FROM PTL                        Q
+     0 00 0 254  0 03    256  0  04                       TNZ     *+2                                                    Y
+     0 00 0 255  0 03    260  0  10                       TRA     EMS2                                                   N
+     0 00 0 256  0 03    003  1  17                       CLA     D.KBSG                                                 Y
+     0 00 0 257  0 03    016  0  12                       PIO     016          SET D.O. 13                               I
+     0 00 0 260  0 03    371  0  17                EMS2   CLA     V.EMW        WAS ENTRY TO TELEMETER ERROR MESSAGE      Q
+     0 00 0 261  0 03    263  0  04                       TNZ     EMS3                                                   Y
+     0 00 0 262  0 03    265  0  10                       TRA     EMS4                                                   N
+     0 00 0 263  0 03    371  0  12                EMS3   PIO     371          TELEMETER ERROR MESSAGE                   I
+     0 00 0 264  0 03    266  0  10                       TRA     EMS5
+     0 00 0 265  0 03    301  1  12                EMS4   PIO     701          TELEMETER RAW EMR READING                 I
+     0 00 0 266  0 03    140  0  17    470000000   EMS5   CLA     =O47
+     0 00 0 267  0 03    075  0  00                       HOP*    ISS          ISSUE STATUS CODE                         P
+     0 00 0 270  0 03    371  0  17                       CLA     V.EMW        WAS ENTRY TO TELEMETER ERROR MESSAGE      Q
+     0 00 0 271  0 03    273  0  04                       TNZ     *+2
+     0 00 0 272  0 03    275  0  10                       TRA     EMS6
+     0 00 0 273  0 03    371  0  12                       PIO     371          TELEMETER ERROR MESSAGE                   I
+     0 00 0 274  0 03    077  0  00                       HOP*    OIGS         OUTPUT INTERRUPT GEN.                     P
+     0 00 0 275  0 03    301  1  12                EMS6   PIO     701          TELEMETER RAW EMR READING                 I
+     0 00 0 276  0 03    077  0  00                       HOP*    OIGS         OUTPUT INTERRUPT GEN.                     P
+     0 00 0 277  0 03    057  0  12                EMS7   PIO     057
+     0 00 0 300  0 03    032  1  06                       AND     D.KB23       IS SYNC ON                                Q
+     0 00 0 301  0 03    304  0  04                       TNZ     EMS8                                                   Y
+     0 00 0 302  0 03    134  0  00                       HOP*    PRUS         PTL REALTIME UPDATE SUBROUTINE            P
+     0 00 0 303  0 03    277  0  10                       TRA     EMS7
+     0 00 0 304  0 03    042  1  17                EMS8   CLA     INPTL        WAS ENTRY FROM PTL                        Q
+     0 00 0 305  0 03    307  0  04                       TNZ     *+2                                                    Y
+     0 00 0 306  0 03    311  0  10                       TRA     EMS9                                                   N
+     0 00 0 307  0 03    100  0  00                       HOP*    SRS          RESET SYNC                                P
+     0 00 0 310  0 03    317  0  10                       TRA     EMS10
+     0 00 0 311  0 03    043  0  12                EMS9   PIO     043          READ RCA-110A REGISTER                    I
+     0 00 0 312  0 03    133  0  06    777760000          AND     =O77776
+     0 00 0 313  0 03    033  0  13                       STO     EMSCMD
+     0 00 0 314  0 03    100  0  00                       HOP*    SRS          RESET SYNC                                P
+     0 00 0 315  0 03    033  0  17                       CLA     EMSCMD       DOES RCA COMMAND=00                       Q
+     0 00 0 316  0 03    325  0  04                       TNZ     EMS11                                                  N
+     0 00 0 317  0 03    034  0  17                EMS10  CLA     EMSTAT       DOES ROUTINE EXIT TO MODE SORT            Q
+     0 00 0 320  0 03    322  0  04                       TNZ     *+2                                                    N
+     0 00 0 321  0 03    035  0  00                       HOP     EMSRT        EXIT TO MODE SORT                         X
+     0 00 0 322  0 03    034  0  17                       CLA     EMSTAT       RESTORE PREV STATUS CODE                  P
+     0 00 0 323  0 03    075  0  00                       HOP*    ISS
+     0 00 0 324  0 03    035  0  00                       HOP     EMSRT        EXIT HOP RETURN                           X
+     0 00 0 325  0 03    141  0  11    576000000   EMS11  XOR     =O576        IS RCA COMMAND = 77                       Q
+     0 00 0 326  0 03    277  0  04                       TNZ     EMS7                                                   N
+     0 00 0 327  0 03    142  0  17    700000000          CLA     =O7          SET EMCON AND EMCON1 = 700000000          B
+     0 00 0 330  0 03    003  0  13                       STO     EMCON
+     0 00 0 331  0 03    002  1  13                       STO     EMCON1
+     0 00 0 332  0 03    071  0  00                       HOP*    FBR1         EXIT FORCED BEGIN                         X
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      ISSUE STATUS CODE SUBROUTINE                                  *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THE FUNCTION OF THIS SUBROUTINE IS TO TELEMETER THE
+                                                   *            STATUS CODE OF THE CURRENT ROUTINE, LOAD THE MODE
+                                                   *            REGISTER, AND INTERRUPT THE RCA-110A BY ISSUING DO 2.
+                                                   *            SYNC IS THEN RECEIVED FROM THE RCA-110A AND RESET BY
+                                                   *            THE SYNC RESET SUBROUTINE. A DELAY OF 6 MS. IS UTILIZED
+                                                   *            TO INSURE THE SYNC SIGNAL HAS BEEN RESET AND CONTROL IS
+                                                   *            RETURNED TO THE CALLING ROUTINE.
+                                                   * ENTRY      ISS      ENTER TO ISSUE STATUS CODE
+                                                          ORG     FBR1,D.DATA
+            036  0 03                              ISSRT  BSS     1
+W    0 01 0 136  0 03    377  1  13                ISS    STO     777
+     0 01 0 137  0 03    271  1  13                       STO     V.STAT
+     0 01 0 140  0 03    271  1  12                       PIO     671          TELEMETER PRESENT STATUS CODE             B
+     0 01 0 141  0 03    006  0  12                       PIO     006          PLACE THE PRESENT STATUS CODE IN THE MODE B
+                                                   *                           REGISTER                                  B
+     0 01 0 142  0 03    377  1  17                       CLA     777
+     0 01 0 143  0 03    036  0  13                       STO     ISSRT
+     0 01 0 144  0 03    077  0  00                       HOP*    OIGS         GENERATE OUTPUT INTERRUPT                 P
+     0 01 0 145  0 03    143  0  17    045000000          CLA     =O045        DELAY 6 MS                                B
+     0 01 0 146  0 03    013  1  02                       SUB     D.KB8
+     0 01 0 147  0 03    146  0  04                       TNZ     *-1
+     0 01 0 150  0 03    036  0  00                       HOP     ISSRT        RET TO CAL RT                             X
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      OUTPUT-INTERRUPT GENERATE SUBROUTINE                          *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION  THE PURPOSE OF THIS SUBRROUTINE IS TO PROVIDE AN INTERRUPT
+                                                   *           AFTER CERTAIN COMPUTER TELEMETRY OPERATIONS.
+                                                   *           AFTER ISSUING THE INTERRUPT (DO2) TO THE LAUNCH COMPUTER,
+                                                   *           THIS SUBROUTINE WAITS 1 MS. FOR THE SYNC SIGNAL FROM THE
+                                                   *           LAUNCH COMPUTER. WHEN SYNC IS DETECTED, THE SUBROUTINE
+                                                   *           ISSUES SYNC RESET AND RETURNS TO CALLING ROUTINE.
+                                                   * ENTRY     OIGS     ENTER TO GENERATE OUTPUT-INTERRUPT
+                                                          ORG     FBR1,D.DATA
+            037  0 03                              OIGSRT BSS     1
+W    0 01 0 151  0 03    377  1  13                OIGS   STO     777
+     0 01 0 152  0 03    377  1  17                       CLA     777
+     0 01 0 153  0 03    037  0  13                       STO     OIGSRT
+     0 01 0 154  0 03    134  0  00                       HOP*    PRUS         PTL REALTIME UPDATE SUBR.                 P
+     0 01 0 155  0 03    016  1  17                       CLA     D.KB11
+     0 01 0 156  0 03    016  0  12                       PIO     016          SET DISCRETE OUTPUT NUMBER 2              I
+     0 01 0 157  0 03    144  0  17    500000000          CLA     =O5
+     0 01 0 160  0 03    005  1  02    100000000   OIGS1  SUB     =O1          HAS 1 MS ELAPSED                          Q
+     0 01 0 161  0 03    160  0  04                       TNZ     OIGS1                                                  N
+     0 01 0 162  0 03    016  1  17                       CLA     D.KB11                                                 Y
+     0 01 0 163  0 03    012  0  12                       PIO     012          RESET DISCRETE OUTPUT NUMBER 2            I
+     0 01 0 164  0 03    057  0  12                OIGS2  PIO     057
+     0 01 0 165  0 03    032  1  06                       AND     D.KB23       IS SYNC DISCRETE ON                       Q
+     0 01 0 166  0 03    170  0  04                       TNZ     *+2                                                    Y
+     0 01 0 167  0 03    164  0  10                       TRA     OIGS2                                                  N
+     0 01 0 170  0 03    100  0  00                       HOP*    SRS          SYNC RESET SUBROUTINE                     P
+     0 01 0 171  0 03    037  0  00                       HOP     OIGSRT       RET TO CAL RT                             X
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      INSTRUCTION EXECUTE SUBROUTINE                                *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   LVDC PROGRAMMING STANDARDS REQUIRE THAT THE INSTRUCTIONS
+                                                   *            FOR A GIVEN ROUTINE AND THE ACCOMPANYING DATA WORDS BE
+                                                   *            STORED IN DIFFERENT SECTORS. IT IS, THEREFORE, IMPOSSIBLE
+                                                   *            TO EXECUTE PROGRAM-BUILT AND MODIFIED INSTRUCTIONS WITH-
+                                                   *            OUT FIRST CHANGING THE CURRENT DATA SECTOR TO THE CURRENT
+                                                   *            INSTRUCTION SECTOR. THE INSTRUCTION EXECUTE SUBROUTINE
+                                                   *            PROVIDES A QUICK AND EFFICIENT MEANS TO EXECUTE THESE
+                                                   *            PROGRAM-BUILT INSTRUCTIONS.
+                                                   * ENTRY      IEDA     CALL WITH FIRST INSTRUCTION IN SYLLABLE 1,
+                                                   *                     SECOND INSTRUCTION IN SYLLABLE 0, AND DATA TO
+                                                   *                     BE OPERATED ON IN PQ.
+                                                          ORGSS   0,3,0,000,0,3,0
+                                                   L.IEDA TABLE   6
+W                                                         ORG     L.IEDA
+                                                          ORG     *,*,*+(1),*,*,*,*
+                                                 +        ORG     *,*,*+1,*,*,*,*
+     0 03 1 040  0 03    377  1  13                IEDA   STO     777          SAVE RETURN HOP CONSTANT                  B
+     0 03 1 041  0 03    043  0  13                       STO     CW           STORE INST                                B
+     0 03 1 042  0 03    375  1  17                       CLA     775          OBTAIN DATA WORD TO BE OPERATED ON, IF ANYB
+     0 03 1 043  0 03    000  0  00                CW     HOP     0            EXECUTE PROGRAM BUILT INSTRUCTIONS        B
+     0 03 1 044  0 03    043  0  10                       TRA     IEDA1
+                                                          ORG     L.IEDA
+                                                          ORG     *,*,*,*+(3),*,*,*
+                                                 +        ORG     *,*,*,*+3,*,*,*
+     0 03 0 043  0 03    000  0  00                IEDA1  HOP     0
+     0 03 0 044          060  0  16                       CDS     L.IEDA
+     0 03 0 045  0 03    377  1  00                       HOP     777          HOP TO PEP                                X
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      CONTROL WORD EXECUTE SUBROUTINE                               *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THE CW EXECUTE SUBROUTINE IS CALLED BY THE LOAD ROUTINE
+                                                   *            AND BY THE VERIFY MODE OF THE VERIFY AND PREPARE TO LOAD
+                                                   *            ROUTINE.
+                                                   *
+                                                   *            WHEN USED BY THE LOAD ROUTINE, THIS SUBROUTINE LOADS THE
+                                                   *            DATA PREPARED BY THE VERIFY AND PREPARE TO LOAD ROUITNE,
+                                                   *            INTO THE MEMORY LOCATIONS SPECIFIED BY THE CONTROL WORDS
+                                                   *            WHAT WERE ALSO PREPARED IN THAT PROGRAM.
+                                                   *
+                                                   *            WHEN CALLED BY THE VERIFY PORTION OF THE VERIFY AND
+                                                   *            PREPARE TO LOAD ROUTINE, HTE CW EXECUTE SUBROUTINE USES
+                                                   *            THE PREVIOUSLY PREPARED CONTROL WORDS TO OBTAIN THE
+                                                   *            REQUIRED INFORMATION FROM MEMORY.
+                                                   * ENTRIES    CWS      CALLED FROM LOAD AND VERIFY AND PREPARE TO LOAD
+                                                          ORG     MDSRT,D.DATA
+            046  0 03                              CWSRT  BSS     1
+W           047  0 03                              CWPTR  BSS     1
+                                                          USE     DAT
+          1 050  0 03    100  0  16                CWCLA  CDS     LVBUF
+          0 050  0 03    234  0  17                       CLA     LVBUF
+                                                          USE     INST
+     0 02 0 053  0 03    377  1  13                CWS    STO     777
+     0 02 0 054  0 03    377  1  17                       CLA     777
+     0 02 0 055  0 03    046  0  13                       STO     CWSRT
+     0 02 0 056  0 03    014  0  17                       CLA     LDPEND
+     0 02 0 057  0 03    063  0  04                       TNZ     CWS1         LOADING                                   Q
+                                                   *      VERIFYING                                                      B
+     0 02 0 060  0 03    375  1  17                       CLA     775          PLACE CONTROL WRD TO BE EXECUTED IN       N
+                                                   *                           ACCUMULATOR                               N
+     0 02 0 061  0 03    110  0  00                       HOP*    IEDA
+     0 02 0 062  0 03    046  0  00                       HOP     CWSRT        EXIT HOP TO CR                            X
+                                                   *      LOADING                                                        B
+     0 02 0 063  0 03    050  0  17                CWS1   CLA     CWCLA                                                  Y
+     0 02 0 064  0 03    047  0  13                       STO     CWPTR
+     0 02 0 065  0 03    047  0  17                CWS2   CLA     CWPTR
+     0 02 0 066  0 03    027  1  07                       ADD     D.KB20
+     0 02 0 067  0 03    110  0  00                       HOP*    IEDA         PICKUP DATA TO LOAD                       P
+     0 02 0 070  0 03    375  1  13                       STO     775
+     0 02 0 071  0 03    047  0  17                       CLA     CWPTR
+     0 02 0 072  0 03    110  0  00                       HOP*    IEDA         PICKUP CTRL WORD TO LOAD                  P
+     0 02 0 073  0 03    110  0  00                       HOP*    IEDA         EXEC CTRL WORD AND LOAD                   P
+     0 02 0 074  0 03    047  0  17                       CLA     CWPTR        UPDATE CNTR ALLOWING PICKUP OF SEQ LOC IN B
+     0 02 0 075  0 03    026  1  07                       ADD     D.KB19       TEMP STOR                                 B
+     0 02 0 076  0 03    047  0  13                       STO     CWPTR
+     0 02 0 077  0 03    014  0  17                       CLA     LDPEND
+     0 02 0 100  0 03    026  1  02                       SUB     D.KB19
+     0 02 0 101  0 03    014  0  13                       STO     LDPEND
+     0 02 0 102  0 03    065  0  04                       TNZ     CWS2         ALL WORDS LOADED                          Q
+     0 02 0 103  0 03    046  0  00                       HOP     CWSRT        EXIT HOP TO CR                            X
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      ACCELEROMETER MONITOR SUBROUTINE                              *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   X
+                                                   * ENTRIES    AMS      X
+                                                          ORG     FBR1,D.DATA
+     0 01 0 172  0 03    377  1  13                AMS    STO     777
+                                                   *                           FIXME
+     0 01 0 173  0 03    377  1  00                       HOP     777
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      REAL TIME UPDATE SUBROUTINE                                   *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   IS IS THE PURPOSE OF THIS SUBROUTINE TO PROVIDE A MEANS
+                                                   *            TO ACCUMULATE ELAPSED TIME FOR THE LVDC PREPARE TO LAUNCH
+                                                   *            ROUTINE. IF ENTRY IS FROM ANY OTHER ROUTINE, NO TIME WILL
+                                                   *            BE ACCUMULATED.
+                                                   * ENTRY      PRUS     ENTER TO UPDATE REAL TIME
+                                                          ORG     FBR1,D.DATA
+     0 01 0 174  0 03    377  1  13                PRUS   STO     777          SAVE RETURN HOP CONSTANT
+                                                   *                           FIXME: IN PREPARE TO LAUNCH?
+                                                   *                           FIXME: UPDATE DELTA TIME ACCUMULATION
+     0 01 0 175  0 03    377  1  00                       HOP     777
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      REGISTER INITIALIZE SUBROUTINE                                *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THE PURPOSE OF THE REGISTER INITIALIZE SUBROUTINE IS TO
+                                                   *            GUARANTEE THAT THE SWITCH SELECTOR REGISTER, DISCRETE
+                                                   *            OUTPUT REGISTER, LADDER OUTPUT REGISTER, AND THE LADDER
+                                                   *            CONVERTER ARE AT THEIR PROPER CONDITION DURING EITHER
+                                                   *            POWER UP, OR A COMMANDED RECYCLE THROUGH FORCED BEGIN
+                                                   *            FROM AN RCA-110 INTERRUPT.
+                                                   * ENTRY      RINIT    ENTERED FROM POWER UP OR FORCED BEGIN
+                                                          ORG     FBR1,D.DATA
+     0 01 0 176  0 03    377  1  13                RINIT  STO     777          SAVE HOP RETURN                           B
+     0 01 0 177  0 03    145  0  17    777776774          CLA     =O777776774
+     0 01 0 200  0 03    026  0  12                       PIO     026          RESET ALL ICR BITS EXCEPT 1 AND 9         I
+     0 01 0 201  0 03    037  1  11                       XOR     D.KONS
+     0 01 0 202  0 03    022  0  12                       PIO     022          SET ICR BITS 1 AND 9                      I
+     0 01 0 203  0 03    037  1  17                       CLA     D.KONS
+     0 01 0 204  0 03    012  0  12                       PIO     012          RESET ALL DISCRETE OUTPUT REGISTER BITS   I
+     0 01 0 205  0 03    040  1  17                       CLA     D.KZRO
+     0 01 0 206  0 03    036  0  12                       PIO     036          RESET ALL SWITCH SELECTOR REGISTER BITS   I
+     0 01 0 207  0 03    172  0  12                       PIO     172          CLAMP LADDERS TO ZERO                     I
+                                                   *      CLA     =O460
+     0 01 0 210  0 03    146  0  17    006000000          CLA     =O006        FIXME: LESS DELAY FOR SIM
+     0 01 0 211  0 03    013  1  02                       SUB     D.KB8        DELAY 50 MSEC.                            B
+     0 01 0 212  0 03    211  0  04                       TNZ     *-1
+     0 01 0 213  0 03    172  0  12                       PIO     172          CLAMP LADDERS TO ZERO                     I
+     0 01 0 214  0 03    017  1  17                       CLA     D.KB12
+     0 01 0 215  0 03    022  0  12                       PIO     022          SET ICR BIT 14 TO SELECT CONVERTER A      I
+     0 01 0 216  0 03    023  0  12                       PIO     023          READ EMR TO CLEAR SCB BIT                 I
+     0 01 0 217  0 03    377  1  00                       HOP     777          RETURN                                    X
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      REAL TIME DELTA SUBROUTINE                                    *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THE PURPOSE OF THE REAL TIME DELTA SUBROUTINE IS TO
+                                                   *            PROVIDE A CURRENT VALUE OF REAL TIME AND A DELTA TIME
+                                                   *            VALUE. THE DELTA TIME IS THE DIFFERENCE BETWEEN THE
+                                                   *            CURRENT TIME AND THE LAST VALUE OF REAL TIME THAT WAS
+                                                   *            READ IN THIS SUBROUTINE.
+                                                   * ENTRIES    RTS      ENTERED TO READ REAL AND DELTA TIME
+                                                          ORG     INTP,D.DATA
+            051  0 03                              OLDT   BSS     1
+W    0 00 0 333  0 03    377  1  13                RTS    STO     777          SAVE RETURN HOP CONSTANT                  B
+     0 00 0 334  0 03    375  1  17                       CLA     775          OBT PREV DET VALUE OF REAL TIME FROM      B
+     0 00 0 335  0 03    051  0  13                       STO     OLDT         PQ VALUE                                  B
+     0 00 0 336  0 03    103  0  12                       PIO     103          OBTAIN CURRENT VALUE OF REAL TIME AND     I
+                                                   *                           FORM DELTA TM.                            I
+     0 00 0 337  0 03    375  1  13                       STO     775          PUT CURRENT REAL TIME IN PQ REGISTER      B
+     0 00 0 340  0 03    051  0  02                       SUB     OLDT         PUT DELTA TIME IN ACCUMULATOR             B
+     0 00 0 341  0 03    036  1  06                       AND     D.KSY0
+     0 00 0 342  0 03    377  1  00                       HOP     777          EXIT HOP TO CR                            X
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      LVDC SELF TEST SUBROUTINE                                     *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   X
+                                                   * ENTRIES    STS      X
+                                                          ORG     FBR1,D.DATA
+     0 01 0 220  0 03    377  1  13                STS    STO     777
+                                                   *                           FIXME
+     0 01 0 221  0 03    377  1  00                       HOP     777
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      LVDA TIMING AND COUNTER TEST SUBROUTINE                       *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   X
+                                                   * ENTRIES    DAS      X
+                                                          ORG     INTP,D.DATA
+     0 00 0 343  0 03    377  1  13                DAS    STO     777
+                                                   *                           FIXME
+     0 00 0 344  0 03    377  1  00                       HOP     777
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      OUTPUT SUBROUTINE                                             *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THE PURPOSE OF THIS SUBROUTINE IS TO TELEMETER WORD
+                                                   *            PLACED IN TEMPORARY STORAGE.
+                                                   * ENTRIES    OS       ENTER TO TELEMETER WORDS FROM NORMAL OPERATIONS.
+                                                   *            OSLV     ENTER TO TELEMETER WORDS FROM VERIFY & PREPARE
+                                                   *                     TO LOAD.
+                                                          ORG     VPLD,D.DATA
+            052  0 03                              OSRT   BSS     1
+W           053  0 03                              WORDCT BSS     1
+            054  0 03                              TAGCT  BSS     1
+            055  0 03                              OSCW   BSS     1
+                                                          USE     DAT
+          1 056  0 03    100  0  16                LVCLA  CDS     LVBUF
+          0 056  0 03    234  0  17                       CLA     LVBUF
+          1 057  0 03    140  0  16                GENCLA CDS     GENBUF
+          0 057  0 03    234  0  17                       CLA     GENBUF
+          1 060  0 03    040  1  07                SENDCW ADD     D.KZRO
+          0 060  0 03    000  0  12                       PIO     000
+                                                          USE     INST
+     0 01 1 266  0 03    377  1  13                OS     STO     777          ENTER FROM NORM OP                        B
+     0 01 1 267  0 03    053  0  13                       STO     WORDCT
+     0 01 1 270  0 03    057  0  17                       CLA     GENCLA       INITIALIZE CONSTANTS AND OBTAIN           B
+     0 01 1 271  0 03    055  0  13                       STO     OSCW         CONTROL WORD                              B
+     0 01 1 272  0 03    277  1  10                       TRA     OS1
+     0 01 1 273  0 03    377  1  13                OSLV   STO     777          ENTER FROM V+P TO L                       B
+     0 01 1 274  0 03    053  0  13                       STO     WORDCT
+     0 01 1 275  0 03    056  0  17                       CLA     LVCLA        INITIALIZE CONSTANTS AND OBTAIN           B
+     0 01 1 276  0 03    055  0  13                       STO     OSCW         CONTROL WORD                              B
+     0 01 1 277  0 03    377  1  17                OS1    CLA     777
+     0 01 1 300  0 03    052  0  13                       STO     OSRT
+     0 01 1 301  0 03    053  0  17                OS2    CLA     WORDCT       ARE THERE 32 OR MORE WORDS TO TELEMETER   Q
+                                                          SUB     =(32)B20
+     0 01 1 302  0 03    022  1  02    000004000 +        SUB     =32B20
+     0 01 1 303  0 03    307  1  14                       TMI     OS3                                                    N
+                                                          CLA     =(31)B18     SET TAG COUNTER TO MAXIMUM VALUE (31)     B
+     0 01 1 304  0 03    147  0  17    000017400 +        CLA     =31B18     SET TAG COUNTER TO MAXIMUM VALUE (31)     B
+     0 01 1 305  0 03    054  0  13                       STO     TAGCT
+     0 01 1 306  0 03    320  1  10                       TRA     OS5
+     0 01 1 307  0 03    053  0  17                OS3    CLA     WORDCT       PLACE THE NUMBER OF WORDS TO TELEMETER    B
+     0 01 1 310          040  1  16                       SHL     2
+     0 01 1 311  0 03    025  1  02                       SUB     D.KB18
+     0 01 1 312  0 03    054  0  13                       STO     TAGCT
+     0 01 1 313  0 03    053  0  17                OS4    CLA     WORDCT
+     0 01 1 314  0 03    027  1  02                       SUB     D.KB20
+     0 01 1 315  0 03    320  1  04                       TNZ     OS5          IS THIS THE LAST OR ONLY WORD TO TELEMETERQ
+     0 01 1 316  0 03    030  1  17                       CLA     D.KB21       SET A9=1 ON LAST WORD                     Y
+     0 01 1 317  0 03    054  0  13                       STO     TAGCT
+     0 01 1 320  0 03    055  0  17                OS5    CLA     OSCW
+     0 01 1 321  0 03    110  0  00                       HOP*    IEDA         EXECUTE CONTROL WORD                      P
+     0 01 1 322  0 03    375  1  13                       STO     775
+     0 01 1 323  0 03    060  0  17                       CLA     SENDCW
+     0 01 1 324  0 03    054  0  07                       ADD     TAGCT
+     0 01 1 325  0 03    110  0  00                       HOP*    IEDA
+     0 01 1 326  0 03    077  0  00                       HOP*    OIGS         OUTPUT INTERRUPT GENERATE                 P
+     0 01 1 327  0 03    053  0  17                       CLA     WORDCT       DECREMENT WORD COUNTER                    B
+     0 01 1 330  0 03    027  1  02                       SUB     D.KB20
+     0 01 1 331  0 03    053  0  13                       STO     WORDCT
+     0 01 1 332  0 03    055  0  17                       CLA     OSCW         UPDATE CONTROL WORD                       B
+     0 01 1 333  0 03    027  1  07                       ADD     D.KB20
+     0 01 1 334  0 03    055  0  13                       STO     OSCW
+     0 01 1 335  0 03    054  0  17                       CLA     TAGCT        IS TAG COUNTER EQUAL ZERO                 Q
+                                                          AND     =(31)B18
+     0 01 1 336  0 03    147  0  06    000017400 +        AND     =31B18
+     0 01 1 337  0 03    343  1  04                       TNZ     OS6                                                    N
+     0 01 1 340  0 03    053  0  17                       CLA     WORDCT       IS WORD COUNTER EQUAL ZERO                Q
+     0 01 1 341  0 03    301  1  04                       TNZ     OS2                                                    N
+     0 01 1 342  0 03    052  0  00                       HOP     OSRT         EXIT HOP TO CR                            X
+     0 01 1 343  0 03    025  1  02                OS6    SUB     D.KB18       DECREMENT TAG COUNTER                     B
+     0 01 1 344  0 03    054  0  13                       STO     TAGCT
+     0 01 1 345  0 03    313  1  10                       TRA     OS4
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      HOP 400 INITIALIZE SUBROUTINE                                 *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THE HOP 400 INITIALIZE SUBROUTINE INITIALIZES THE
+                                                   *            INTERRUPT HOP 400 ADDRESS IN EVERY MODULE PRESENT IN THE
+                                                   *            LVDC. WHEN AN INTERRUPT IS ENCOUNTERED DURING PRELAUNCH,
+                                                   *            THE HOP 400 ADDRESS IS UTILIZED IN REACHING THE PREFLIGHT
+                                                   *            INTERRUPT PROCESSOR SUBROUTINE.
+                                                   * ENTRY      KIN400   ENTER TO INITIALIZE HOP 400 LOCATIONS
+                                                          ORG     FBR1,D.DATA
+            061  0 03                              IN400S BSS     1
+W           062  0 03                              MODCNT BSS     1
+            063  0 03                              MODMSK BSS     1
+                                                          USE     DAT
+          1 064  0 03    000  0  16                ININST CDSS    0,0
+          0 064  0 03    000  1  13                       STO     400
+                                                          USE     INST
+     0 01 0 222  0 03    377  1  13                KIN400 STO     777
+     0 01 0 223  0 03    377  1  17                       CLA     777
+     0 01 0 224  0 03    061  0  13                       STO     IN400S       STORE HOP RETURN IN IN400S                B
+     0 01 0 225  0 03    001  1  17                       CLA     MESMAP       PICK UP MESMAP TO DETERMINE MODULES IN USEB
+     0 01 0 226  0 03    150  0  06    776000000          AND     =O776        MASK OUT ALL BUT VALID MODULE BITS (S-8)  B
+     0 01 0 227  0 03    063  0  13                       STO     MODMSK       STORE MODULE MAP FOR DOWNSTREAM REFERENCE B
+     0 01 0 230  0 03    040  1  17                       CLA     D.KZRO
+     0 01 0 231  0 03    062  0  13                       STO     MODCNT       INITIALIZE MODULE COUNTER
+     0 01 0 232  0 03    063  0  17                       CLA     MODMSK
+     0 01 0 233  0 03    240  0  14                IN400A TMI     IN400B       DOES MOD. MAP SHOW MOD. UNDER TEST PRESENTQ
+     0 01 0 234  0 03    245  0  04                       TNZ     IN400C       DO ANY OTHER MODULES REMAIN               Q
+                                                   *                           ALL MODULES INDICATED IN MAP NOW INIT.    B
+                                                   *                           FIXME: THE BELOW IS DUBIOUS
+     0 01 0 235  0 03    000  0  17                       CLA     000          PERFORM CLA 000 FROM ODD DATA MODULE      B
+                                                   *                           THIS IS TO FORCE MEMORY B LATCH ALIGNMENT B
+     0 01 0 236          060  0  16                       CDS     IN400S       CDS BACK FOR HOP EXIT                     B
+     0 01 0 237  0 03    061  0  00                       HOP     IN400S       HOP BACK                                  X
+     0 01 0 240  0 03    041  1  17                IN400B CLA     INHOPC                                                 Y
+     0 01 0 241  0 03    375  1  13                       STO     775          SET PQ = INTERRUPT PROCESSING HOP CONSTANTB
+     0 01 0 242  0 03    064  0  17                       CLA     ININST       PICK UP USE DAT OF COS 0,0 AND STO 400    B
+     0 01 0 243  0 03    062  0  11                       XOR     MODCNT       INSERT MODULE COUNTER                     B
+     0 01 0 244  0 03    110  0  00                       HOP*    IEDA         STO INT HPC IN MODULE X                   B
+     0 01 0 245  0 03    062  0  17                IN400C CLA     MODCNT
+     0 01 0 246  0 03    011  1  07                       ADD     D.KB6        INCREMENT MODULE COUNTER BY 1             M
+     0 01 0 247  0 03    062  0  13                       STO     MODCNT
+     0 01 0 250  0 03    063  0  17                       CLA     MODMSK
+     0 01 0 251          020  1  16                       SHL     1            ROTATE MODULE MAP LEFT 1 POSITION         M
+     0 01 0 252  0 03    063  0  13                       STO     MODMSK
+     0 01 0 253  0 03    233  0  10                       TRA     IN400A       GO TO TEST FOR NEXT MODULE PRESENT        B
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      TLC MONITOR SUBROUTINE                                        *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   THIS SUBROUTINE TESTS THE EMR FOR OCCURRENCE OF A TLC,
+                                                   *            EAM, OR EBM. IF ANY OF THESE BITS ARE DETECTED "ON", THE
+                                                   *            MODULE, SECTOR, AND ADDRESS BITS OF THE CALLING ROUTINE
+                                                   *            ARE INSERTED INTO AN ERROR MESSAGE. THIS ERROR MESSAGE IS
+                                                   *            THEN TELEMETERED.
+                                                   * ENTRIES    TLC      ENTERED EACH TIME CORE IS ACCESSED.
+                                                          ORG     INTP,D.DATA
+            065  0 03                              TLCRT  BSS     1
+W    0 00 0 345  0 03    377  1  13                TLC    STO     777
+     0 00 0 346  0 03    377  1  17                       CLA     777          SAVE HOP RETURN                           B
+     0 00 0 347  0 03    065  0  13                       STO     TLCRT
+     0 00 0 350  0 03    023  0  12                       PIO     023
+     0 00 0 351  0 03    142  0  06    700000000          AND     =O7          HAS TLC, EAM, OR EBM OCCURRED             Q
+     0 00 0 352  0 03    354  0  04                       TNZ     *+2                                                    Y
+     0 00 0 353  0 03    065  0  00                       HOP     TLCRT                                                  N
+     0 00 0 354  0 03    007  1  17                       CLA     D.KB4        ISSUE TLC LIMITING BIT TO RESET INTERRUPT
+     0 00 0 355  0 03    032  0  12                       PIO     032
+     0 00 0 356  0 03    043  0  17                       CLA     CW           PICK UP ROLLOVER CW                       B
+                                                          SHR     3            SAVE MOD., SECT., ADD BITS                B
+     0 00 0 357          002  1  16              +        SHR     2
+     0 00 0 360          001  1  16              +        SHR     1
+     0 00 0 361  0 03    151  0  06    000003770          AND     =O00000377
+     0 00 0 362  0 03    371  0  13                       STO     V.EMW
+     0 00 0 363  0 03    043  0  17                       CLA     CW
+                                                          SHR     9
+     0 00 0 364          002  1  16              +        SHR     2
+     0 00 0 365          002  1  16              +        SHR     2
+     0 00 0 366          002  1  16              +        SHR     2
+     0 00 0 367          002  1  16              +        SHR     2
+     0 00 0 370          001  1  16              +        SHR     1
+     0 00 0 371  0 03    152  0  06    000774000          AND     =O000774
+     0 00 0 372  0 03    371  0  11                       XOR     V.EMW
+     0 00 0 373  0 03    055  1  11                       XOR     LVEM7        INSERT BITS INTO ERROR MESSAGE            B
+     0 00 0 374  0 03    103  0  00                       HOP*    EMS          ERROR MONITOR                             P
+     0 00 0 375  0 03    065  0  00                       HOP     TLCRT        EXIT ON HOP RETURN                        X
+                                                   **********************************************************************
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   *      ABORT TEST SUBROUTINE                                         *J
+                                                   *                                                                    *
+                                                   *                                                                    *
+                                                   **********************************************************************
+                                                   * FUNCTION   FIXME
+                                                   * ENTRIES    ATS      FIXME
+                                                          ORG     FBR1,D.DATA
+     0 01 0 254  0 03    377  1  13                ATS    STO     777
+                                                   *                           FIXME
+     0 01 0 255  0 03    377  1  00                       HOP     777
+
+
+Assembly-message summary:
+	Implementation errors:  0
+	Errors:                 0
+	Warnings:               18
+	Mismatches:             (not checked)
+	Rollovers:              0
+	Infos:                  0
+	Other:                  0
+
+
+Symbol Table:
+
+
+ 0 01 0 172  AMS                      0 01 0 254  ATS                       0 05   371  AZCHC
+
+ 0 02 0 050  BADMOD
+
+ 0 00 0 202  CIU                      0 16   002  CIUHC                     0 17   154  CRAIHC                    0 00 0 203  CRI
+ 0 03 1 043  CW                       0 03   050  CWCLA                     0 03   047  CWPTR                     0 02 0 053  CWS
+ 0 02 0 063  CWS1                     0 02 0 065  CWS2                      0 03   046  CWSRT
+
+ 0 03   000  D.DATA                   0 17   004  D.KB1                     0 17   015  D.KB10                    0 17   016  D.KB11
+ 0 17   017  D.KB12                   0 17   020  D.KB13                    0 17   021  D.KB14                    0 17   022  D.KB15
+ 0 17   023  D.KB16                   0 17   024  D.KB17                    0 17   025  D.KB18                    0 17   026  D.KB19
+ 0 17   005  D.KB2                    0 17   027  D.KB20                    0 17   030  D.KB21                    0 17   031  D.KB22
+ 0 17   032  D.KB23                   0 17   033  D.KB24                    0 17   034  D.KB25                    0 17   006  D.KB3
+ 0 17   007  D.KB4                    0 17   010  D.KB5                     0 17   011  D.KB6                     0 17   012  D.KB7
+ 0 17   013  D.KB8                    0 17   014  D.KB9                     0 17   003  D.KBSG                    0 17   037  D.KONS
+ 0 17   036  D.KSY0                   0 17   035  D.KSY1                    0 17   040  D.KZRO                    0 17   000  D.RESD
+ 0 17   272  D.VIH                    0 00 0 343  DAS                       0 03   031  DISR
+
+ 0 03   003  EMCON                    0 17   002  EMCON1                    0 03   032  EMRM                      0 00 0 216  EMS
+ 0 00 0 247  EMS1                     0 00 0 317  EMS10                     0 00 0 325  EMS11                     0 00 0 260  EMS2
+ 0 00 0 263  EMS3                     0 00 0 265  EMS4                      0 00 0 266  EMS5                      0 00 0 275  EMS6
+ 0 00 0 277  EMS7                     0 00 0 304  EMS8                      0 00 0 311  EMS9                      0 03   033  EMSCMD
+ 0 00 0 211  EMSR                     0 03   035  EMSRT                     0 03   034  EMSTAT                    0 16   004  EOHC
+ 0 00 0 007  EXIT
+
+ 0 16   005  FBHC                     0 01 0 000  FBR1                      0 01 0 002  FBR2                      0 01 0 007  FBR3
+ 0 01 0 036  FBR4                     0 01 0 041  FBR5                      0 01 0 046  FBR6                      0 07   007  FIRMC
+
+ 0 07   006  GCFIHC                   0 03   002  GCOTST                    0 06   234  GENBUF                    0 03   057  GENCLA
+ 0 17   157  GRIHC                    0 00 0 170  GRR1
+
+ 0 05   372  IBOLHC                   0 03 1 040  IEDA                      0 03 0 043  IEDA1                     0 01 0 233  IN400A
+ 0 01 0 240  IN400B                   0 01 0 245  IN400C                    0 03   061  IN400S                    0 17   210  INACC
+ 0 17   060  INEM1                    0 17   061  INEM2                     0 17   212  INHC                      0 17   041  INHOPC
+ 0 03   064  ININST                   0 00 0 015  INIT                      0 17   214  INPQ                      0 17   042  INPTL
+ 0 17   216  INTH                     0 00 0 100  INTP                      0 01 0 136  ISS                       0 03   036  ISSRT
+
+ 0 01 0 222  KIN400
+
+ 0 03   040  L.IEDA                   0 01 0 053  LD                        0 01 0 065  LD1                       0 01 0 071  LD2
+ 0 01 0 075  LD3                      0 03   022  LDAREA                    0 01 0 111  LDBAD                     0 17   056  LDEM1
+ 0 17   057  LDEM2                    0 03   021  LDEND                     0 03   023  LDMASK                    0 01 0 061  LDOUT
+ 0 03   014  LDPEND                   0 03   020  LDPTR                     0 00 0 210  LLS                       0 16   006  LLSHC
+ 0 04   234  LVBUF                    0 03   056  LVCLA                     0 03   010  LVCW                      0 03   011  LVDATA
+ 0 17   047  LVEM1                    0 17   050  LVEM2                     0 17   051  LVEM3                     0 17   052  LVEM4
+ 0 17   053  LVEM5                    0 17   054  LVEM6                     0 17   055  LVEM7                     0 03   016  LVINST
+ 0 03   012  LVLAST                   0 03   000  LVOVFL                    0 03   017  LVSTO                     0 03   013  LVV
+ 0 03   007  LVWORD
+
+ 0 02 0 000  MDSRT                    0 02 0 002  MDSRT1                    0 02 0 027  MDSRT2                    0 02 0 044  MDSRT3
+ 0 00 0 027  MEMOK                    0 17   001  MESMAP                    0 00 0 200  MLC                       0 16   000  MLHC
+ 0 03   004  MODCMD                   0 03   062  MODCNT                    0 03   063  MODMSK                    0 03   005  MODPTR
+ 1 01   000  MODTAB                   0 17   043  MSEM0                     0 17   044  MSEM1                     0 17   045  MSEM2
+ 0 17   046  MSEM3
+
+ 0 00 0 043  NORMPF
+
+ 0 00   077  OBFLAG                   0 07   253  OCRLHC                    0 01 0 151  OIGS                      0 01 0 160  OIGS1
+ 0 01 0 164  OIGS2                    0 03   037  OIGSRT                    0 03   051  OLDT                      0 01 1 266  OS
+ 0 01 1 277  OS1                      0 01 1 301  OS2                       0 01 1 307  OS3                       0 01 1 313  OS4
+ 0 01 1 320  OS5                      0 01 1 343  OS6                       0 03   055  OSCW                      0 01 1 273  OSLV
+ 0 03   052  OSRT
+
+ 0 16   003  PDHC                     0 01 0 114  PFDA                      0 04   227  PFSCHC                    0 01 0 174  PRUS
+
+ 0 00 0 207  RCAI                     0 17   062  RIEM1                     0 01 0 176  RINIT                     0 01 1 213  RIS
+ 0 01 1 220  RIS1                     0 01 1 224  RIS2                      0 01 1 240  RIS3                      0 01 1 254  RIS4
+ 0 01 1 256  RIS5                     0 03   026  RISCMD                    0 03   025  RISDT                     0 03   024  RISRT
+ 0 03   027  RISTAT                   0 00 0 333  RTS
+
+ 0 00 0 205  S1PD                     0 00 0 204  S2PD                      0 00 0 206  S4BEO                     0 03   060  SENDCW
+ 0 00 0 144  SPARE                    0 01 0 121  SRS                       0 01 0 126  SRS1                      0 01 0 134  SRS2
+ 0 03   030  SRSRT                    0 00 0 201  SSC                       0 16   001  SSHC                      0 00 0 000  START
+ 0 03   015  STOCW                    0 01 0 220  STS
+
+ 0 03   054  TAGCT                    0 00 0 345  TLC                       0 00 0 153  TLCI                      0 03   065  TLCRT
+
+ 0 17   301  V.EMR                    0 03   371  V.EMW                     0 17   271  V.STAT                    0 01 1 175  VMSMCH
+ 0 01 1 177  VPCCE                    0 01 1 204  VPERR                     0 01 1 205  VPEXIT                    0 01 1 000  VPLD
+ 0 01 1 004  VPLD1                    0 01 1 025  VPLD2                     0 01 1 027  VPLD3                     0 01 1 147  VPLD4
+ 0 01 1 155  VPLD5                    0 01 1 164  VPLD6                     0 01 1 035  VPWD1                     0 01 1 054  VPWD2
+ 0 01 1 102  VPWD2A                   0 01 1 113  VPWD2B                    0 01 1 117  VPWD2C                    0 01 1 126  VPWD3
+ 0 01 1 137  VPWD4
+
+ 0 03   053  WORDCT                   0 03   006  WORDNO
+
+
+Literal Table:
+
+
+ 0 00   077  000000000                0 00   064  030077010                 0 00   063  357740000                 0 00   062  377740000
+ 0 00   061  777760000
+
+ 0 03   135  000000600                0 03   073  000001002                 0 03   137  000001200                 0 03   151  000003770
+ 0 03   147  000017400                0 03   114  000060000                 0 03   123  000077700                 0 03   152  000774000
+ 0 03   116  001700000                0 03   146  006000000                 0 03   131  007737374                 0 03   071  030000010
+ 0 03   101  030000020                0 03   110  030020230                 0 03   120  030025420                 0 03   100  030050410
+ 0 03   075  030057010                0 03   077  030064410                 0 03   102  030075010                 0 03   134  030076010
+ 0 03   066  030077010                0 03   106  030104400                 0 03   113  030105610                 0 03   103  030107000
+ 0 03   104  030110010                0 03   067  030111010                 0 03   127  030126010                 0 03   124  030135610
+ 0 03   130  030155400                0 03   105  030161400                 0 03   121  030162400                 0 03   143  045000000
+ 0 03   107  176000000                0 03   111  210000000                 0 03   125  230000000                 0 03   074  265252260
+ 0 03   126  310000000                0 03   070  357540000                 0 03   115  376000000                 0 03   117  377000000
+ 0 03   122  377700000                0 03   132  450000000                 0 03   140  470000000                 0 03   144  500000000
+ 0 03   076  512525510                0 03   112  560000000                 0 03   141  576000000                 0 03   142  700000000
+ 0 03   150  776000000                0 03   133  777760000                 0 03   072  777775366                 0 03   023  777776076
+ 0 03   145  777776774                0 03   136  777776776
+
+ 0 16   011  030000020                0 16   005  030001010                 0 16   000  030062000                 0 16   010  030107000
+ 0 16   013  120000000                0 16   012  357740000                 0 16   007  377740000
+
+ 0 17   040  000000000                0 17   034  000000002                 0 17   033  000000004                 0 17   032  000000010
+ 0 17   031  000000020                0 17   030  000000040                 0 17   027  000000100                 0 17   026  000000200
+ 0 17   025  000000400                0 17   024  000001000                 0 17   023  000002000                 0 17   022  000004000
+ 0 17   021  000010000                0 17   020  000020000                 0 17   036  000037776                 0 17   017  000040000
+ 0 17   016  000100000                0 17   015  000200000                 0 17   014  000400000                 0 17   013  001000000
+ 0 17   045  001100000                0 17   046  001200000                 0 17   012  002000000                 0 17   011  004000000
+ 0 17   010  010000000                0 17   007  020000000                 0 17   041  030040000                 0 17   006  040000000
+ 0 17   005  100000000                0 17   004  200000000                 0 17   047  211000000                 0 17   050  212000000
+ 0 17   051  213000000                0 17   052  214000000                 0 17   053  215000000                 0 17   054  216000000
+ 0 17   055  217000000                0 17   056  231000000                 0 17   057  231200000                 0 17   060  331000000
+ 0 17   061  332000000                0 17   003  400000000                 0 17   062  451000000                 0 17   035  777740000
+ 0 17   037  777777776
+
+ 1 01   040  000000000                1 01   021  030000210                 1 01   000  030024020                 1 01   023  030025410
+ 1 01   031  030046010
+
+
+Constant Table:
+
+
+ P.CMSR     4.063492
+
+
+Octal Listing:
+
+
+                                                         MODULE 0      SECTOR 00
+
+
+            0               1               2               3               4               5               6               7         
+
+ 000         03446           07736           00410           01520           05724           03254           01010           00720  
+ 010         04324           06114           03446           00362           00710           06236           03224           06236  
+ 020         07224           03476           02224           06624           07736           02710           37576           06336  
+ 030         07224           05724           03254           03510           04320           04324           06114           00362  
+ 040         04310           06400           04220           06034           00376           27166           27164           00624  
+ 050         06600           06700           02324           07036           07224           21666           04076           01426  
+ 060         07100      777760000       377740000       357740000       030077010                                                   
+ 070                                                                                                                    000000000   
+ 100         37666           21066           37576           21466           37676           21266           21676           03762  
+ 110         02074           37566           13724           37554           37566           00654           15310           37576  
+ 120         01054           17010           37576           20030           02074           20130           02074           20230  
+ 130         04074           20330           04074           20430           02074           20530           02074           20630  
+ 140         02074           20730           02074           21030           00736           03224           06076           01000  
+ 150         04076           17224           01100           00736           01224           01236           07224           00776  
+ 160         03224           06176           01000           21676           07224           04076           17224           01100  
+ 170         27176           01304           17410           04076           04076           03476           02624           15740  
+ 200         00000           00100           00200           15440           00300           00300           00400           00500  
+ 210         00600           37766           37126           37776           03526           24720           37766           37126  
+ 220         37776           03526           05324           13514           03126           02324           30166           00314  
+ 230         03226           37136           24710           03236           13614           24710           03236           02454  
+ 240         03116           13722           24410           24720           03236           24710           03500           03476  
+ 250         02224           27176           03426           04276           25610           26020           00376           01624  
+ 260         37136           26310           26520           37124           26620           30164           14036           07500  
+ 270         37136           27310           27520           37124           07700           30164           07700           05724  
+ 300         03254           30410           13400           27720           04276           30710           31120           10000  
+ 310         31720           04324           13314           03326           10000           03336           32510           03436  
+ 320         32210           03500           03436           07500           03500           14122           27710           14236  
+ 330         00326           00266           07100           37766           37576           05126           10324           37566  
+ 340         05104           03654           37740           37766           37740           37766           37776           06526  
+ 350         02324           14214           35410           06500           00776           03224           04336           00274  
+ 360         00174           15114           37126           04336           00274           00274           00274           00274  
+ 370         00174           15214           37122           05562           10300           06500                                  
+
+
+                                                         MODULE 0      SECTOR 01
+
+
+            0               1               2               3               4               5               6               7         
+
+ 000   03074 02324     01120 00720     22274 07036     01340 07224     22474 21666     17200 02324     01774 07214     07744 30166  
+ 010   43530 06700     01744 07336     16450 02224     00774 03762     02654 02624     03674 07436     03254 07500     10174 06600  
+ 020   03054 00276     01454 00326     02254 00236     02454 03610     05740 20324     01474 30176     04134 00314     01454 03110  
+ 030   22600 04120     01654 07636     23030 07500     01410 30164     37720 07700     01474 03720     13120 04130     01674 07636  
+ 040   23230 07500     04170 05724     03444 03254     02054 04510     01674 04120     23430 10000     10170 01576     10170 03224  
+ 050   10170 04076     10170 04266     02254 10100     05340 12536     04110 07500     25520 01436     01674 06510     23630 05676  
+ 060   03724 10300     02044 04276     02054 06410     01674 10100     03530 10100     10170 04276     10170 07110     02044 12000  
+ 070   02054 06120     01674 05036     03130 02026     02454 01416     02674 02126     22760 02036     01674 11000     03330 02222  
+ 100   02644 02314     37320 11110     02674 02036     04124 02656     02044 02026     77354 02104     03274 07510     22000 12000  
+ 110   02674 10100     23720 05776     05340 10300     01674 10100     03330 12636     02654 07500     20540 03476     24000 02624  
+ 120   77354 15740     24200 37766     03274 37776     05734 03026     22000 01776     31740 01624     04110 05724     27720 03254  
+ 130   01674 13410     24430 01776     00570 01224     00370 03000     02244 13400     02254 12620     05340 37766     01674 27166  
+ 140   24430 27164     04324 00624     02244 37776     77354 03626     03274 07700     05734 14336     22000 01344     03274 14610  
+ 150   24630 03600     03710 37766     33360 37776     13174 03726     41140 13400     03274 01676     05534 01624     03254 14436  
+ 160   02474 00544     35120 16010     10174 01676     05740 01224     03274 05724     03610 03254     25000 17010     02674 16420  
+ 170   41320 10000     03274 03700     03610 37766     03054 37740     41340 37766     12774 37740     41140 37766     01474 14536  
+ 200   10170 02624     10170 03762     04170 02224     11734 03776     20600 01224     43574 04076     16450 03624     10574 17224  
+ 210   42520 14636     20200 01344     20200 21110     77754 17224     77774 01776     05054 02224     56374 02324     05654 37740  
+ 220   10174 37766     05254 37740     20650 37766     77354 37776     13650 06126     06530 00176     50120 15014     25600 06326  
+ 230   26000 04076     05234 06226     05254 06336     26210 24030     45160 24510     26474 00036     17200 06034     44140 06100  
+ 240   10650 04176     26630 37566     05454 06436     20000 06222     05474 11000     53560 06236     05674 01156     56310 06226  
+ 250   52520 06336     53140 02074     05674 06326     17200 23320     05474 37766     05000 37740     05474           60354        
+ 260   14574           21400           10574           55320           20200           20200           77754           12654        
+ 270   13674           13254           57740           77754           12654           13474           13254           77774        
+ 300   12454           12674           04510           61760           31674           13054           64140           12674        
+ 310   10170           05310           13054           12674           05710           64120           06174           13054        
+ 320   13274           22000           77354           14074           13034           22000           17600           12674        
+ 330   05710           12654           13274           05734           13254           13074           31630           70720        
+ 340   12674           60320           12400           05310           13054           62740                                        
+ 350                                                                                                                                
+ 360                                                                                                                                
+ 370                                                                                                                                
+
+
+                                                         MODULE 0      SECTOR 02
+
+
+            0               1               2               3               4               5               6               7         
+
+ 000         04076           07500           10200           04376           10300           10400           01576           03762  
+ 010         21654           01562           07224           10500           21676           07224           00336           00262  
+ 020         02710           02324           00314           02510           02720           04576           10300           05724  
+ 030         03254           03310           00220           04324           00426           10000           00436           04430  
+ 040         30166           04476           10600           00020           10714           02052           00516           11000  
+ 050         04676           10300           00020           37766           37776           04626           01436           06310  
+ 060         37576           11000           04600           05036           04726           04736           02756           11000  
+ 070         37566           04736           11000           11000           04736           02656           04726           01436  
+ 100         02644           01426           06510           04600                                                                  
+ 110                                                                                                                                
+ 120                                                                                                                                
+ 130                                                                                                                                
+ 140                                                                                                                                
+ 150                                                                                                                                
+ 160                                                                                                                                
+ 170                                                                                                                                
+ 200                                                                                                                                
+ 210                                                                                                                                
+ 220                                                                                                                                
+ 230                                                                                                                                
+ 240                                                                                                                                
+ 250                                                                                                                                
+ 260                                                                                                                                
+ 270                                                                                                                                
+ 300                                                                                                                                
+ 310                                                                                                                                
+ 320                                                                                                                                
+ 330                                                                                                                                
+ 340                                                                                                                                
+ 350                                                                                                                                
+ 360                                                                                                                                
+ 370                                                                                                                                
+
+
+                                                         MODULE 0      SECTOR 03
+
+
+            0               1               2               3               4               5               6               7         
+
+ 000    000000000       000000000       000000000       000000000       000000000       044700000       000000000       000000000   
+ 010    000000000       000000000       000000000       000000000       000000000       000000000       000700026       200723426   
+ 020    000000000       000000000       702736026       777776076       000000000       000000000       000000000       000000000   
+ 030    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 040   77754           10654           77374           00000 00000     10640 06034           37740      000000000       000000000   
+ 050    200723436       000000000       000000000       000000000       000000000       000000000       200723436       300723436   
+ 060    101340024       000000000       000000000       000000000       000700066       000000000       030077010       030111010   
+ 070    357540000       030000010       777775366       000001002       265252260       030057010       512525510       030064410   
+ 100    030050410       030000020       030075010       030107000       030110010       030161400       030104400       176000000   
+ 110    030020230       210000000       560000000       030105610       000060000       376000000       001700000       377000000   
+ 120    030025420       030162400       377700000       000077700       030135610       230000000       310000000       030126010   
+ 130    030155400       007737374       450000000       777760000       030076010       000000600       777776776       000001200   
+ 140    470000000       576000000       700000000       045000000       500000000       777776774       006000000       000017400   
+ 150    776000000       000003770       000774000                                                                                   
+ 160                                                                                                                                
+ 170                                                                                                                                
+ 200                                                                                                                                
+ 210                                                                                                                                
+ 220                                                                                                                                
+ 230                                                                                                                                
+ 240                                                                                                                                
+ 250                                                                                                                                
+ 260                                                                                                                                
+ 270                                                                                                                                
+ 300                                                                                                                                
+ 310                                                                                                                                
+ 320                                                                                                                                
+ 330                                                                                                                                
+ 340                                                                                                                                
+ 350                                                                                                                                
+ 360                                                                                                                                
+ 370                    000000000                                                                                                   
+
+
+                                                         MODULE 0      SECTOR 04
+
+
+            0               1               2               3               4               5               6               7         
+
+ 000                                                                                                                                
+ 010                                                                                                                                
+ 020                                                                                                                                
+ 030                                                                                                                                
+ 040                                                                                                                                
+ 050                                                                                                                                
+ 060                                                                                                                                
+ 070                                                                                                                                
+ 100                                                                                                                                
+ 110                                                                                                                                
+ 120                                                                                                                                
+ 130                                                                                                                                
+ 140                                                                                                                                
+ 150                                                                                                                                
+ 160                                                                                                                                
+ 170                                                                                                                                
+ 200                                                                                                                                
+ 210                                                                                                                                
+ 220                                                                                                                    372402510   
+ 230                                                                    000000000       000000000       000000000       000000000   
+ 240    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 250    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 260    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 270    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 300    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 310    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 320    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 330    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 340    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 350    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 360    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 370    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+
+
+                                                         MODULE 0      SECTOR 05
+
+
+            0               1               2               3               4               5               6               7         
+
+ 000                                                                                                                                
+ 010                                                                                                                                
+ 020                                                                                                                                
+ 030                                                                                                                                
+ 040                                                                                                                                
+ 050                                                                                                                                
+ 060                                                                                                                                
+ 070                                                                                                                                
+ 100                                                                                                                                
+ 110                                                                                                                                
+ 120                                                                                                                                
+ 130                                                                                                                                
+ 140                                                                                                                                
+ 150                                                                                                                                
+ 160                                                                                                                                
+ 170                                                                                                                                
+ 200                                                                                                                                
+ 210                                                                                                                                
+ 220                                                                                                                                
+ 230                                                                                                                                
+ 240                                                                                                                                
+ 250                                                                                                                                
+ 260                                                                                                                                
+ 270                                                                                                                                
+ 300                                                                                                                                
+ 310                                                                                                                                
+ 320                                                                                                                                
+ 330                                                                                                                                
+ 340                                                                                                                                
+ 350                                                                                                                                
+ 360                                                                                                                                
+ 370                    332405110       362402510                                                                                   
+
+
+                                                         MODULE 0      SECTOR 06
+
+
+            0               1               2               3               4               5               6               7         
+
+ 000                                                                                                                                
+ 010                                                                                                                                
+ 020                                                                                                                                
+ 030                                                                                                                                
+ 040                                                                                                                                
+ 050                                                                                                                                
+ 060                                                                                                                                
+ 070                                                                                                                                
+ 100                                                                                                                                
+ 110                                                                                                                                
+ 120                                                                                                                                
+ 130                                                                                                                                
+ 140                                                                                                                                
+ 150                                                                                                                                
+ 160                                                                                                                                
+ 170                                                                                                                                
+ 200                                                                                                                                
+ 210                                                                                                                                
+ 220                                                                                                                                
+ 230                                                                    000000000       000000000       000000000       000000000   
+ 240    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 250    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 260    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 270    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 300    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 310    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 320    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 330    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 340    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 350    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 360    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+ 370    000000000       000000000       000000000       000000000       000000000       000000000       000000000       000000000   
+
+
+                                                         MODULE 0      SECTOR 07
+
+
+            0               1               2               3               4               5               6               7         
+
+ 000                                                                                                    372401110       000000000   
+ 010                                                                                                                                
+ 020                                                                                                                                
+ 030                                                                                                                                
+ 040                                                                                                                                
+ 050                                                                                                                                
+ 060                                                                                                                                
+ 070                                                                                                                                
+ 100                                                                                                                                
+ 110                                                                                                                                
+ 120                                                                                                                                
+ 130                                                                                                                                
+ 140                                                                                                                                
+ 150                                                                                                                                
+ 160                                                                                                                                
+ 170                                                                                                                                
+ 200                                                                                                                                
+ 210                                                                                                                                
+ 220                                                                                                                                
+ 230                                                                                                                                
+ 240                                                                                                                                
+ 250                                                    374536174                                                                   
+ 260                                                                                                                                
+ 270                                                                                                                                
+ 300                                                                                                                                
+ 310                                                                                                                                
+ 320                                                                                                                                
+ 330                                                                                                                                
+ 340                                                                                                                                
+ 350                                                                                                                                
+ 360                                                                                                                                
+ 370                                                                                                                                
+
+
+                                                         MODULE 0      SECTOR 16
+
+
+            0               1               2               3               4               5               6               7         
+
+ 000    030062000       030062000       030062000       030062000       030062000       030001010       030062000       377740000   
+ 010    030107000       030000020       357740000       120000000                                                                   
+ 020                                                                                                                                
+ 030                                                                                                                                
+ 040                                                                                                                                
+ 050                                                                                                                                
+ 060                                                                                                                                
+ 070                                                                                                                                
+ 100                                                                                                                                
+ 110                                                                                                                                
+ 120                                                                                                                                
+ 130                                                                                                                                
+ 140                                                                                                                                
+ 150                                                                                                                                
+ 160                                                                                                                                
+ 170                                                                                                                                
+ 200                                                                                                                                
+ 210                                                                                                                                
+ 220                                                                                                                                
+ 230                                                                                                                                
+ 240                                                                                                                                
+ 250                                                                                                                                
+ 260                                                                                                                                
+ 270                                                                                                                                
+ 300                                                                                                                                
+ 310                                                                                                                                
+ 320                                                                                                                                
+ 330                                                                                                                                
+ 340                                                                                                                                
+ 350                                                                                                                                
+ 360                                                                                                                                
+ 370                                                                                                                                
+
+
+                                                         MODULE 0      SECTOR 17
+
+
+            0               1               2               3               4               5               6               7         
+
+ 000    000000000       776000000       777775777       400000000       200000000       100000000       040000000       020000000   
+ 010    010000000       004000000       002000000       001000000       000400000       000200000       000100000       000040000   
+ 020    000020000       000010000       000004000       000002000       000001000       000000400       000000200       000000100   
+ 030    000000040       000000020       000000010       000000004       000000002       777740000       000037776       777777776   
+ 040    000000000       030040000       000000000       000000000       001000000       001100000       001200000       211000000   
+ 050    212000000       213000000       214000000       215000000       216000000       217000000       231000000       231200000   
+ 060    331000000       332000000       451000000                                                                                   
+ 070                                                                                                                                
+ 100                                                                                                                                
+ 110                                                                                                                                
+ 120                                                                                                                                
+ 130                                                                                                                                
+ 140                                                                                                                                
+ 150                                                                    030062000                                       372400110   
+ 160                                                                                                                                
+ 170                                                                                                                                
+ 200                                                                                                                                
+ 210    000000000                       000000000                       000000000                       000000000                   
+ 220                                                                                                                                
+ 230                                                                                                                                
+ 240                                                                                                                                
+ 250                                                                                                                                
+ 260                                                                                                                                
+ 270                    000000000       000000000                                                                                   
+ 300                    000000000                                                                                                   
+ 310                                                                                                                                
+ 320                                                                                                                                
+ 330                                                                                                                                
+ 340                                                                                                                                
+ 350                                                                                                                                
+ 360                                                                                                                                
+ 370                                                                                                                                
+
+
+                                                         MODULE 1      SECTOR 01
+
+
+            0               1               2               3               4               5               6               7         
+
+ 000    030024020       030024020       030024020       030024020       030024020       030024020       030024020       030024020   
+ 010    030024020       030024020       030024020       030024020       030024020       030024020       030024020       030024020   
+ 020    030024020       030000210       030024020       030025410       030024020       030024020       030024020       030024020   
+ 030    030024020       030046010       030024020       030024020       030024020       030024020       030024020       030024020   
+ 040    000000000       030024020       030024020       030024020       030024020       030024020       030024020       030024020   
+ 050    030024020       030024020       030024020       030024020       030025410       030024020       030024020       030024020   
+ 060    030024020       030024020       030024020       030024020       030024020       030024020       030024020       030024020   
+ 070    030024020       030024020       030024020       030024020       030024020       030024020       030024020       030024020   
+ 100                                                                                                                                
+ 110                                                                                                                                
+ 120                                                                                                                                
+ 130                                                                                                                                
+ 140                                                                                                                                
+ 150                                                                                                                                
+ 160                                                                                                                                
+ 170                                                                                                                                
+ 200                                                                                                                                
+ 210                                                                                                                                
+ 220                                                                                                                                
+ 230                                                                                                                                
+ 240                                                                                                                                
+ 250                                                                                                                                
+ 260                                                                                                                                
+ 270                                                                                                                                
+ 300                                                                                                                                
+ 310                                                                                                                                
+ 320                                                                                                                                
+ 330                                                                                                                                
+ 340                                                                                                                                
+ 350                                                                                                                                
+ 360                                                                                                                                
+ 370                                                                                                                                

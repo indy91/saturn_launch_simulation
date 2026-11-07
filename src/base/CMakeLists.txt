@@ -1,0 +1,29 @@
+add_subdirectory(GSE)
+add_subdirectory(S-IC)
+add_subdirectory(S-II)
+add_subdirectory(S-IVB)
+add_subdirectory(IU)
+target_sources(saturn_launch_simulation
+  PRIVATE
+    SaturnLaunchSimulation.h
+    SaturnLaunchSimulation.cpp
+	OrbMech.h
+	OrbMech.cpp
+	Saturn.h
+	Saturn.cpp
+	SaturnV.h
+	SaturnV.cpp
+	connector.h
+	connector.cpp
+	connector_messages.h
+	j2engine.h
+	j2engine.cpp
+	DelayTimer.h
+	DelayTimer.cpp
+	Pyro.h
+	Pyro.cpp
+	StageSystems.h
+	StageSystems.cpp
+	SwitchSelector.h
+	SwitchSelector.cpp
+)

@@ -1,0 +1,9 @@
+target_sources(saturn_launch_simulation
+  PRIVATE
+    SaturnLaunchSimulationGUI.h
+    SaturnLaunchSimulationGUI.cpp
+	LaunchSimGUIInterface.h
+	LaunchSimGUIInterface.cpp
+	SettingsDialog.h
+	SettingsDialog.cpp
+)

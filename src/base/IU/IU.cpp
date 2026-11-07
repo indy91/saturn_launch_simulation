@@ -1,0 +1,1496 @@
+/***************************************************************************
+
+Saturn Launch Simulation
+Copyright (C) 2026  Niklas Beug
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+***************************************************************************/
+
+#include "../Saturn.h"
+#include "../GSE/IUUmbilical.h"
+#include "../connector_messages.h"
+
+#include "iu.h"
+
+
+IU::IU(Saturn* s) : StageSystems(s), commandConnector(this),
+	ourSwitchSelector(020,this),
+	AuxiliaryPowerDistributor1(this),
+	AuxiliaryPowerDistributor2(this),
+	lvimu(this),
+	ControlSignalProcessor(this)
+{
+	State = 0;
+	LastCycled = 0.0;
+
+	Crewed = true;
+	SCControlPoweredFlight = false;
+
+	sivbCommandConnector.SetIU(this);
+	iuToIUESECommandConnector.SetIU(this);
+}
+
+IU::~IU()
+{
+	sivbCommandConnector.Disconnect();
+	iuToIUESECommandConnector.Disconnect();
+}
+
+int IU::SetMissionInfo(bool crewed, bool sccontpowered, const std::string& LVDCSoftwareName)
+{
+	Crewed = crewed;
+	SCControlPoweredFlight = sccontpowered;
+
+	return GetLVDA()->SetMissionInfo(LVDCSoftwareName);
+}
+
+void IU::PreStep(double simt, double simdt)
+{
+	AuxiliaryPowerDistributor1.Timestep(simdt);
+	AuxiliaryPowerDistributor2.Timestep(simdt);
+	lvimu.PreStep();
+
+	if (GetControlDistributor()->GetGSECommandVehicleLiftoffIndicationInhibit() == false)
+	{
+		GetEngineCutoffEnableTimer()->SetRunning(true);
+	}
+}
+
+void IU::PostStep(double simt, double simdt)
+{
+	lvimu.PostStep(simdt);
+	lvrg.Timestep(simdt);
+	GetLVDA()->Timestep(simt, simdt);
+	GetFCC()->Timestep(simdt);
+}
+
+void IU::ConnectToSIVB(Connector* CommandConnector)
+{
+	sivbCommandConnector.ConnectTo(CommandConnector);
+}
+
+bool IU::GetSIPropellantDepletionEngineCutoff()
+{
+	return sivbCommandConnector.GetSIPropellantDepletionEngineCutoff();
+}
+
+bool IU::GetSIInboardEngineOut()
+{
+	return sivbCommandConnector.GetSIInboardEngineOut();
+}
+
+bool IU::GetSIOutboardEngineOut()
+{
+	return sivbCommandConnector.GetSIOutboardEngineOut();
+}
+
+bool IU::SIBLowLevelSensorsDry()
+{
+	return false;
+}
+
+bool IU::GetSIIPropellantDepletionEngineCutoff()
+{
+	return false;
+}
+
+bool IU::GetSIIEnginesOut()
+{
+	return false;
+}
+
+void IU::DisconnectIU()
+{
+	sivbCommandConnector.Disconnect();
+}
+
+IUConnector::IUConnector()
+{
+	ourIU = 0;
+}
+
+IUConnector::~IUConnector()
+{
+
+}
+
+IUToSIVBCommandConnector::IUToSIVBCommandConnector()
+{
+	type = SIVB_IU_COMMAND;
+}
+
+IUToSIVBCommandConnector::~IUToSIVBCommandConnector()
+{
+
+}
+
+void IUToSIVBCommandConnector::SetAPSAttitudeEngine(int n, bool on)
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_SET_APS_ATTITUDE_ENGINE;
+	cm.val1.iValue = n;
+	cm.val2.bValue = on;
+
+	SendMessage(cm);
+}
+
+void IUToSIVBCommandConnector::SIEDSCutoff(bool cut)
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_SI_EDS_CUTOFF;
+	cm.val1.bValue = cut;
+
+	SendMessage(cm);
+}
+
+void IUToSIVBCommandConnector::SIIEDSCutoff(bool cut)
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_SII_EDS_CUTOFF;
+	cm.val1.bValue = cut;
+
+	SendMessage(cm);
+}
+
+void IUToSIVBCommandConnector::SIVBEDSCutoff(bool cut)
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_SIVB_EDS_CUTOFF;
+	cm.val1.bValue = cut;
+
+	SendMessage(cm);
+}
+
+void IUToSIVBCommandConnector::SetSIThrusterDir(int n, double yaw, double pitch)
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_SET_SI_THRUSTER_DIR;
+	cm.val1.iValue = n;
+	cm.val2.dValue = yaw;
+	cm.val3.dValue = pitch;
+
+	SendMessage(cm);
+}
+
+void IUToSIVBCommandConnector::SetSIIThrusterDir(int n, double yaw, double pitch)
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_SET_SII_THRUSTER_DIR;
+	cm.val1.iValue = n;
+	cm.val2.dValue = yaw;
+	cm.val3.dValue = pitch;
+
+	SendMessage(cm);
+}
+
+void IUToSIVBCommandConnector::SetSIVBThrusterDir(double yaw, double pitch)
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_SET_SIVB_THRUSTER_DIR;
+	cm.val1.dValue = yaw;
+	cm.val2.dValue = pitch;
+
+	SendMessage(cm);
+}
+
+void IUToSIVBCommandConnector::SISwitchSelector(int channel)
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_SI_SWITCH_SELECTOR;
+	cm.val1.iValue = channel;
+
+	SendMessage(cm);
+}
+
+void IUToSIVBCommandConnector::SIISwitchSelector(int channel)
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_SII_SWITCH_SELECTOR;
+	cm.val1.iValue = channel;
+
+	SendMessage(cm);
+}
+
+void IUToSIVBCommandConnector::SIVBSwitchSelector(int channel)
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_SIVB_SWITCH_SELECTOR;
+	cm.val1.iValue = channel;
+
+	SendMessage(cm);
+}
+
+int IUToSIVBCommandConnector::GetSwitchSelectorFeedback()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_SWITCH_SELECTOR_FEEDBACK;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.iValue;
+	}
+	return 0;
+}
+
+void IUToSIVBCommandConnector::GetSIThrustOK(bool* ok, int n)
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SI_THRUST_OK;
+	cm.val1.pValue = ok;
+	cm.val2.iValue = n;
+
+	(SendMessage(cm));
+}
+
+void IUToSIVBCommandConnector::GetSIIThrustOK(bool* ok)
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SII_THRUST_OK;
+	cm.val1.pValue = ok;
+
+	if (SendMessage(cm))
+	{
+		return;
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		ok[i] = false;
+	}
+}
+
+bool IUToSIVBCommandConnector::GetSIVBThrustOK()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SIVB_THRUST_OK;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+
+	return false;
+}
+
+bool IUToSIVBCommandConnector::GetSIPropellantDepletionEngineCutoff()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SI_PROPELLANT_DEPLETION_ENGINE_CUTOFF;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+
+	return false;
+}
+
+bool IUToSIVBCommandConnector::GetSIIPropellantDepletionEngineCutoff()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SII_PROPELLANT_DEPLETION_ENGINE_CUTOFF;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+
+	return false;
+}
+
+bool IUToSIVBCommandConnector::GetSIBLowLevelSensorsDry()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SIB_LOW_LEVEL_SENSORS_DRY;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+
+	return false;
+}
+
+bool IUToSIVBCommandConnector::GetSIInboardEngineOut()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SI_INBOARD_ENGINE_OUT;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+
+	return false;
+}
+
+bool IUToSIVBCommandConnector::GetSIOutboardEngineOut()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SI_OUTBOARD_ENGINE_OUT;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+
+	return false;
+}
+
+double IUToSIVBCommandConnector::GetSIIFuelTankPressurePSI()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SII_FUEL_TANK_PRESSURE;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.dValue;
+	}
+
+	return 0.0;
+}
+
+double IUToSIVBCommandConnector::GetSIVBLOXTankPressurePSI()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SIVB_LOX_TANK_PRESSURE;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.dValue;
+	}
+
+	return 0.0;
+}
+
+double IUToSIVBCommandConnector::GetSIVBFuelTankPressurePSI()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SIVB_FUEL_TANK_PRESSURE;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.dValue;
+	}
+
+	return 0.0;
+}
+
+bool IUToSIVBCommandConnector::SIXSIVBNotSeparated()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SIX_SIVB_NOT_SEPARATED;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+
+	return false;
+}
+
+bool IUToSIVBCommandConnector::SICSIINotSeparated()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SIC_SII_NOT_SEPARATED;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+
+	return false;
+}
+
+bool IUToSIVBCommandConnector::SIIInterstageNotSeparated()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_SII_INTERSTAGE_NOT_SEPARATED;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+
+	return false;
+}
+
+bool IUToSIVBCommandConnector::GetSIVBBurnerMalfunction()
+{
+	ConnectorMessage cm;
+
+	cm.destination = SIVB_IU_COMMAND;
+	cm.messageType = IUSIVB_GET_BURNER_MALFUNCTION;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+
+	return false;
+}
+
+IUToIUESECommandConnector::IUToIUESECommandConnector()
+{
+	type = IUESE_IU_COMMAND;
+}
+
+IUToIUESECommandConnector::~IUToIUESECommandConnector()
+{
+
+}
+
+bool IUToIUESECommandConnector::ReceiveMessage(Connector* from, ConnectorMessage& m)
+{
+	//
+	// Sanity check.
+	//
+
+	if (m.destination != type)
+	{
+		return false;
+	}
+
+	IUESEMessageType messageType;
+
+	messageType = (IUESEMessageType)m.messageType;
+
+	switch (messageType)
+	{
+	case IUESE_IU_SET_EDS_LIFTOFF_ENABLE_A:
+		if (ourIU)
+		{
+			ourIU->GetEDS()->SetEDSLiftoffEnableA();
+			return true;
+		}
+		break;
+	case IUESE_IU_SET_EDS_LIFTOFF_ENABLE_B:
+		if (ourIU)
+		{
+			ourIU->GetEDS()->SetEDSLiftoffEnableB();
+			return true;
+		}
+		break;
+	case IUESE_IU_EDS_LIFTOFF_ENABLE_RESET:
+		if (ourIU)
+		{
+			ourIU->GetEDS()->LiftoffEnableReset();
+			return true;
+		}
+		break;
+	case IUESE_IU_SET_FCC_POWER:
+		if (ourIU)
+		{
+			ourIU->GetControlDistributor()->SetFCCPower(m.val1.bValue);
+			return true;
+		}
+		break;
+	case IUESE_IU_SET_Q_BALL_POWER:
+		if (ourIU)
+		{
+			ourIU->GetControlDistributor()->SetQBallPower(m.val1.bValue);
+			return true;
+		}
+		break;
+	case IUESE_IU_SET_CONTROL_SIGNAL_PROCESSOR_POWER:
+		if (ourIU)
+		{
+			ourIU->GetControlDistributor()->SetControlSignalProcessorPowerOn(m.val1.bValue);
+			return true;
+		}
+		break;
+	case IUESE_IU_EDS_GROUP_NO_1_RESET:
+		if (ourIU)
+		{
+			ourIU->GetControlDistributor()->ResetBus1();
+			return true;
+		}
+		break;
+	case IUESE_IU_EDS_GROUP_NO_2_RESET:
+		if (ourIU)
+		{
+			ourIU->GetControlDistributor()->ResetBus2();
+			return true;
+		}
+		break;
+	case IUESE_IU_ALL_SI_ENGINES_RUNNING:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetEDS()->GetAllSIEnginesRunning();
+			return true;
+		}
+		break;
+	case IUESE_IU_IS_EDS_UNSAFE_A:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetEDS()->IsEDSUnsafeA();
+			return true;
+		}
+		break;
+	case IUESE_IU_IS_EDS_UNSAFE_B:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetEDS()->IsEDSUnsafeB();
+			return true;
+		}
+		break;
+	case IUESE_IU_GET_EDS_SC_CUTOFF:
+		if (ourIU)
+		{
+			if (m.val1.iValue == 1)
+			{
+				m.val1.bValue = ourIU->GetEDS()->GetLVEnginesCutoffFromSC1();
+			}
+			else if (m.val1.iValue == 2)
+			{
+				m.val1.bValue = ourIU->GetEDS()->GetLVEnginesCutoffFromSC2();
+			}
+			else
+			{
+				m.val1.bValue = ourIU->GetEDS()->GetLVEnginesCutoffFromSC3();
+			}
+			return true;
+		}
+		break;
+	case IUESE_IU_GET_EDS_AUTO_ABORT_BUS:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetEDS()->GetAutoAbort();
+			return true;
+		}
+		break;
+	case IUESE_IU_GET_EDS_EXCESSIVE_ROLL_RATE_INDICATION:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetEDS()->GetExcessiveRollRateIndication();
+			return true;
+		}
+		break;
+	case IUESE_IU_GET_EDS_EXCESSIVE_PITCH_YAW_RATE_INDICATION:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetEDS()->GetExcessivePitchYawRateIndication();
+			return true;
+		}
+		break;
+	case IUESE_IU_GET_GUIDANCE_REFERENCE_FAILURE_A:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetLVDA()->GetGuidanceReferenceFailureA();
+			return true;
+		}
+		break;
+	case IUESE_IU_GET_GUIDANCE_REFERENCE_FAILURE_B:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetLVDA()->GetGuidanceReferenceFailureB();
+			return true;
+		}
+		break;
+	case IUESE_IU_GET_FIRING_COMMIT_INHIBIT:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetLVDA()->GetFiringCommitInhibit();
+			return true;
+		}
+		break;
+	case IUESE_IU_GET_FIRING_COMMIT_ENABLE:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetLVDA()->GetFiringCommitEnable();
+			return true;
+		}
+		break;
+	case IUESE_IU_FCC_POWER_IS_ON:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetControlDistributor()->GetFCCPowerOn();
+			return true;
+		}
+		break;
+	case IUESE_IU_SWITCH_SELECTOR:
+		if (ourIU)
+		{
+			ourIU->GetControlDistributor()->SwitchSelector(m.val1.iValue);
+			return true;
+		}
+		break;
+	case IUESE_IU_EDS_SC_CUTOFF_ENABLE_A:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetEDS()->GetSCCutoffEnabledA();
+			return true;
+		}
+		break;
+	case IUESE_IU_EDS_SC_CUTOFF_ENABLE_B:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetEDS()->GetSCCutoffEnabledB();
+			return true;
+		}
+		break;
+	case IUESE_IU_EDS_GET_LIFTOFF_ENABLE_A:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetEDS()->GetLiftoffEnableA();
+			return true;
+		}
+		break;
+	case IUESE_IU_EDS_GET_LIFTOFF_ENABLE_B:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetEDS()->GetLiftoffEnableB();
+			return true;
+		}
+		break;
+	case IUESE_IU_EDS_GET_ABORT_TO_SC:
+		if (ourIU)
+		{
+			ourIU->GetEDS()->GetAutoAbortToSC((bool*)m.val1.pValue);
+			return true;
+		}
+		break;
+	case IUESE_IU_PLATFORM_AZIMUTH_ALIGNMENT:
+		ourIU->GetLVIMU()->DriveGimbals(m.val1.dValue, 0.0, 0.0);
+		break;
+	case IUESE_IU_RCA110_SYNC_RESET:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetLVDA()->GetSyncReset();
+			return true;
+		}
+		break;
+		/*
+	case IUESE_IU_RCA110_INTERRUPT:
+		if (ourIU)
+		{
+			m.val1.bValue = ourIU->GetLVDA()->GetRCA110Interrupt();
+			return true;
+		}
+		break;
+		*/
+	case IUESE_IU_SEND_LVDC_DATA:
+		ourIU->GetLVDA()->SendData(m.val1.iValue);
+		break;
+	case IUESE_IU_GET_MODE_REGISTER:
+		if (ourIU)
+		{
+			m.val1.iValue = ourIU->GetLVDA()->GetModeRegister();
+			return true;
+		}
+		break;
+	case IUESE_IU_GET_HARDWIRES:
+		if (ourIU)
+		{
+			ourIU->GetLVDA()->GetHardwires(m.val1.iValue, m.val2.iValue);
+			return true;
+		}
+		break;
+	case IUESE_IU_SET_LVDC_POWER:
+		if (ourIU)
+		{
+			if (m.val1.bValue)
+			{
+				ourIU->GetLVDA()->SwitchLVDCPowerOn();
+			}
+			else
+			{
+				ourIU->GetLVDA()->SwitchLVDCPowerOff();
+			}
+		}
+		break;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::IsUmbilicalConnected()
+{
+	return (connectedTo != NULL);
+}
+
+bool IUToIUESECommandConnector::GetCommandVehicleLiftoffIndicationInhibit()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_COMMAND_VEHICLE_LIFTOFF_INDICATION_INHIBIT;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetExcessiveRollRateAutoAbortInhibit(int n)
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_EXCESSIVE_ROLL_RATE_AUTO_ABORT_INHIBIT;
+	cm.val1.iValue = n;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetExcessivePitchYawRateAutoAbortInhibit(int n)
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_EXCESSIVE_PITCH_YAW_RATE_AUTO_ABORT_INHIBIT;
+	cm.val1.iValue = n;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetTwoEngineOutAutoAbortInhibit(int n)
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_TWO_ENGINE_OUT_AUTO_ABORT_INHIBIT;
+	cm.val1.iValue = n;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetGSEOverrateSimulate(int n)
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_GSE_OVERRATE_SIMULATE;
+	cm.val1.iValue = n;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetEDSPowerInhibit()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_EDS_POWER_INHIBIT;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::PadAbortRequest()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_PAD_ABORT_REQUEST;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetEngineThrustIndicationEnableInhibitA()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_ENGINE_THRUST_INDICATION_ENABLE_INHIBIT_A;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetEngineThrustIndicationEnableInhibitB()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_ENGINE_THRUST_INDICATION_ENABLE_INHIBIT_B;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::EDSLiftoffInhibitA()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_EDS_LIFTOFF_INHIBIT_A;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::EDSLiftoffInhibitB()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_EDS_LIFTOFF_INHIBIT_B;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetSIBurnModeSubstitute()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_SI_BURN_MODE_SUBSTITUTE;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetGuidanceReferenceRelease()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_GUIDANCE_REFERENCE_RELEASE;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetGuidanceReferenceReleaseAlert()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_GUIDANCE_REFERENCE_RELEASE_ALERT;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetQBallSimulateCmd()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_Q_BALL_SIMULATE_CMD;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetEDSAutoAbortSimulate(int n)
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_EDS_AUTO_ABORT_SIMULATE;
+	cm.val1.iValue = n;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetEDSLVCutoffSimulate(int n)
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_EDS_LV_CUTOFF_SIMULATE;
+	cm.val1.iValue = n;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetSICOutboardEnginesCantInhibit()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_SIC_OUTBOARD_ENGINES_CANT_INHIBIT;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetSICOutboardEnginesCantSimulate()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_SIC_OUTBOARD_ENGINES_CANT_SIMULATE;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetRCA110Interrupt()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_RCA110_INTERRUPT;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+bool IUToIUESECommandConnector::GetRCA110Sync()
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_GET_RCA110_SYNC;
+
+	if (SendMessage(cm))
+	{
+		return cm.val1.bValue;
+	}
+	return false;
+}
+
+void IUToIUESECommandConnector::LVDC_To_RCA110_Interrupt(bool set)
+{
+	ConnectorMessage cm;
+
+	cm.destination = IUESE_IU_COMMAND;
+	cm.messageType = IU_IUESE_LVDC_TO_RCA110_INTERRUPT;
+
+	cm.val1.bValue = set;
+
+	SendMessage(cm);
+}
+
+IUToCSMCommandConnector::IUToCSMCommandConnector(IU* iu)
+{
+	ourIU = iu;
+}
+
+IUToCSMCommandConnector::~IUToCSMCommandConnector()
+{
+
+}
+
+bool IUToCSMCommandConnector::GetSIISIVbDirectStagingSignal()
+{
+	return (ourIU->GetSat()->GetControl(IUCSM_GET_SII_SIVB_LV_STAGE) != 0);
+}
+
+bool IUToCSMCommandConnector::GetTLIInhibitSignal()
+{
+	return (ourIU->GetSat()->GetControl(IUCSM_GET_TLI_INHIBIT) != 0);
+}
+
+bool IUToCSMCommandConnector::GetCMCSIVBTakeover()
+{
+	return (ourIU->GetSat()->GetControl(IUCSM_GET_LV_TAKEOVER) != 0);
+}
+
+bool IUToCSMCommandConnector::GetSIVBInjSeqStart()
+{
+	return (ourIU->GetSat()->GetControl(IUCSM_GET_SIVB_INJ_SEQ_START) != 0);
+}
+
+bool IUToCSMCommandConnector::GetSIVBCutoff()
+{
+	return (ourIU->GetSat()->GetControl(IUCSM_GET_SIVB_CUTOFF) != 0);
+}
+
+IU1B::IU1B(Saturn* s) : IU(s), fcc(this), eds(this), ControlDistributor(this), EngineCutoffEnableTimer(40.0), lvdc(&lvda), lvda(this)
+{
+	lvrg.Init(this);			// LV Rate Gyro Package
+}
+
+IU1B::~IU1B()
+{
+
+}
+
+void IU1B::PreStep(double simt, double simdt)
+{
+	IU::PreStep(simt, simdt);
+
+	EngineCutoffEnableTimer.Timestep(simdt);
+	ControlDistributor.Timestep(simdt);
+	ControlSignalProcessor.Timestep();
+	eds.Timestep(simdt);
+}
+
+bool IU1B::SIBLowLevelSensorsDry()
+{
+	return sivbCommandConnector.GetSIBLowLevelSensorsDry();
+}
+
+void IU1B::SwitchSelectorOutput(int item)
+{
+	switch (item)
+	{
+	case 1: //Q-Ball Power Off
+		ControlDistributor.SetQBallPower(false);
+		break;
+	case 2: //Excess Rate (P,Y,R) Auto-Abort Inhibit and Switch Rate Gyro SC Indication "A"
+		ControlDistributor.SetExcessiveRatePYRAutoAbortInhibit(true);
+		break;
+	case 3: //S-IVB Engine EDS Cutoffs Disable
+		eds.SetSIVBEngineOutIndicationA(false);
+		eds.SetSIVBEngineOutIndicationB(false);
+		eds.SetSIVBEngineCutoffDisabled();
+		break;
+	case 4: //Flight Control Computer Switch Point No. 4
+		ControlDistributor.SetFCCSwitchPoint4On();
+		break;
+	case 5: //Flight Control Computer S-IVB Burn Mode Off "B"
+		ControlDistributor.SetSIVBBurnModeB(false);
+		break;
+	case 6: //Flight Control Computer S-IVB Burn Mode On "B"
+		ControlDistributor.SetSIVBBurnModeB(true);
+		break;
+	case 9: //S-IVB Engine Out Indication "A" Enable
+		eds.SetSIVBEngineOutIndicationA(true);
+		break;
+	case 12: //Flight Control Computer S-IVB Burn Mode Off "A"
+		ControlDistributor.SetSIVBBurnModeA(false);
+		break;
+	case 13: //Excess Rate (P,Y,R) Auto-Abort Inhibit Off
+		ControlDistributor.SetExcessiveRatePYRAutoAbortInhibitEnable(false);
+		break;
+	case 15: //Excess Rate (P,Y,R) Auto-Abort Inhibit Enable
+		ControlDistributor.SetExcessiveRatePYRAutoAbortInhibitEnable(true);
+		break;
+	case 16: //Auto-Abort Enable Relays Reset
+		eds.LiftoffEnableReset();
+		break;
+	case 18: //S/C Control of Saturn Enable
+		eds.EnableSCControl();
+		break;
+	case 20: //Excess Rate (Roll) Auto Abort Off
+		ControlDistributor.SetExcessiveRateRollAutoAbortInhibit(false);
+		break;
+	case 21: //Flight Control Computer Switch Point No. 2
+		ControlDistributor.SetFCCSwitchPoint2On();
+		break;
+	case 22: //Flight Control Computer Switch Point No. 3
+		ControlDistributor.SetFCCSwitchPoint3On();
+		break;
+	case 23: //Telemetry Calibrator Inflight Calibrate On
+		break;
+	case 24: //Telemetry Calibrator Inflight Calibrate Off
+		break;
+	case 29: //S-IVB Engine Out Indication "B" Enable
+		eds.SetSIVBEngineOutIndicationB(true);
+		break;
+	case 34: //Excess Rate (Roll) Auto-Abort Inhibit Enable
+		ControlDistributor.SetExcessiveRateRollAutoAbortInhibitEnable(true);
+		break;
+	case 35: //S-IB Two Engines Out Auto-Abort Inhibit
+		ControlDistributor.SetTwoEngOutAutoAbortInhibit();
+		break;
+	case 38: //Launch Vehicle Engines EDS Cutoff Enable
+		eds.SetLVEnginesCutoffEnable1();
+		break;
+	case 41: //Excess Rate(P, Y, R) Auto Abort Inhibit Off
+		ControlDistributor.SetExcessiveRatePYRAutoAbortInhibit(false);
+		break;
+	case 42: //Excess Rate (Roll) Auto-Abort Inhibit Off
+		ControlDistributor.SetExcessiveRateRollAutoAbortInhibitEnable(false);
+		break;
+	case 43: //Flight Control Computer Switch Point No. 1
+		ControlDistributor.SetFCCSwitchPoint1On();
+		break;
+	case 44: //Flight Control Computer Switch Point No. 5
+		ControlDistributor.SetFCCSwitchPoint5On();
+		break;
+	case 50: //Excess Rate (Roll) Auto-Abort Inhibit and Switch Rate Gyro SC Indication "B"
+		ControlDistributor.SetExcessiveRateRollAutoAbortInhibit(true);
+		break;
+	case 51: //S-IB Two Engines Out Auto-Abort Inhibit Enable
+		ControlDistributor.SetTwoEngOutAutoAbortInhibitEnable();
+		break;
+	case 53: //Flight Control Computer S-IVB Burn Mode On "A"
+		ControlDistributor.SetSIVBBurnModeA(true);
+		break;
+	case 110: //Nose Cone Jettison (Apollo 5, not a real switch selector event!)
+		//lvCommandConnector.JettisonNosecap();
+		break;
+	case 111: //SLA Panel Deployment (Apollo 5, not a real switch selector event!)
+		//lvCommandConnector.DeploySLAPanel();
+		break;
+	default:
+		break;
+	}
+}
+
+IUSV::IUSV(Saturn* s) : IU(s), fcc(this), eds(this), ControlDistributor(this), EngineCutoffEnableTimer(30.0), lvdc(&lvda), lvda(this)
+{
+	lvrg.Init(this);			// LV Rate Gyro Package
+	lvdc.Init();
+}
+
+IUSV::~IUSV()
+{
+
+}
+
+void IUSV::PreStep(double simt, double simdt)
+{
+	IU::PreStep(simt, simdt);
+
+	EngineCutoffEnableTimer.Timestep(simdt);
+	ControlDistributor.Timestep(simdt);
+	ControlSignalProcessor.Timestep();
+	eds.Timestep(simdt);
+}
+
+bool IUSV::GetSIIPropellantDepletionEngineCutoff()
+{
+	return sivbCommandConnector.GetSIIPropellantDepletionEngineCutoff();
+}
+
+bool IUSV::GetSIIEnginesOut()
+{
+	return eds.GetSIIEnginesOut();
+}
+
+bool IUSV::GetSIIInboardEngineOut()
+{
+	return eds.GetSIIInboardEngineOut();
+}
+
+bool IUSV::GetSIIOutboardEngineOut()
+{
+	return eds.GetSIIOutboardEngineOut();
+}
+
+void IUSV::SwitchSelectorOutput(int item)
+{
+	GetSat()->SendEventMessage("IU Switch Selector Channel " + std::to_string(item));
+
+	switch (item)
+	{
+	case 1: //Q-Ball Power Off
+		ControlDistributor.SetQBallPower(false);
+		break;
+	case 2: //Excess Rate (P,Y,R) Auto-Abort Inhibit and Switch Rate Gyro SC Indication "A"
+		ControlDistributor.SetExcessiveRatePYRAutoAbortInhibit(true);
+		break;
+	case 3: //Tape Recorder Playback Reverse Off
+		break;
+	case 4: //Flight Control Computer Switch Point No. 4
+		ControlDistributor.SetFCCSwitchPoint4On();
+		break;
+	case 5: //Flight Control Computer Switch Point No. 6
+		ControlDistributor.SetFCCSwitchPoint6On();
+		break;
+	case 6: //Spare
+		break;
+	case 7: //Flight Control Computer Switch Point No. 7
+		ControlDistributor.SetFCCSwitchPoint7On();
+		break;
+	case 8: //Spare
+		break;
+	case 9: //S-IVB Engine Out Indication "A" Enable
+		eds.SetSIVBEngineOutIndicationA(true);
+		break;
+	case 10: //Spare
+		break;
+	case 11: //S-IVB Engine Out Indication "B" Enable
+		eds.SetSIVBEngineOutIndicationB(true);
+		break;
+	case 12: //Flight Control Computer S-IVB Burn Mode Off "A"
+		ControlDistributor.SetSIVBBurnModeA(false);
+		break;
+	case 13: //Excess Rate (P,Y,R) Auto-Abort Inhibit Off
+		ControlDistributor.SetExcessiveRatePYRAutoAbortInhibitEnable(false);
+		break;
+	case 14: //IU Tape Recorder Playback Off
+		break;
+	case 15: //Excess Rate (P,Y,R) Auto-Abort Inhibit Enable
+		ControlDistributor.SetExcessiveRatePYRAutoAbortInhibitEnable(true);
+		break;
+	case 16: //Auto-Abort Enable Relays Reset
+		eds.LiftoffEnableReset();
+		break;
+	case 17: //Tape Recorder Record Off
+		break;
+	case 18: //S-IVB Engine Out Indication "A" Enable Reset
+		eds.SetSIVBEngineOutIndicationA(false);
+		break;
+	case 19: //Tape Recorder Playback Reverse On
+		break;
+	case 20: //Excess Rate (Roll) Auto-Abort Inhibit Enable Off
+		ControlDistributor.SetExcessiveRateRollAutoAbortInhibit(false);
+		break;
+	case 21: //Flight Control Computer Switch Pointer No. 2
+		ControlDistributor.SetFCCSwitchPoint2On();
+		break;
+	case 22: //Flight Control Computer Switch Pointer No. 3
+		ControlDistributor.SetFCCSwitchPoint3On();
+		break;
+	case 23: //Telemetry Calibrator Inflight Calibrate On
+		break;
+	case 24: //Telemetry Calibrator Inflight Calibrate Off
+		break;
+	case 26: //Flight Control Computer Switch Pointer No. 1
+		ControlDistributor.SetFCCSwitchPoint1On();
+		break;
+	case 27: //Flight Control Computer Switch Pointer No. 9
+		ControlDistributor.SetFCCSwitchPoint9On();
+		break;
+	case 28: //S-II Engine Out Indication "A" Enable; S-II Aft Interstage Separation Indication "A" Enable
+		eds.SetSIIEngineOutIndicationA();
+		break;
+	case 29: //S-IVB Engine EDS Cutoff No. 1 Disable
+		eds.SetSIVBEngineCutoffDisabled();
+		break;
+	case 30: //Spare
+		break;
+	case 31: //Flight Control Computer S-IVB Burn Mode On "A"
+		ControlDistributor.SetSIVBBurnModeA(true);
+		break;
+	case 32: //Spare
+		break;
+	case 33: //Switch Engine Control to S-II and S-IC Outboard Engine Cant Off "A"
+		ControlDistributor.SetSIIBurnModeEngineCantOff();
+		break;
+	case 34: //Excess Rate (Roll) Auto-Abort Inhibit Enable
+		ControlDistributor.SetExcessiveRateRollAutoAbortInhibitEnable(true);
+		break;
+	case 35: //S-IC Two Engines Out Auto-Abort Inhibit
+		ControlDistributor.SetTwoEngOutAutoAbortInhibit();
+		break;
+	case 36: //Switch S-IVB LOX to S-II Fuel Tank Pressure Indicator On
+		break;
+	case 37: //Switch S-IVB LOX to S-II Fuel Tank Pressure Indicator Reset
+		break;
+	case 38: //Launch Vehicle Engines EDS Cutoff Enable
+		eds.SetLVEnginesCutoffEnable1();
+		break;
+	case 39: //Tape Recorder Record On
+		break;
+	case 40: //Tape Recorder Playback On
+		break;
+	case 41: //Excess Rate (P,Y,R) Auto-Abort Inhibit Off
+		ControlDistributor.SetExcessiveRatePYRAutoAbortInhibit(false);
+		break;
+	case 42: //Excess Rate (Roll) Auto-Abort Inhibit Off
+		ControlDistributor.SetExcessiveRateRollAutoAbortInhibitEnable(false);
+		break;
+	case 43: // S-IVB Ullage Thrust Present Indication On
+		eds.SetUllageThrustIndicate(true);
+		break;
+	case 44: //Flight Control Computer Switch Point No. 5
+		ControlDistributor.SetFCCSwitchPoint5On();
+		break;
+	case 45: //Spare
+		break;
+	case 46: //S-IVB Ullage Thrust Present Indication Off
+		eds.SetUllageThrustIndicate(false);
+		break;
+	case 47: //Flight Control Computer Switch Point No. 8
+		ControlDistributor.SetFCCSwitchPoint8On();
+		break;
+	case 48: //S-II Engine Out Indication "B" Enable; S-II Aft Interstage Separation Indication "B" Enable
+		eds.SetSIIEngineOutIndicationB();
+		break;
+	case 49: //Spare
+		break;
+	case 50: //Excess Rate (Roll) Auto-Abort Inhibit and Switch Rate Gyro SC Indication "B"
+		ControlDistributor.SetExcessiveRateRollAutoAbortInhibit(true);
+		break;
+	case 51: //S-IC Two Engines Out Auto-Abort Inhibit Enable
+		ControlDistributor.SetTwoEngOutAutoAbortInhibitEnable();
+		break;
+	case 52: //LET Jettison "A"
+		break;
+	case 53: //S-IVB Engine Out Indication "B" Enable Reset
+		eds.SetSIVBEngineOutIndicationB(false);
+		break;
+	case 54: //C-Band Transponder No. 1 & No. 2 On
+		break;
+	case 55: //Inhibit C-Band Transponder No. 1
+		break;
+	case 56: //Inhibit C-Band Transponder No. 2
+		break;
+	case 60: //PCM Coax Switch Low Gain Antenna
+		break;
+	case 62: //PCM Coax Switch High Gain Antenna
+		break;
+	case 63: //CCS Coax Switch High Gain Antenna
+		break;
+	case 65: //CCS Coax Switch Low Gain Antenna
+		break;
+	case 68: //S/C Control of Saturn Enable
+		eds.EnableSCControl();
+		break;
+	case 69: //S/C Control of Saturn Disable
+		eds.DisableSCControl();
+		break;
+	case 74: //Flight Control Computer S-IVB Burn Mode On "B"
+		ControlDistributor.SetSIVBBurnModeB(true);
+		break;
+	case 75: //Flight Control Computer S-IVB Burn Mode Off "B"
+		ControlDistributor.SetSIVBBurnModeB(false);
+		break;
+	case 80: //S-IVB Restart Alert On
+		eds.SetSIVBRestartAlert(true);
+		break;
+	case 81: //S-IVB Restart Alert Off
+		eds.SetSIVBRestartAlert(false);
+		break;
+	case 82: //IU Command System Enable
+		eds.EnableCommandSystem();
+		break;
+	case 83: //S-IC Outboard Engines Cant On "A"
+		ControlDistributor.SetSICEngineCantAOn();
+		break;
+	case 84: //S-IC Outboard Engines Cant On "B"
+		ControlDistributor.SetSICEngineCantB(true);
+		break;
+	case 85: //S-IC Outboard Engines Cant On "C"
+		ControlDistributor.SetSICEngineCantC(true);
+		break;
+	case 86: //S-IC Outboard Engines Cant Off "B"
+		ControlDistributor.SetSICEngineCantB(false);
+		break;
+	case 87: //S-IC Outboard Engines Cant Off "C"
+		ControlDistributor.SetSICEngineCantC(false);
+		break;
+	case 98: //AZUSA X-Ponder Power Off
+		break;
+	case 106: //S-I RF Assembly Power Off
+		break;
+	case 107: //Water Coolant Valve Open
+		break;
+	case 108: //Water Coolant Valve Closed
+		break;
+	case 109: //Sensor Bias On
+		break;
+	case 110: //Cooling System Electronic Assembly Power Off
+		break;
+	case 112: //Measuring Rack Power Off
+		break;
+	default:
+		break;
+	}
+}

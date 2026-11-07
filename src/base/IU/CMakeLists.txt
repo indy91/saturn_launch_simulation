@@ -1,0 +1,24 @@
+add_subdirectory(yaLVDC)
+target_sources(saturn_launch_simulation
+  PRIVATE
+  LVDA.h
+  LVDA.cpp
+  FCC.h
+  FCC.cpp
+  IU.h
+  IU.cpp
+  eds.h
+  eds.cpp
+  IUControlDistributor.h
+  IUControlDistributor.cpp
+  IUAuxiliaryPowerDistributor.h
+  IUAuxiliaryPowerDistributor.cpp
+  IUControlSignalProcessor.h
+  IUControlSignalProcessor.cpp
+  LVRG.h
+  LVRG.cpp
+  LVIMU.h
+  LVIMU.cpp
+  LVDC.h
+  LVDC.cpp
+)

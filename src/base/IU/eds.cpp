@@ -1,0 +1,938 @@
+/***************************************************************************
+
+Saturn Launch Simulation
+Copyright (C) 2026  Niklas Beug
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+***************************************************************************/
+
+#include "iu.h"
+#include "eds.h"
+#include "../Saturn.h"
+#include "../connector_messages.h"
+
+EDS::EDS(IU* iu)
+{
+	this->iu = iu;
+
+	TwoEngineOutAutoAbortInhibitNo1 = false;
+	TwoEngineOutAutoAbortInhibitNo2 = false;
+	TwoEngineOutAutoAbortInhibitNo3 = false;
+	ExcessiveRateAutoAbortInhibitPY1 = false;
+	ExcessiveRateAutoAbortInhibitPY2 = false;
+	ExcessiveRateAutoAbortInhibitPY3 = false;
+	ExcessiveRateAutoAbortInhibitR1 = false;
+	ExcessiveRateAutoAbortInhibitR2 = false;
+	ExcessiveRateAutoAbortInhibitR3 = false;
+	LVEnginesCutoffEnable1 = false;
+	LVEnginesCutoffEnable2 = false;
+	SIVBEngineOutIndicationA = false;
+	SIVBEngineOutIndicationB = false;
+	EDSLiftoffEnableA = false;
+	EDSLiftoffEnableB = false;
+	EDSLiftoffInhibitA = false;
+	EDSLiftoffInhibitB = false;
+	LiftoffA = false;
+	LiftoffB = false;
+	LVEnginesCutoffFromSC1 = false;
+	LVEnginesCutoffFromSC2 = false;
+	LVEnginesCutoffFromSC3 = false;
+	SIVBEngineCutoffDisabled = false;
+	SIEDSCutoff = false;
+	SIVBEDSCutoff = false;
+	EDSAbortSignal1 = false;
+	EDSAbortSignal2 = false;
+	EDSAbortSignal3 = false;
+	SIVBRestartAlert = false;
+	LiftoffRelay = false;
+	SCControlEnableRelay = false;
+	LVAttRefFail1 = false;
+	LVAttRefFail2 = false;
+	LVEnginesCutoffCommand1 = false;
+	LVEnginesCutoffCommand2 = false;
+	LVEnginesCutoffCommand3 = false;
+	GSEEngineThrustIndicationEnableA = false;
+	GSEEngineThrustIndicationEnableB = false;
+	SIVBEngineThrustMonitorA = false;
+	SIVBEngineThrustMonitorB = false;
+	PadAbortRequest = false;
+	RangeSafetyDestructArmedAFromSIVB = false;
+	RangeSafetyDestructArmedBFromSIVB = false;
+	ExcessiveRollRateVotingA = false;
+	ExcessiveRollRateVotingB = false;
+	ExcessivePitchRateVotingA = false;
+	ExcessivePitchRateVotingB = false;
+	ExcessiveYawRateVotingA = false;
+	ExcessiveYawRateVotingB = false;
+	ExcessiveRollRateIndication = false;
+	ExcessivePitchYawRateIndicationA = false;
+	ExcessivePitchYawRateIndicationB = false;
+	SINotAllEnginesOKA = false;
+	SINotAllEnginesOKB = false;
+	AutoAbort1AToSC = false;
+	AutoAbort1BToSC = false;
+	AutoAbort2AToSC = false;
+	AutoAbort2BToSC = false;
+	AutoAbort3AToSC = false;
+	AutoAbort3BToSC = false;
+	AutoAbortBusGSEMonitor = false;
+	IUCommandSystemEnable = false;
+	SIVBCMCTakeover = false;
+	CMCSIVBCutoff = false;
+
+	AutoAbortBus = false;
+	IUEDSBusPowered = true;
+
+	AbortLightSignal = false;
+
+	LiftoffCircuitAFailure = false;
+	LiftoffCircuitBFailure = false;
+
+	LVRateAutoSwitchOff = false;
+	TwoEngineOutAutoSwitchOff = false;
+	EDSBus1Powered = false;
+	EDSBus2Powered = false;
+	EDSBus3Powered = false;
+	BECOA = false;
+	BECOB = false;
+}
+
+void EDS::Timestep(double simdt)
+{
+	bool tempsignal1, tempsignal2;
+
+	if (iu->GetAuxPowrDistr()->IsIUEDSBusPowered())
+		IUEDSBusPowered = true;
+	else
+		IUEDSBusPowered = false;
+
+	if (iu->GetIUToIUESECommandConnector()->GetCommandVehicleLiftoffIndicationInhibit())
+		LiftoffRelay = true;
+	else
+		LiftoffRelay = false;
+
+	if (iu->GetIUToIUESECommandConnector()->PadAbortRequest())
+		PadAbortRequest = true;
+	else
+		PadAbortRequest = false;
+
+	if (iu->GetIUToIUESECommandConnector()->GetEngineThrustIndicationEnableInhibitA())
+		GSEEngineThrustIndicationEnableA = true;
+	else
+		GSEEngineThrustIndicationEnableA = false;
+
+	if (iu->GetIUToIUESECommandConnector()->GetEngineThrustIndicationEnableInhibitB())
+		GSEEngineThrustIndicationEnableB = true;
+	else
+		GSEEngineThrustIndicationEnableB = false;
+
+	if (iu->GetIUToIUESECommandConnector()->EDSLiftoffInhibitA())
+		EDSLiftoffInhibitA = true;
+	else
+		EDSLiftoffInhibitA = false;
+
+	if (iu->GetIUToIUESECommandConnector()->EDSLiftoffInhibitB())
+		EDSLiftoffInhibitB = true;
+	else
+		EDSLiftoffInhibitB = false;
+
+	//S-IVB Thrust Monitor
+	if (IUEDSBusPowered && SIVBEngineOutIndicationA && iu->GetSIVBCommandConnector()->GetSIVBThrustOK() == false)
+		SIVBEngineThrustMonitorA = true;
+	else
+		SIVBEngineThrustMonitorA = false;
+
+	if (IUEDSBusPowered && SIVBEngineOutIndicationB && iu->GetSIVBCommandConnector()->GetSIVBThrustOK() == false)
+		SIVBEngineThrustMonitorB = true;
+	else
+		SIVBEngineThrustMonitorB = false;
+
+	//Input signals
+	SIVBCMCTakeover = iu->GetCommandConnector()->GetCMCSIVBTakeover();
+	CMCSIVBCutoff = (SIVBCMCTakeover && iu->GetCommandConnector()->GetSIVBCutoff());
+	LVRateAutoSwitchOff = false; // iu->GetCommandConnector()->LVRateAutoSwitchState() == TOGGLESWITCH_DOWN;
+	TwoEngineOutAutoSwitchOff = false; //  iu->GetCommandConnector()->TwoEngineOutAutoSwitchState() == TOGGLESWITCH_DOWN;
+	EDSBus1Powered = true; //  iu->GetCommandConnector()->IsEDSBusPowered(1);
+	EDSBus2Powered = true; //  iu->GetCommandConnector()->IsEDSBusPowered(2);
+	EDSBus3Powered = true; //  iu->GetCommandConnector()->IsEDSBusPowered(3);
+	BECOA = false; //  iu->GetCommandConnector()->GetBECOCommand(true);
+	BECOB = false; //  iu->GetCommandConnector()->GetBECOCommand(false);
+
+	//Auto Abort Relays
+	//Two-Engines Out
+	tempsignal1 = iu->GetControlDistributor()->GetTwoEnginesOutAutoAbortInhibit() || (IUEDSBusPowered && TwoEngineOutAutoSwitchOff);
+	if (iu->GetIUToIUESECommandConnector()->GetTwoEngineOutAutoAbortInhibit(1) || tempsignal1)
+		TwoEngineOutAutoAbortInhibitNo1 = true;
+	else
+		TwoEngineOutAutoAbortInhibitNo1 = false;
+
+	if (iu->GetIUToIUESECommandConnector()->GetTwoEngineOutAutoAbortInhibit(2) || tempsignal1)
+		TwoEngineOutAutoAbortInhibitNo2 = true;
+	else
+		TwoEngineOutAutoAbortInhibitNo2 = false;
+
+	if (iu->GetIUToIUESECommandConnector()->GetTwoEngineOutAutoAbortInhibit(3) || tempsignal1)
+		TwoEngineOutAutoAbortInhibitNo3 = true;
+	else
+		TwoEngineOutAutoAbortInhibitNo3 = false;
+
+	//Excessive Rate
+	tempsignal1 = iu->GetControlDistributor()->GetExcessiveRatePYRAutoAbortInhibit() || (IUEDSBusPowered && LVRateAutoSwitchOff);
+	if (iu->GetIUToIUESECommandConnector()->GetExcessivePitchYawRateAutoAbortInhibit(1) || tempsignal1)
+		ExcessiveRateAutoAbortInhibitPY1 = true;
+	else
+		ExcessiveRateAutoAbortInhibitPY1 = false;
+
+	if (iu->GetIUToIUESECommandConnector()->GetExcessivePitchYawRateAutoAbortInhibit(2) || tempsignal1)
+		ExcessiveRateAutoAbortInhibitPY2 = true;
+	else
+		ExcessiveRateAutoAbortInhibitPY2 = false;
+
+	if (iu->GetIUToIUESECommandConnector()->GetExcessivePitchYawRateAutoAbortInhibit(3) || tempsignal1)
+		ExcessiveRateAutoAbortInhibitPY3 = true;
+	else
+		ExcessiveRateAutoAbortInhibitPY3 = false;
+
+	tempsignal1 = iu->GetControlDistributor()->GetExcessiveRatePYRAutoAbortInhibit() || iu->GetControlDistributor()->GetExcessiveRateRollAutoAbortInhibit() || (IUEDSBusPowered && LVRateAutoSwitchOff);
+	if (iu->GetIUToIUESECommandConnector()->GetExcessiveRollRateAutoAbortInhibit(1) || tempsignal1)
+		ExcessiveRateAutoAbortInhibitR1 = true;
+	else
+		ExcessiveRateAutoAbortInhibitR1 = false;
+
+	if (iu->GetIUToIUESECommandConnector()->GetExcessiveRollRateAutoAbortInhibit(2) || tempsignal1)
+		ExcessiveRateAutoAbortInhibitR2 = true;
+	else
+		ExcessiveRateAutoAbortInhibitR2 = false;
+
+	if (iu->GetIUToIUESECommandConnector()->GetExcessiveRollRateAutoAbortInhibit(3) || tempsignal1)
+		ExcessiveRateAutoAbortInhibitR3 = true;
+	else
+		ExcessiveRateAutoAbortInhibitR3 = false;
+
+	//Backup LV Engines Cutoff Enable
+	if (LVEnginesCutoffCommand2 == false && iu->GetEngineCutoffEnableTimer()->ContactClosed())
+	{
+		LVEnginesCutoffEnable2 = true;
+	}
+
+	//LV Engines EDS Cutoff Inhibit
+	if ((IUEDSBusPowered && !BECOA) || iu->GetIUToIUESECommandConnector()->GetEDSLVCutoffSimulate(1))
+		LVEnginesCutoffFromSC1 = true;
+	else
+		LVEnginesCutoffFromSC1 = false;
+
+	if ((IUEDSBusPowered && (!BECOA || !BECOB)) || iu->GetIUToIUESECommandConnector()->GetEDSLVCutoffSimulate(2))
+		LVEnginesCutoffFromSC2 = true;
+	else
+		LVEnginesCutoffFromSC2 = false;
+
+	if ((IUEDSBusPowered && !BECOB) || iu->GetIUToIUESECommandConnector()->GetEDSLVCutoffSimulate(3))
+		LVEnginesCutoffFromSC3 = true;
+	else
+		LVEnginesCutoffFromSC3 = false;
+
+	//LV Engines Cutoff Command
+	if (IUEDSBusPowered && LVEnginesCutoffEnable1 && TripleVoting(!LVEnginesCutoffFromSC1, !LVEnginesCutoffFromSC2, !LVEnginesCutoffFromSC3))
+		LVEnginesCutoffCommand1 = true;
+	else
+		LVEnginesCutoffCommand1 = false;
+
+	if (IUEDSBusPowered && TripleVoting(!LVEnginesCutoffFromSC1, !LVEnginesCutoffFromSC2, !LVEnginesCutoffFromSC3))
+		LVEnginesCutoffCommand2 = true;
+	else
+		LVEnginesCutoffCommand2 = false;
+
+	if (IUEDSBusPowered && LVEnginesCutoffEnable2 && TripleVoting(!LVEnginesCutoffFromSC1, !LVEnginesCutoffFromSC2, !LVEnginesCutoffFromSC3))
+		LVEnginesCutoffCommand3 = true;
+	else
+		LVEnginesCutoffCommand3 = false;
+
+	//Overrate Auto Abort
+	//Roll
+	if (iu->GetIUToIUESECommandConnector()->GetGSEOverrateSimulate(3) || IUEDSBusPowered && iu->GetContSigProc()->GetRollNo3Overrate())
+		ExcessiveRollRateVotingA = true;
+	else
+		ExcessiveRollRateVotingA = false;
+
+	tempsignal1 = iu->GetIUToIUESECommandConnector()->GetGSEOverrateSimulate(2) || IUEDSBusPowered && iu->GetContSigProc()->GetRollNo2Overrate();
+
+	if (tempsignal1)
+		ExcessiveRollRateVotingB = true;
+	else
+		ExcessiveRollRateVotingB = false;
+
+	tempsignal2 = iu->GetIUToIUESECommandConnector()->GetGSEOverrateSimulate(1) || IUEDSBusPowered && iu->GetContSigProc()->GetRollNo1Overrate();
+
+	if ((tempsignal1 && ExcessiveRollRateVotingA) || (tempsignal2 && ExcessiveRollRateVotingB))
+		ExcessiveRollRateIndication = true;
+	else
+		ExcessiveRollRateIndication = false;
+
+	//Pitch
+	if (iu->GetIUToIUESECommandConnector()->GetGSEOverrateSimulate(6) || IUEDSBusPowered && iu->GetContSigProc()->GetPitchNo3Overrate())
+		ExcessivePitchRateVotingA = true;
+	else
+		ExcessivePitchRateVotingA = false;
+
+	tempsignal1 = iu->GetIUToIUESECommandConnector()->GetGSEOverrateSimulate(5) || IUEDSBusPowered && iu->GetContSigProc()->GetPitchNo2Overrate();
+
+	if (tempsignal1)
+		ExcessivePitchRateVotingB = true;
+	else
+		ExcessivePitchRateVotingB = false;
+
+	tempsignal2 = iu->GetIUToIUESECommandConnector()->GetGSEOverrateSimulate(4) || IUEDSBusPowered && iu->GetContSigProc()->GetPitchNo1Overrate();
+
+	if ((tempsignal1 && ExcessivePitchRateVotingA) || (tempsignal2 && ExcessivePitchRateVotingB))
+		ExcessivePitchYawRateIndicationA = true;
+	else
+		ExcessivePitchYawRateIndicationA = false;
+
+	//Yaw
+	if (iu->GetIUToIUESECommandConnector()->GetGSEOverrateSimulate(9) || IUEDSBusPowered && iu->GetContSigProc()->GetYawNo3Overrate())
+		ExcessiveYawRateVotingA = true;
+	else
+		ExcessiveYawRateVotingA = false;
+
+	tempsignal1 = iu->GetIUToIUESECommandConnector()->GetGSEOverrateSimulate(8) || IUEDSBusPowered && iu->GetContSigProc()->GetYawNo2Overrate();
+
+	if (tempsignal1)
+		ExcessiveYawRateVotingB = true;
+	else
+		ExcessiveYawRateVotingB = false;
+
+	tempsignal2 = iu->GetIUToIUESECommandConnector()->GetGSEOverrateSimulate(7) || IUEDSBusPowered && iu->GetContSigProc()->GetYawNo1Overrate();
+
+	if ((tempsignal1 && ExcessiveYawRateVotingA) || (tempsignal2 && ExcessiveYawRateVotingB))
+		ExcessivePitchYawRateIndicationB = true;
+	else
+		ExcessivePitchYawRateIndicationB = false;
+
+	//Both relays gets the same signal, so they enable each other for easier logic
+	if (ExcessivePitchYawRateIndicationA && !ExcessivePitchYawRateIndicationB) ExcessivePitchYawRateIndicationB = true;
+	if (ExcessivePitchYawRateIndicationB && !ExcessivePitchYawRateIndicationA) ExcessivePitchYawRateIndicationA = true;
+
+	//Auto Abort Logic
+	AutoAbortBus = false;
+	if (TripleVoting(ExcessiveRateAutoAbortInhibitPY1, ExcessiveRateAutoAbortInhibitPY2, ExcessiveRateAutoAbortInhibitPY3) == false && (ExcessivePitchYawRateIndicationA || ExcessivePitchYawRateIndicationB)) AutoAbortBus = true;
+	if (TripleVoting(ExcessiveRateAutoAbortInhibitR1, ExcessiveRateAutoAbortInhibitR2, ExcessiveRateAutoAbortInhibitR3) == false && ExcessiveRollRateIndication) AutoAbortBus = true;
+
+	//LV Guidance Light
+	LVAttRefFail1 = iu->GetLVDA()->GetGuidanceReferenceFailureA();
+	LVAttRefFail2 = iu->GetLVDA()->GetGuidanceReferenceFailureB();
+
+	if ((LVAttRefFail1 || LVAttRefFail2) && iu->GetSCControlPoweredFlight())
+	{
+		SCControlEnableRelay = true;
+	}
+
+	//if (LVAttRefFail1 && (EDSBus1Powered || EDSBus3Powered))
+	//	iu->GetCommandConnector()->SetLVGuidLight();
+	//else
+	//	iu->GetCommandConnector()->ClearLVGuidLight();
+
+	//LV Rates Light
+	tempsignal1 = (EDSBus1Powered && ((!ExcessiveRateAutoAbortInhibitPY2 && LVAttRefFail2) || ExcessiveRollRateIndication || ExcessivePitchYawRateIndicationA || ExcessivePitchYawRateIndicationB));
+	tempsignal2 = (EDSBus3Powered && ((!ExcessiveRateAutoAbortInhibitPY3 && LVAttRefFail2) || ExcessiveRollRateIndication || ExcessivePitchYawRateIndicationA || ExcessivePitchYawRateIndicationB));
+
+	//if (tempsignal1 || tempsignal2)
+	//	iu->GetCommandConnector()->SetLVRateLight();
+	//else
+	//	iu->GetCommandConnector()->ClearLVRateLight();
+
+	//Abort Light
+	if ((EDSBus1Powered || EDSBus3Powered) && (PadAbortRequest || RangeSafetyDestructArmedAFromSIVB || RangeSafetyDestructArmedBFromSIVB))
+		AbortLightSignal = true;
+	else
+		AbortLightSignal = false;
+
+	//Liftoff Circuits
+	if (EDSBus1Powered && !EDSLiftoffInhibitA && EDSLiftoffEnableA)
+	{
+		LiftoffA = true;
+	}
+	else
+	{
+		LiftoffA = false;
+	}
+
+	if (EDSBus3Powered && !EDSLiftoffInhibitB && EDSLiftoffEnableB)
+	{
+		LiftoffB = true;
+	}
+	else
+	{
+		LiftoffB = false;
+	}
+
+	//Guidance Reference Release
+	//if (iu->GetIUToIUESECommandConnector()->GetGuidanceReferenceRelease())
+	//	iu->GetCommandConnector()->SetAGCInputChannelBit(030, GuidanceReferenceRelease, true);
+	//else
+	//	iu->GetCommandConnector()->SetAGCInputChannelBit(030, GuidanceReferenceRelease, false);
+
+	//Liftoff
+	//if (LiftoffRelay)
+	//	iu->GetCommandConnector()->SetAGCInputChannelBit(030, LiftOff, false);
+	//else
+	//	iu->GetCommandConnector()->SetAGCInputChannelBit(030, LiftOff, true);
+}
+
+void EDS::AutoAbortCircuits()
+{
+	if (AutoAbortBus || iu->GetIUToIUESECommandConnector()->GetEDSAutoAbortSimulate(1))
+		AutoAbort1AToSC = true;
+	else
+		AutoAbort1AToSC = false;
+
+	if (AutoAbortBus || iu->GetIUToIUESECommandConnector()->GetEDSAutoAbortSimulate(2))
+		AutoAbort1BToSC = true;
+	else
+		AutoAbort1BToSC = false;
+
+	if (AutoAbortBus || iu->GetIUToIUESECommandConnector()->GetEDSAutoAbortSimulate(3))
+		AutoAbort2AToSC = true;
+	else
+		AutoAbort2AToSC = false;
+
+	if (AutoAbortBus || iu->GetIUToIUESECommandConnector()->GetEDSAutoAbortSimulate(4))
+		AutoAbort2BToSC = true;
+	else
+		AutoAbort2BToSC = false;
+
+	if (AutoAbortBus || iu->GetIUToIUESECommandConnector()->GetEDSAutoAbortSimulate(5))
+		AutoAbort3AToSC = true;
+	else
+		AutoAbort3AToSC = false;
+
+	if (AutoAbortBus || iu->GetIUToIUESECommandConnector()->GetEDSAutoAbortSimulate(6))
+		AutoAbort3BToSC = true;
+	else
+		AutoAbort3BToSC = false;
+
+	if (AutoAbortBus)
+		AutoAbortBusGSEMonitor = true;
+	else
+		AutoAbortBusGSEMonitor = false;
+
+	if (EDSBus1Powered && ((!AutoAbort2BToSC && !AutoAbort3AToSC) || (!AutoAbort3AToSC && !AutoAbort1BToSC) || (!AutoAbort2BToSC && AutoAbort3AToSC && !AutoAbort1BToSC)))
+	{
+		EDSAbortSignal1 = true;
+	}
+	else
+	{
+		EDSAbortSignal1 = false;
+	}
+	if (EDSBus2Powered && ((!AutoAbort3BToSC && !AutoAbort2AToSC) || (!AutoAbort2AToSC && !AutoAbort1BToSC) || (!AutoAbort3BToSC && AutoAbort2AToSC && !AutoAbort1BToSC)))
+	{
+		EDSAbortSignal2 = true;
+	}
+	else
+	{
+		EDSAbortSignal2 = false;
+	}
+	if (EDSBus3Powered && ((!AutoAbort3BToSC && !AutoAbort1AToSC) || (!AutoAbort1AToSC && !AutoAbort2BToSC) || (!AutoAbort3BToSC && AutoAbort1AToSC && !AutoAbort2BToSC)))
+	{
+		EDSAbortSignal3 = true;
+	}
+	else
+	{
+		EDSAbortSignal3 = false;
+	}
+
+	//sprintf(oapiDebugString(), "Relays: %d %d %d %d %d %d Signals: %d %d %d", AutoAbort1AToSC, AutoAbort1BToSC, AutoAbort2AToSC, AutoAbort2BToSC, AutoAbort3AToSC, AutoAbort3BToSC, EDSAbortSignal1, EDSAbortSignal2, EDSAbortSignal3);
+}
+
+bool EDS::GetEDSAbort(int n)
+{
+	if (n == 1)
+	{
+		return EDSAbortSignal1;
+	}
+	else if (n == 2)
+	{
+		return EDSAbortSignal2;
+	}
+	else if (n == 3)
+	{
+		return EDSAbortSignal3;
+	}
+
+	return false;
+}
+
+double EDS::GetLVTankPressure(int n)
+{
+	//S-IVB LOX No. 1 Tank Pressure
+	if (n == 1)
+	{
+		return iu->GetSIVBCommandConnector()->GetSIVBLOXTankPressurePSI();
+	}
+	//S-IVB LOX No. 2 Tank Pressure
+	else if (n == 2)
+	{
+		return iu->GetSIVBCommandConnector()->GetSIVBLOXTankPressurePSI();
+	}
+	//S-IVB Fuel No. 1 Tank Pressure
+	else if (n == 3)
+	{
+		return iu->GetSIVBCommandConnector()->GetSIVBFuelTankPressurePSI();
+	}
+	//S-IVB Fuel No. 2 Tank Pressure
+	else if (n == 4)
+	{
+		return iu->GetSIVBCommandConnector()->GetSIVBFuelTankPressurePSI();
+	}
+
+	return 0.0;
+}
+
+bool EDS::GetIULiftoffSignal()
+{
+	// TBD: require +6D11 power
+	return !LiftoffRelay;
+}
+
+bool EDS::GetSIVBTakeover()
+{
+	return SIVBCMCTakeover;
+}
+
+bool EDS::GetCMCSIVBCutoff()
+{
+	return CMCSIVBCutoff;
+}
+
+bool EDS::GetSCControl()
+{
+	return (SCControlEnableRelay && SIVBCMCTakeover);
+}
+
+bool EDS::GetAllSIEnginesRunning()
+{
+	return (!SINotAllEnginesOKA && !SINotAllEnginesOKB);
+}
+
+bool EDS::IsEDSUnsafeA()
+{
+	return false; //iu->GetCommandConnector()->IsEDSUnsafeA();
+}
+
+bool EDS::IsEDSUnsafeB()
+{
+	return false; // iu->GetCommandConnector()->IsEDSUnsafeB();
+}
+
+void EDS::GetAutoAbortToSC(bool* abort)
+{
+	abort[0] = AutoAbort1AToSC;
+	abort[1] = AutoAbort1BToSC;
+	abort[2] = AutoAbort2AToSC;
+	abort[3] = AutoAbort2BToSC;
+	abort[4] = AutoAbort3AToSC;
+	abort[5] = AutoAbort3BToSC;
+}
+
+void EDS::ResetBus1()
+{
+	LVEnginesCutoffEnable1 = false;
+	SIVBRestartAlert = false;
+	SIVBEngineOutIndicationB = false;
+	IUCommandSystemEnable = false;
+}
+void EDS::ResetBus2()
+{
+	LVEnginesCutoffEnable2 = false;
+	SIVBEngineOutIndicationA = false;
+	SCControlEnableRelay = false;
+}
+
+bool EDS::TripleVoting(bool vote1, bool vote2, bool vote3)
+{
+	//2 out of 3 need to be true
+	if (vote1 && vote2) return true;
+	if (vote1 && vote3) return true;
+	if (vote2 && vote3) return true;
+
+	return false;
+}
+
+bool EDS::GetIUCommandSystemEnable()
+{
+	return IUEDSBusPowered && (IUCommandSystemEnable || true || LVEnginesCutoffCommand2); // true instead of iu->GetCommandConnector()->GetIUUPTLMAccept()
+}
+
+EDS1B::EDS1B(IU* iu) : EDS(iu)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		SIThrustNotOK[i] = false;
+		ThrustOKSignal[i] = false;
+	}
+	IUCommandSystemEnable = true;
+}
+
+void EDS1B::Timestep(double simdt)
+{
+	EDS::Timestep(simdt);
+
+	SINotAllEnginesOKA = false;
+	SINotAllEnginesOKB = false;
+
+	//S-IB Thrust Monitor
+	if (IUEDSBusPowered && iu->GetSIVBCommandConnector()->SIXSIVBNotSeparated())
+	{
+		iu->GetSIVBCommandConnector()->GetSIThrustOK(ThrustOKSignal, 24);
+		for (int i = 0; i < 8; i++)
+		{
+			SIThrustNotOK[i] = TripleVoting(!ThrustOKSignal[3 * i], !ThrustOKSignal[3 * i + 1], !ThrustOKSignal[3 * i + 2]);
+
+			if (SIThrustNotOK[i])
+			{
+				SINotAllEnginesOKA = true;
+				SINotAllEnginesOKB = true;
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			SIThrustNotOK[i] = false;
+		}
+	}
+
+	//EDS Engine Cutoff
+	if (LVEnginesCutoffCommand1 || LVEnginesCutoffCommand3)
+	{
+		if (!SIEDSCutoff)
+		{
+			SIEDSCutoff = true;
+			iu->GetSIVBCommandConnector()->SIEDSCutoff(true);
+		}
+		if (!SIVBEngineCutoffDisabled && !SIVBEDSCutoff)
+		{
+			SIVBEDSCutoff = true;
+			iu->GetSIVBCommandConnector()->SIVBEDSCutoff(true);
+		}
+	}
+	else
+	{
+		if (SIEDSCutoff == true)
+		{
+			iu->GetSIVBCommandConnector()->SIEDSCutoff(false);
+			SIEDSCutoff = false;
+		}
+		if (SIVBEDSCutoff == true)
+		{
+			iu->GetSIVBCommandConnector()->SIVBEDSCutoff(false);
+			SIVBEDSCutoff = false;
+		}
+	}
+
+	//Two Engines Out Auto Abort
+	if (IUEDSBusPowered && !TripleVoting(TwoEngineOutAutoAbortInhibitNo1, TwoEngineOutAutoAbortInhibitNo2, TwoEngineOutAutoAbortInhibitNo3))
+	{
+		int enginesout = 0;
+
+		for (int i = 0; i < 8; i++)
+		{
+			if (SIThrustNotOK[i]) enginesout++;
+		}
+
+		if (enginesout >= 2) AutoAbortBus = true;
+	}
+
+	//Auto Abort Logic
+	AutoAbortCircuits();
+
+	// Update engine indicators and failure flags
+	bool LVIndicatorsPower = ((EDSBus1Powered || EDSBus3Powered) && (!GSEEngineThrustIndicationEnableA || !GSEEngineThrustIndicationEnableB));
+
+	//Engine Light 1
+	//if (LVIndicatorsPower && (SIThrustNotOK[0] || SIVBEngineThrustMonitorA || SIVBEngineThrustMonitorB))
+	//	iu->GetCommandConnector()->SetEngineIndicator(1);
+	//else
+	//	iu->GetCommandConnector()->ClearEngineIndicator(1);
+	//Engine Lights 2-8
+	//for (int i = 1; i < 8; i++)
+	//{
+	//	if (LVIndicatorsPower && SIThrustNotOK[i])
+	//		iu->GetCommandConnector()->SetEngineIndicator(i + 1);
+	//	else
+	//		iu->GetCommandConnector()->ClearEngineIndicator(i + 1);
+	//}
+}
+
+EDSSV::EDSSV(IU* iu) : EDS(iu)
+{
+	for (int i = 0; i < 5; i++)
+	{
+		SIThrustNotOK[i] = false;
+		SIIEngineThrustMonitorA[i] = false;
+		SIIEngineThrustMonitorB[i] = false;
+		ThrustOKSignal[i] = false;
+	}
+	SIISIVBNotSeparated = false;
+	SIISIVBSepSeqStart = false;
+	UllageThrustIndicate = false;
+	SIIEngineOutIndicationA = false;
+	SIIEngineOutIndicationB = false;
+	SIIEDSCutoff = false;
+	IUCommandSystemEnable = false;
+	SIVBIgnitionSequenceStart = false;
+	TLIInhibit = false;
+}
+
+bool EDSSV::GetSIISIVBSepSeqStart()
+{
+	return SIISIVBSepSeqStart;
+}
+
+bool EDSSV::GetSIVBIgnitionSequenceStart()
+{
+	return SIVBIgnitionSequenceStart;
+}
+
+bool EDSSV::GetTLIInhibit()
+{
+	return TLIInhibit;
+}
+
+bool EDSSV::GetSIIInboardEngineOut()
+{
+	return SIIEngineThrustMonitorA[4];
+}
+
+bool EDSSV::GetSIIOutboardEngineOut()
+{
+	return SIIEngineThrustMonitorA[0] || SIIEngineThrustMonitorA[1] || SIIEngineThrustMonitorA[2] || SIIEngineThrustMonitorA[3];
+}
+
+bool EDSSV::GetSIIEnginesOut()
+{
+	return SIIEngineThrustMonitorA[0] && SIIEngineThrustMonitorA[1] && SIIEngineThrustMonitorA[2] && SIIEngineThrustMonitorA[3] && SIIEngineThrustMonitorA[4];
+}
+
+double EDSSV::GetLVTankPressure(int n)
+{
+	if (n == 1)
+	{
+		if (SIISIVBNotSeparated)
+		{
+			//S-II LH2 Tank Ullage Pressure No. 1
+			return iu->GetSIVBCommandConnector()->GetSIIFuelTankPressurePSI();
+		}
+		else
+		{
+			//S-IVB LOX No. 1 Tank Pressure
+			return iu->GetSIVBCommandConnector()->GetSIVBLOXTankPressurePSI();
+		}
+	}
+	else if (n == 2)
+	{
+		if (SIISIVBNotSeparated)
+		{
+			//S-II LH2 Tank Ullage Pressure No. 2
+			return iu->GetSIVBCommandConnector()->GetSIIFuelTankPressurePSI();
+		}
+		else
+		{
+			//S-IVB LOX No. 2 Tank Pressure
+			return iu->GetSIVBCommandConnector()->GetSIVBLOXTankPressurePSI();
+		}
+	}
+	//S-IVB Fuel No. 1 Tank Pressure
+	else if (n == 3)
+	{
+		return iu->GetSIVBCommandConnector()->GetSIVBFuelTankPressurePSI();
+	}
+	//S-IVB Fuel No. 2 Tank Pressure
+	else if (n == 4)
+	{
+		return iu->GetSIVBCommandConnector()->GetSIVBFuelTankPressurePSI();
+	}
+
+	return 0.0;
+}
+
+void EDSSV::Timestep(double simdt)
+{
+	EDS::Timestep(simdt);
+
+	if (iu->GetSIVBCommandConnector()->SIXSIVBNotSeparated())
+		SIISIVBNotSeparated = true;
+	else
+		SIISIVBNotSeparated = false;
+
+	SINotAllEnginesOKA = false;
+	SINotAllEnginesOKB = false;
+
+	//S-IC Thrust Monitor
+	if (IUEDSBusPowered && iu->GetSIVBCommandConnector()->SICSIINotSeparated())
+	{
+		iu->GetSIVBCommandConnector()->GetSIThrustOK(ThrustOKSignal, 15);
+		for (int i = 0; i < 5; i++)
+		{
+			SIThrustNotOK[i] = TripleVoting(!ThrustOKSignal[3 * i], !ThrustOKSignal[3 * i + 1], !ThrustOKSignal[3 * i + 2]);
+
+			if (SIThrustNotOK[i])
+			{
+				SINotAllEnginesOKA = true;
+				SINotAllEnginesOKB = true;
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			SIThrustNotOK[i] = false;
+		}
+	}
+
+	//S-II Thrust Monitor
+	if (IUEDSBusPowered && (SIIEngineOutIndicationA || SIIEngineOutIndicationB) && iu->GetSIVBCommandConnector()->SIXSIVBNotSeparated())
+	{
+		iu->GetSIVBCommandConnector()->GetSIIThrustOK(ThrustOKSignal);
+		for (int i = 0; i < 5; i++)
+		{
+			SIIEngineThrustMonitorA[i] = SIIEngineOutIndicationA && !ThrustOKSignal[i];
+			SIIEngineThrustMonitorB[i] = SIIEngineOutIndicationB && !ThrustOKSignal[i];
+		}
+	}
+	else
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			SIIEngineThrustMonitorA[i] = false;
+			SIIEngineThrustMonitorB[i] = false;
+		}
+	}
+
+	//EDS Engine Cutoff
+	if (LVEnginesCutoffCommand1 || LVEnginesCutoffCommand3)
+	{
+		if (!SIEDSCutoff)
+		{
+			SIEDSCutoff = true;
+			iu->GetSIVBCommandConnector()->SIEDSCutoff(true);
+		}
+		if (!SIIEDSCutoff)
+		{
+			SIIEDSCutoff = true;
+			iu->GetSIVBCommandConnector()->SIIEDSCutoff(true);
+		}
+		if (!SIVBEngineCutoffDisabled && !SIVBEDSCutoff)
+		{
+			SIVBEDSCutoff = true;
+			iu->GetSIVBCommandConnector()->SIVBEDSCutoff(true);
+		}
+	}
+	else
+	{
+		if (SIEDSCutoff == true)
+		{
+			iu->GetSIVBCommandConnector()->SIEDSCutoff(false);
+			SIEDSCutoff = false;
+		}
+		if (SIIEDSCutoff == true)
+		{
+			iu->GetSIVBCommandConnector()->SIIEDSCutoff(false);
+			SIIEDSCutoff = false;
+		}
+		if (SIVBEDSCutoff == true)
+		{
+			iu->GetSIVBCommandConnector()->SIVBEDSCutoff(false);
+			SIVBEDSCutoff = false;
+		}
+	}
+
+	if (IUEDSBusPowered && !TripleVoting(TwoEngineOutAutoAbortInhibitNo1, TwoEngineOutAutoAbortInhibitNo2, TwoEngineOutAutoAbortInhibitNo3))
+	{
+		int enginesout = 0;
+
+		for (int i = 0; i < 5; i++)
+		{
+			if (SIThrustNotOK[i]) enginesout++;
+		}
+
+		if (enginesout >= 2) AutoAbortBus = true;
+	}
+
+	//Auto Abort Logic
+	AutoAbortCircuits();
+
+	//Update engine indicators and failure flags
+	bool LVIndicatorsPower = ((EDSBus1Powered || EDSBus3Powered) && (!GSEEngineThrustIndicationEnableA || !GSEEngineThrustIndicationEnableB));
+
+	//Engine Light 1
+	//if (LVIndicatorsPower && (SIThrustNotOK[0] || SIIEngineThrustMonitorA[0] || SIIEngineThrustMonitorB[0] || SIVBEngineThrustMonitorA || SIVBEngineThrustMonitorB))
+	//	iu->GetCommandConnector()->SetEngineIndicator(1);
+	//else
+	//	iu->GetCommandConnector()->ClearEngineIndicator(1);
+
+	//Engine Light 2-5
+	//for (int i = 1; i < 5; i++)
+	//{
+	//	if (LVIndicatorsPower && (SIThrustNotOK[i] || SIIEngineThrustMonitorA[i] || SIIEngineThrustMonitorB[i]))
+	//		iu->GetCommandConnector()->SetEngineIndicator(i + 1);
+	//	else
+	//		iu->GetCommandConnector()->ClearEngineIndicator(i + 1);
+	//}
+
+	//Second Plane Separation Monitor
+	//bool SIISecPlaneSepA = EDSBus1Powered && SIIEngineOutIndicationA && (SIVBRestartAlert || iu->GetSIVBCommandConnector()->SIIInterstageNotSeparated());
+	//bool SIISecPlaneSepB = EDSBus3Powered && SIIEngineOutIndicationB && (SIVBRestartAlert || iu->GetSIVBCommandConnector()->SIIInterstageNotSeparated());
+
+	//if (SIISecPlaneSepA || SIISecPlaneSepB)
+	//	iu->GetCommandConnector()->SetSIISep();
+	//else
+	//	iu->GetCommandConnector()->ClearSIISep();
+
+	// S-IVB Ignition Sequence Start
+	SIVBIgnitionSequenceStart = (SIVBCMCTakeover && iu->GetCommandConnector()->GetSIVBInjSeqStart());
+
+	// TLI Inhibit
+	TLIInhibit = (!SIVBIgnitionSequenceStart && iu->GetCommandConnector()->GetTLIInhibitSignal());
+
+	//S-II/S-IVB Separation Sequence Start
+	if (IUEDSBusPowered && iu->GetCommandConnector()->GetSIISIVbDirectStagingSignal())
+		SIISIVBSepSeqStart = true;
+	else
+		SIISIVBSepSeqStart = false;
+
+	//CMC Ullage Thrust Indication
+	//if (UllageThrustIndicate)
+	//	iu->GetCommandConnector()->SetAGCInputChannelBit(030, UllageThrust, true);
+	//else
+	//	iu->GetCommandConnector()->SetAGCInputChannelBit(030, UllageThrust, false);
+
+	//sprintf(oapiDebugString(), "%f", PlatformFailureTime);
+}
+
+void EDSSV::ResetBus1()
+{
+	EDS::ResetBus1();
+
+	SIIEngineOutIndicationA = false;
+}
+
+void EDSSV::ResetBus2()
+{
+	EDS::ResetBus2();
+
+	SIIEngineOutIndicationB = false;
+}

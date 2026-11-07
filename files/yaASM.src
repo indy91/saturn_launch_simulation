@@ -1,0 +1,737 @@
+0	00	0	000	137	01623	0	00	START  DIV     =1           DIVIDE TO INHIBIT INTERRUPTS              B
+0	00	0	001	138	03757	0	00	       CLA     OBFLAG       DID PROGRAM COME FROM ORBITAL FLIGHT      Q
+0	00	0	002	139	00204	0	00	       TNZ     *+2                                                    Y
+0	00	0	003	140	00650	0	00	       TRA     INIT                                                   N
+0	00	0	004	141	02752	0	00	       PIO     057          IS RCA-110 SYNC PRESENT?                  Q
+0	00	0	005	142	01526	0	00	       AND     D.KB23
+0	00	0	006	143	00404	0	00	       TNZ     *+2
+0	00	0	007	144	00350	0	00	EXIT   TRA     *            ABORT RUN                                 B
+0	00	0	010	145	02152	0	00	       PIO     043          READ RCA-100 COMMAND                      Y
+0	00	0	011	146	03046	0	00	       AND     =O77776
+0	00	0	012	147	01623	0	00	       DIV     =1           DIVIDE TO INHIBIT INTERRUPTS              B
+0	00	0	013	148	00171	0	00	       XOR     D.KBSG
+0	00	0	014	149	00344	0	00	       TNZ     EXIT
+0	00	0	015	150	03117	0	00	INIT   CLA     =O37774
+0	00	0	016	151	01512	0	00	       PIO     032          RESET ALL INITIAL INTERRUPTS              I
+0	00	0	017	152	03117	0	00	       CLA     =O37774
+0	00	0	020	153	03512	0	00	       PIO     072          INHIBIT ALL INITIAL INTERRUPTS            I
+0	00	0	021	154	01637	0	00	       CLA     D.KB25
+0	00	0	022	155	01112	0	00	       PIO     022          PLACE DOM UNDER G-SYNC CONTROL            I
+0	00	0	023	156	03312	0	00	       PIO     066          PLACE THE COD ERROR WORD IN THE DOM       I
+0	00	0	024	157	03757	0	00	       CLA     OBFLAG       IS THE PROGRAM FROM ORBITAL FLIGHT        Q
+0	00	0	025	158	01344	0	00	       TNZ     MEMOK                                                  Y
+0	00	0	026	159	17677	0	00	       CLA     775          FIXME: RESTORE MEMORY TEST LOCATIONS
+0	00	0	027	160	03157	0	00	MEMOK  CLA     =O35774
+0	00	0	030	161	03512	0	00	       PIO     072          INHIBIT ALL INTERRUPTS EXCEPT TLC         I
+0	00	0	031	162	02752	0	00	       PIO     057          IS RCA-110 SYNC PRESENT
+0	00	0	032	163	01526	0	00	       AND     D.KB23
+0	00	0	033	164	01644	0	00	       TNZ     *+2
+0	00	0	034	165	02150	0	00	       TRA     NORMPF
+0	00	0	035	166	02152	0	00	       PIO     043          IS SPECIAL LOADER COMMANDED               Q
+0	00	0	036	167	03046	0	00	       AND     =O77776
+0	00	0	037	168	00171	0	00	       XOR     D.KBSG
+0	00	0	040	169	02144	0	00	       TNZ     NORMPF                                                 N
+0	00	0	041	170	03200	0	00	       HOP     RINIT        REGISTER INITIALIZE                       P
+0	00	0	042	171	02110	0	00	       TRA     *            FIXME: SET UP SPECIAL LOADER
+0	00	0	043	172	03016	0	00	NORMPF CDS     D.DATA       INITIALIZE DATA SECTOR                    B
+0	00	0	044	173	00177	0	03	       CLA     D.KBSG
+0	00	0	045	174	13473	0	03	       STO     V.STAT
+0	00	0	046	175	13472	0	03	       PIO     671          TELEMETER S.C. 40, LOAD MODE REG. TO 40
+0	00	0	047	176	00312	0	03	       PIO     006
+0	00	0	050	177	03300	0	03	       HOP     RINIT        REGISTER INITIALIZE                       P
+0	00	0	051	178	03340	0	03	       HOP     KIN400       HOP 400 INITIALIZE
+0	00	0	052	179	01152	0	03	       PIO     023          DUMMY EMR READ                            I
+0	00	0	053	180	03417	0	03	       CLA     =O35754
+0	00	0	054	181	03512	0	03	       PIO     072          INHIBIT ALL INTERRUPTS EXCEPT TLC, RCA    I
+0	00	0	055	182	10733	0	03	       STO     INTH         INITIALIZE ALL NECESSARY PROGRAM CONSTANTS
+0	00	0	056	184	02037	0	03	       CLA     D.KZRO
+0	00	0	057	185	00613	0	03	       STO     LDPEND
+0	00	0	060	186	03440	0	03	       HOP     FBR1         HOP TO FBR                                X
+0	01	0	000	208	01152	0	03	FBR1   PIO     023          READ EMR AND SAVE                         B
+0	01	0	001	209	00350	0	03	       TRA     FBR3
+0	01	0	002	210	03417	0	03	FBR2   CLA     =O35754
+0	01	0	003	211	03512	0	03	       PIO     072          INHIBIT ALL INTERRUPTS EXCEPT TLC AND RCA I
+0	01	0	004	212	10733	0	03	       STO     INTH
+0	01	0	005	213	01152	0	03	       PIO     023
+0	01	0	006	214	03506	0	03	       AND     =O777775366  READ EMR, MASK EM8, EM3 AND 2 SPARE BITS  B
+0	01	0	007	215	14073	0	03	FBR3   STO     V.EMR        AND SAVE                                  B
+0	01	0	010	217	03340	0	03	       HOP     KIN400       HOP 400 INITIALIZE
+0	01	0	011	218	03557	0	03	       CLA     =O000001002
+0	01	0	012	219	01112	0	03	       PIO     022          SET ICR'S 1 + 9, RESET ALL ICR'S EXCEPT   B
+0	01	0	013	220	01771	0	03	       XOR     D.KONS       1 AND 9                                   B
+0	01	0	014	221	01312	0	03	       PIO     026
+0	01	0	015	222	03617	0	03	       CLA     =O265252260
+0	01	0	016	223	03640	0	03	       HOP     ISS          ISSUE STATUS CODE                         P
+0	01	0	017	224	03300	0	03	       HOP     RINIT        REGISTER INITIALIZE                       P
+0	01	0	020	225	00137	0	03	       CLA     EMCON1       INITIALIZE EMCON = EMCON1                 B
+0	01	0	021	226	00153	0	03	       STO     EMCON
+0	01	0	022	227	00117	0	03	       CLA     GCOTST       IS GCO TEST ON                            Q
+0	01	0	023	228	01704	0	03	       TNZ     FBR4                                                   Y
+0	01	0	024	229	10152	0	03	       PIO     203          STOP COD COUNTERS WITH A DUMMY GROUP 5 PIOI
+0	01	0	025	230	14077	0	03	       CLA     V.EMR
+0	01	0	026	231	00146	0	03	       AND     EMCON        IS SAVED EMR (MASKED) EQUAL ERROR         Q
+0	01	0	027	232	01444	0	03	       TNZ     *+2                                                    Y
+0	01	0	030	233	02050	0	03	       TRA     FBR5                                                   N
+0	01	0	031	234	03717	0	03	       CLA     =O512525510
+0	01	0	032	235	03640	0	03	       HOP     ISS          ISSUE STATUS CODE 51                      P
+0	01	0	033	236	14072	0	03	       PIO     701          TELEMETER EMR CONTENTS                    I
+0	01	0	034	237	03740	0	03	       HOP     OIGS         GENERATE OUTPUT INT.                      P
+0	01	0	035	238	01750	0	03	       TRA     *+2
+0	01	0	036	239	02054	0	03	FBR4   TMI     FBR5         IS GCO TEST LOCATION MINUS                Q
+0	01	0	037	240	03717	0	03	       CLA     =O512525510                                            N
+0	01	0	040	241	03640	0	03	       HOP     ISS          ISSUE STATUS CODE 51                      P
+0	01	0	041	242	02752	0	03	FBR5   PIO     057
+0	01	0	042	243	01526	0	03	       AND     D.KB23       IS SYNC ON                                Q
+0	01	0	043	244	02244	0	03	       TNZ     *+2                                                    Y
+0	01	0	044	245	02050	0	03	       TRA     FBR5
+0	01	0	045	246	04000	0	03	       HOP     SRS          SYNC RESET                                P
+0	01	0	046	247	00677	0	03	FBR6   CLA     D.KB10
+0	01	0	047	248	01512	0	03	       PIO     032          RESET RCA-110 INTERRUPT CONDITION         I
+0	01	0	050	251	02037	0	03	       CLA     D.KZRO
+0	01	0	051	252	02133	0	03	       STO     INPTL
+0	01	0	052	253	04040	0	03	       HOP     MDSRT        HOP TO MD SRT                             X
+0	03	1	005	266	01116	0	03	MODPTR CDS     MODTAB       POINTER TO MODE TABLE
+0	03	0	005	267	00000	0	03	       HOP     MODTAB
+0	02	0	000	269	02037	0	03	MDSRT  CLA     D.KZRO
+0	02	0	001	270	03640	0	03	       HOP     ISS          ISSUE STATUS CODE                         P
+0	02	0	002	271	04100	0	03	MDSRT1 HOP     AMS          ACCELEROMETER MONITOR                     P
+0	02	0	003	272	02177	0	03	       CLA     MSEM0
+0	02	0	004	273	04140	0	03	       HOP     EMS          ERROR MONITOR                             P
+0	02	0	005	274	04200	0	03	       HOP     STS          LVDC SELFTEST                             P
+0	02	0	006	275	00677	0	03	       CLA     D.KB10
+0	02	0	007	276	01771	0	03	       XOR     D.KONS
+0	02	0	010	277	10726	0	03	       AND     INTH
+0	02	0	011	278	00671	0	03	       XOR     D.KB10
+0	02	0	012	279	03512	0	03	       PIO     072          INHIBIT RCA-110 INTERRUPT                 I
+0	02	0	013	280	04240	0	03	       HOP     DAS          DATA ADAPTER TEST                         P
+0	02	0	014	281	10737	0	03	       CLA     INTH
+0	02	0	015	282	03512	0	03	       PIO     072          RESTORE NORMAL INHIBITS                   I
+0	02	0	016	283	00157	0	03	       CLA     EMCON
+0	02	0	017	284	00131	0	03	       XOR     EMCON1       IS EMR MASK SET TO SPECIAL VALUE          Q
+0	02	0	020	285	01344	0	03	       TNZ     MDSRT2                                                 Y
+0	02	0	021	286	01152	0	03	       PIO     023
+0	02	0	022	287	00146	0	03	       AND     EMCON        IS ANY UNACCEPTABLE EMR BIT ON            Q
+0	02	0	023	288	01244	0	03	       TNZ     *+2                                                    Y
+0	02	0	024	289	01350	0	03	       TRA     MDSRT2                                                 N
+0	02	0	025	290	02277	0	03	       CLA     MSEM2
+0	02	0	026	291	04140	0	03	       HOP     EMS          ISSUE ERROR MESSAGE                       P
+0	02	0	027	292	02752	0	03	MDSRT2 PIO     057
+0	02	0	030	293	01526	0	03	       AND     D.KB23       IS SYNC ON                                Q
+0	02	0	031	294	01544	0	03	       TNZ     *+2                                                    Y
+0	02	0	032	295	00110	0	03	       TRA     MDSRT1                                                 N
+0	02	0	033	296	02152	0	03	       PIO     043          READ RCA-110A INPUT WORD                  I
+0	02	0	034	297	00213	0	03	       STO     MODCMD
+0	02	0	035	298	04000	0	03	       HOP     SRS          SYNC RESET                                P
+0	02	0	036	299	00217	0	03	       CLA     MODCMD
+0	02	0	037	300	02214	0	03	       TMI     MDSRT3       IS INPUT WORD MODE INFORMATION            Q
+0	02	0	040	301	14073	0	03	       STO     V.EMR
+0	02	0	041	302	02237	0	03	       CLA     MSEM1
+0	02	0	042	303	04300	0	03	       HOP     EMSR         ERROR MONITOR                             P
+0	02	0	043	304	00010	0	03	       TRA     MDSRT
+0	02	0	044	305	04346	0	03	MDSRT3 AND     =O176
+0	02	0	045	306	01025	0	03	       MPH     D.KB13       SHIFT RIGHT 13 PLACES
+0	02	0	046	307	00247	0	03	       ADD     MODPTR
+0	02	0	047	308	04400	0	03	       HOP     IEDA         INSTRUCTION EXECUTE                       P
+0	02	0	050	310	02337	0	03	BADMOD CLA     MSEM3
+0	02	0	051	311	04140	0	03	       HOP     EMS
+0	02	0	052	312	00010	0	03	       TRA     MDSRT
+0	03	1	016	402	00016	0	03	LVINST CDSS    0,0
+0	03	0	016	403	00013	0	03	       STO     000
+0	03	1	017	404	04016	0	03	LVSTO  CDS     LVBUF
+0	03	0	017	405	11613	0	03	       STO     LVBUF
+0	01	1	000	407	00617	0	03	VPLD   CLA     LDPEND       TRYING TO VERIFY OR PREP TO LOAD WITHOUT  Q
+0	01	1	001	409	00224	0	03	       TNZ     VPLD1
+0	01	1	002	410	04457	0	03	       CLA     =O21         PREPARE TO TELEMETER STATUS CODE          N
+0	01	1	003	411	00270	0	03	       TRA     *+2
+0	01	1	004	412	04517	0	03	VPLD1  CLA     =O56         PREPARE TO TELEMETER STATUS CODE WITH     Y
+0	01	1	005	414	03640	0	03	       HOP     ISS          ISSUE STATUS CODE                         P
+0	01	1	006	415	00377	0	03	       CLA     D.KB4
+0	01	1	007	416	01771	0	03	       XOR     D.KONS
+0	01	1	010	417	10726	0	03	       AND     INTH
+0	01	1	011	418	00371	0	03	       XOR     D.KB4
+0	01	1	012	419	03512	0	03	       PIO     072          INHIBIT TLC INTERRUPT
+0	01	1	013	420	00177	0	03	       CLA     D.KBSG       INITIALIZE CONSTANTS                      B
+0	01	1	014	421	00553	0	03	       STO     LVV
+0	01	1	015	422	00757	0	03	       CLA     LVSTO
+0	01	1	016	423	00653	0	03	       STO     STOCW
+0	01	1	017	424	02037	0	03	       CLA     D.KZRO
+0	01	1	020	425	00613	0	03	       STO     LDPEND
+0	01	1	021	426	00313	0	03	       STO     WORDNO
+0	01	1	022	427	00453	0	03	       STO     LVDATA
+0	01	1	023	428	00513	0	03	       STO     LVLAST
+0	01	1	024	429	01370	0	03	       TRA     VPLD3
+0	01	1	025	430	00317	0	03	VPLD2  CLA     WORDNO
+0	01	1	026	431	01027	0	03	       ADD     D.KB13
+0	01	1	027	432	00313	0	03	VPLD3  STO     WORDNO
+0	01	1	030	433	04540	0	03	       HOP     RIS          READ INPUT DATA                           P
+0	01	1	031	434	00353	0	03	       STO     LVWORD
+0	01	1	032	435	04606	0	03	       AND     =O00006
+0	01	1	033	436	00302	0	03	       SUB     WORDNO
+0	01	1	034	437	07764	0	03	       TNZ     VPCCE
+0	01	1	035	438	00317	0	03	VPWD1  CLA     WORDNO       WAS FIRST RCA WORD JUST READ              Q
+0	01	1	036	439	02624	0	03	       TNZ     VPWD2                                                  N
+0	01	1	037	440	00357	0	03	       CLA     LVWORD       SAVE SECTOR, MODULE, DATA BITS            B
+0	01	1	040	441	04646	0	03	       AND     =O376
+0	01	1	041	442	01036	0	03	       SHL     1
+0	01	1	042	443	00711	0	03	       XOR     LVINST
+0	01	1	043	444	00413	0	03	       STO     LVCW
+0	01	1	044	445	00357	0	03	       CLA     LVWORD
+0	01	1	045	446	04706	0	03	       AND     =O0017
+0	01	1	046	447	02036	0	03	       SHL     2
+0	01	1	047	447	02036	0	03	       SHL     2
+0	01	1	050	447	02036	0	03	       SHL     2
+0	01	1	051	447	02036	0	03	       SHL     2
+0	01	1	052	448	00453	0	03	       STO     LVDATA
+0	01	1	053	449	01270	0	03	       TRA     VPLD2
+0	01	1	054	450	01022	0	03	VPWD2  SUB     D.KB13       WAS SECOND RCA WORD JUST READ             Q
+0	01	1	055	451	05324	0	03	       TNZ     VPWD3                                                  N
+0	01	1	056	452	00357	0	03	       CLA     LVWORD       SAVE ADDRESS BITS L, V, AND S/D
+0	01	1	057	453	04746	0	03	       AND     =O377        ADDRESS BITS
+0	01	1	060	454	00765	0	03	       MPH     D.KB12
+0	01	1	061	455	00411	0	03	       XOR     LVCW
+0	01	1	062	456	00413	0	03	       STO     LVCW
+0	01	1	063	457	00357	0	03	       CLA     LVWORD
+0	01	1	064	458	00726	0	03	       AND     D.KB11       S/D
+0	01	1	065	459	02036	0	03	       SHL     2
+0	01	1	066	459	02036	0	03	       SHL     2
+0	01	1	067	460	00411	0	03	       XOR     LVCW
+0	01	1	070	461	00413	0	03	       STO     LVCW
+0	01	1	071	462	00357	0	03	       CLA     LVWORD       L
+0	01	1	072	463	00626	0	03	       AND     D.KB9
+0	01	1	073	464	00513	0	03	       STO     LVLAST
+0	01	1	074	465	00557	0	03	       CLA     LVV          IS THIS THE FIRST V BIT
+0	01	1	075	466	04574	0	03	       TMI     VPWD2B
+0	01	1	076	467	00357	0	03	       CLA     LVWORD
+0	01	1	077	468	00666	0	03	       AND     D.KB10
+0	01	1	100	469	00551	0	03	       XOR     LVV          IS V BIT SAME AS INITIAL V BIT            Q
+0	01	1	101	470	07664	0	03	       TNZ     VMSMCH                                                 N
+0	01	1	102	471	00557	0	03	VPWD2A CLA     LVV          V
+0	01	1	103	472	01025	0	03	       MPH     D.KB13
+0	01	1	104	473	00411	0	03	       XOR     LVCW
+0	01	1	105	474	17673	0	03	       STO     775
+0	01	1	106	475	00657	0	03	       CLA     STOCW        STORE THE NEWLY FORMED CONTROL WORD IN
+0	01	1	107	476	04400	0	03	       HOP     IEDA         THE TEMPORARY BUFFER
+0	01	1	110	477	00557	0	03	       CLA     LVV          WAS THIS ROUTINE ENTERED TO VERIFY AND    Q
+0	01	1	111	478	04764	0	03	       TNZ     VPWD2C       PREP TO LOAD                              Q
+0	01	1	112	479	01270	0	03	       TRA     VPLD2
+0	01	1	113	480	00357	0	03	VPWD2B CLA     LVWORD
+0	01	1	114	481	00666	0	03	       AND     D.KB10
+0	01	1	115	482	00553	0	03	       STO     LVV
+0	01	1	116	483	04130	0	03	       TRA     VPWD2A
+0	01	1	117	485	05000	0	03	VPWD2C HOP     CWS          READ WORD TO BE VERIFIED AND PLACE IN     B
+0	01	1	120	486	17673	0	03	       STO     775          TEMP STORAGE                              B
+0	01	1	121	487	05040	0	03	       HOP     TLC          TLC MONITOR                               P
+0	01	1	122	488	00657	0	03	       CLA     STOCW
+0	01	1	123	489	01367	0	03	       ADD     D.KB20
+0	01	1	124	490	04400	0	03	       HOP     IEDA
+0	01	1	125	491	06370	0	03	       TRA     VPLD4
+0	01	1	126	492	01022	0	03	VPWD3  SUB     D.KB13       WAS THIRD RCA WORD JUST READ              Q
+0	01	1	127	493	05764	0	03	       TNZ     VPWD4                                                  N
+0	01	1	130	494	00357	0	03	       CLA     LVWORD       SAVE DATA BITS                            B
+0	01	1	131	495	05106	0	03	       AND     =O3777
+0	01	1	132	496	00136	0	03	       SHR     2
+0	01	1	133	496	00076	0	03	       SHR     1
+0	01	1	134	497	00451	0	03	       XOR     LVDATA
+0	01	1	135	498	00453	0	03	       STO     LVDATA
+0	01	1	136	499	01270	0	03	       TRA     VPLD2
+0	01	1	137	500	00357	0	03	VPWD4  CLA     LVWORD       SAVE DATA BITS                            B
+0	01	1	140	501	05106	0	03	       AND     =O3777
+0	01	1	141	502	01065	0	03	       MPH     D.KB14
+0	01	1	142	503	00451	0	03	       XOR     LVDATA       COMBINE DATA BITS OF FIRST, THIRD, FOURTH B
+0	01	1	143	504	17673	0	03	       STO     775          RCA WRDS
+0	01	1	144	505	00657	0	03	       CLA     STOCW
+0	01	1	145	506	01367	0	03	       ADD     D.KB20
+0	01	1	146	507	04400	0	03	       HOP     IEDA         STORE IN TEMPORARY STORAGE
+0	01	1	147	508	00657	0	03	VPLD4  CLA     STOCW
+0	01	1	150	509	05146	0	03	       AND     =O0000777
+0	01	1	151	510	00762	0	03	       SUB     D.KB12       WAS TEMPORARY STORAGE ACCIDENTALLY        Q
+0	01	1	152	511	06674	0	03	       TMI     VPLD5        OVERFLOWED                                Q
+0	01	1	153	512	02637	0	03	       CLA     LVEM6        PREP ERR MESSAGE TEMP STORAGE ACCIDENTALLYB
+0	01	1	154	513	10230	0	03	       TRA     VPERR        OVERFLOWED                                B
+0	01	1	155	514	00657	0	03	VPLD5  CLA     STOCW        INCREMENT BUFFER POINTER BY TWO
+0	01	1	156	515	01327	0	03	       ADD     D.KB19
+0	01	1	157	516	00653	0	03	       STO     STOCW
+0	01	1	160	517	00517	0	03	       CLA     LVLAST       HAS LAST WORD BEEN READ                   Q
+0	01	1	161	518	07224	0	03	       TNZ     VPLD6
+0	01	1	162	519	02037	0	03	       CLA     D.KZRO
+0	01	1	163	520	01370	0	03	       TRA     VPLD3                                                  N
+0	01	1	164	521	00657	0	03	VPLD6  CLA     STOCW
+0	01	1	165	522	00742	0	03	       SUB     LVSTO
+0	01	1	166	523	05200	0	03	       HOP     OSLV         OUTPUT                                    P
+0	01	1	167	524	00557	0	03	       CLA     LVV
+0	01	1	170	525	10264	0	03	       TNZ     VPEXIT
+0	01	1	171	526	00657	0	03	       CLA     STOCW        SET NUMBER OF WORDS PENDING LOAD          B
+0	01	1	172	527	00742	0	03	       SUB     LVSTO
+0	01	1	173	528	00613	0	03	       STO     LDPEND
+0	01	1	174	529	10270	0	03	       TRA     VPEXIT
+0	01	1	175	530	02577	0	03	VMSMCH CLA     LVEM5        PREP ERR MESSAGE V BITS DIAGREE           B
+0	01	1	176	531	10230	0	03	       TRA     VPERR
+0	01	1	177	532	00317	0	03	VPCCE  CLA     WORDNO
+0	01	1	200	533	02036	0	03	       SHL     2
+0	01	1	201	533	02036	0	03	       SHL     2
+0	01	1	202	533	01036	0	03	       SHL     1
+0	01	1	203	534	02367	0	03	       ADD     LVEM1
+0	01	1	204	535	04140	0	03	VPERR  HOP     EMS
+0	01	1	205	536	10737	0	03	VPEXIT CLA     INTH         RESTORE NORMAL INTERRUPTS
+0	01	1	206	537	03512	0	03	       PIO     072
+0	01	1	207	538	02137	0	03	       CLA     INPTL        IS EXIT TO MODE SORT                      Q
+0	01	1	210	539	10524	0	03	       TNZ     *+2                                                    N
+0	01	1	211	540	04040	0	03	       HOP     MDSRT        EXIT TO MODE SORT                         X
+0	01	1	212	541	04040	0	03	       HOP     MDSRT        FIXME: EXIT PREP TO LNCH                  X
+0	03	1	022	558	16056	0	03	LDAREA CDSD    0,16
+0	03	0	022	559	17013	0	03	       STO     360
+0	01	0	053	562	05257	0	03	LD     CLA     =O23
+0	01	0	054	563	03640	0	03	       HOP     ISS          ISSUE STATUS CODE                         P
+0	01	0	055	564	00617	0	03	       CLA     LDPEND       PREPARED TO LOAD                          Q
+0	01	0	056	565	03244	0	03	       TNZ     LD1                                                    Y
+0	01	0	057	566	02737	0	03	       CLA     LDEM1        PREPARE ERROR MESSAGE, ENTERED THIS       N
+0	01	0	060	569	04140	0	03	       HOP     EMS          ERROR MONITOR                             P
+0	01	0	061	570	02137	0	03	LDOUT  CLA     INPTL        IS RETURN TO MODE SORT                    Q
+0	01	0	062	571	03204	0	03	       TNZ     *+2                                                    N
+0	01	0	063	572	04040	0	03	       HOP     MDSRT        EXIT TO MODE SORT                         X
+0	01	0	064	573	04040	0	03	       HOP     MDSRT        FIXME: EXIT PREP TO LAUNCH                X
+0	01	0	065	574	02137	0	03	LD1    CLA     INPTL        CALLED FROM PREPARE TO LAUNCH             Q
+0	01	0	066	575	03444	0	03	       TNZ     LD2                                                    Y
+0	01	0	067	576	05000	0	03	       HOP     CWS          CW EXECUTE                                P
+0	01	0	070	579	03050	0	03	       TRA     LDOUT
+0	01	0	071	580	02417	0	03	LD2    CLA     CWCLA        ARE ALL LOADS SET FOR RIGHT AREA          Q
+0	01	0	072	581	01013	0	03	       STO     LDPTR
+0	01	0	073	582	00607	0	03	       ADD     LDPEND
+0	01	0	074	583	01053	0	03	       STO     LDEND
+0	01	0	075	584	01017	0	03	LD3    CLA     LDPTR
+0	01	0	076	585	04400	0	03	       HOP     IEDA         PICK UP NEXT CONTROL WORD                 P
+0	01	0	077	586	01111	0	03	       XOR     LDAREA
+0	01	0	100	587	01146	0	03	       AND     LDMASK
+0	01	0	101	588	04444	0	03	       TNZ     LDBAD
+0	01	0	102	589	01017	0	03	       CLA     LDPTR
+0	01	0	103	590	01327	0	03	       ADD     D.KB19
+0	01	0	104	591	01013	0	03	       STO     LDPTR
+0	01	0	105	592	01042	0	03	       SUB     LDEND
+0	01	0	106	593	03644	0	03	       TNZ     LD3
+0	01	0	107	594	05000	0	03	       HOP     CWS          CONT WORD EXEC                            P
+0	01	0	110	595	04040	0	03	       HOP     MDSRT        FIXME: EXIT PREP TO LNCH                  X
+0	01	0	111	596	02777	0	03	LDBAD  CLA     LDEM2        PREP ERR MSG-TRIED TO LOAD ILLEGAL ADDRESSB
+0	01	0	112	597	04140	0	03	       HOP     EMS          ERROR MONITOR                             P
+0	01	0	113	598	04040	0	03	       HOP     MDSRT        FIXME: EXIT PREP TO LNCH                  X
+0	00	0	100	612	17733	0	16	INTP   STO     776
+0	00	0	101	613	10433	0	16	       STO     INACC        SAVE PARTIAL RESULTS IF ANY FROM          B
+0	00	0	102	614	17677	0	16	       CLA     775          INTERRUPTED PRGM                          B
+0	00	0	103	615	10633	0	16	       STO     INPQ
+0	00	0	104	616	17737	0	16	       CLA     776
+0	00	0	105	617	10533	0	16	       STO     INHC
+0	00	0	106	618	10737	0	16	       CLA     INTH
+0	00	0	107	619	01771	0	16	       XOR     D.KONS       ELIMINATE INTERRUPT BITS WITH SET INHIBITSB
+0	00	0	110	620	01036	0	16	       SHL     1
+0	00	0	111	621	17673	0	16	       STO     775
+0	00	0	112	622	05752	0	16	       PIO     137          GET CONTENTS OF INTERRUPT STORAGE REGISTERI
+0	00	0	113	623	17666	0	16	       AND     775
+0	00	0	114	624	17673	0	16	       STO     775
+0	00	0	115	625	00326	0	16	       AND     D.KB3
+0	00	0	116	626	06544	0	16	       TNZ     TLCI         TLC INTERRUPT                             Q
+0	00	0	117	627	17677	0	16	       CLA     775                                                    N
+0	00	0	120	628	00426	0	16	       AND     D.KB5
+0	00	0	121	629	07404	0	16	       TNZ     GRR1         GUID REF REL INTERRUPT                    Q
+0	00	0	122	630	17677	0	16	       CLA     775                                                    N
+0	00	0	123	631	10014	0	16	       TMI     MLC          MINOR LOOP CONTROL INTERRUPT              Q
+0	00	0	124	632	01036	0	16	       SHL     1                                                      N
+0	00	0	125	633	10054	0	16	       TMI     SSC          SWITCH SELECTOR CONTROL INTERRUPT         Q
+0	00	0	126	634	01036	0	16	       SHL     1                                                      N
+0	00	0	127	635	10114	0	16	       TMI     CIU          ORB C.O.(CIU) INTERRUPT                   Q
+0	00	0	130	636	02036	0	16	       SHL     2                                                      N
+0	00	0	131	637	10154	0	16	       TMI     CRI          COMMAND RECEIVER INTERRUPT                Q
+0	00	0	132	638	02036	0	16	       SHL     2                                                      N
+0	00	0	133	639	10214	0	16	       TMI     S2PD         SII PROPEL DELETION INTERRUPT             Q
+0	00	0	134	640	01036	0	16	       SHL     1                                                      N
+0	00	0	135	641	10254	0	16	       TMI     S1PD         SI PROPEL DELETION INTERRUPT              Q
+0	00	0	136	642	01036	0	16	       SHL     1                                                      N
+0	00	0	137	643	10314	0	16	       TMI     S4BEO        S-IVB ENG OUT INTERRUPT                   Q
+0	00	0	140	644	01036	0	16	       SHL     1                                                      N
+0	00	0	141	645	10354	0	16	       TMI     RCAI         RCA 110 INTERRUPT                         Q
+0	00	0	142	646	01036	0	16	       SHL     1                                                      N
+0	00	0	143	647	10414	0	16	       TMI     LLS          LOW LEVEL SENSE INTERRUPT                 Q
+0	00	0	144	648	00357	0	16	SPARE  CLA     =O37774
+0	00	0	145	649	01512	0	16	       PIO     032          RESET INTERRUPT LATCH                     I
+0	00	0	146	650	03037	0	16	       CLA     INEM1
+0	00	0	147	651	00400	0	16	       HOP     EMS          ERROR MONITOR                             P
+0	00	0	150	652	02037	0	16	       CLA     D.KZRO
+0	00	0	151	653	07512	0	16	       PIO     172          PIO LADDER CLAMP                          I
+0	00	0	152	654	00440	0	16	       HOP     MDSRT        EXIT TO MODE SORT                         X
+0	00	0	153	655	00357	0	16	TLCI   CLA     =O37774      RESET ALL DISCRETE OUTPUTS EXCEPT D.O     I
+0	00	0	154	656	00512	0	16	       PIO     012          NUMBER 13                                 I
+0	00	0	155	657	00517	0	16	       CLA     =O35774
+0	00	0	156	658	03512	0	16	       PIO     072          INHIBIT ALL INT BUT TLC                   I
+0	00	0	157	659	00377	0	16	       CLA     D.KB4
+0	00	0	160	660	01512	0	16	       PIO     032          ISSUE TLC LIMITING BIT TO RESET INTERRUPT I
+0	00	0	161	661	03077	0	16	       CLA     INEM2
+0	00	0	162	662	00400	0	16	       HOP     EMS          ERROR MONITOR-ISSUE TLC ERROR MSG         P
+0	00	0	163	663	10737	0	16	       CLA     INTH
+0	00	0	164	664	03512	0	16	       PIO     072          RESTORE TO NORMAL INHIBITS                I
+0	00	0	165	665	02037	0	16	       CLA     D.KZRO
+0	00	0	166	666	07512	0	16	       PIO     172          CLAMP LADDERS TO ZERO                     I
+0	00	0	167	667	00440	0	16	       HOP     MDSRT        EXIT TO MODE SORT                         X
+0	00	0	170	668	13477	0	16	GRR1   CLA     V.STAT
+0	00	0	171	669	00542	0	16	       SUB     =O12         IS EXIT FROM MODE 12 OF PREPARE TO LAUNCH Q
+0	00	0	172	670	07604	0	16	       TNZ     *+2                                                    N
+0	00	0	173	671	02037	0	16	       CLA     D.KZRO       ARM THE ABORT TEST FLAG (MSFLT) FIXME     B
+0	00	0	174	672	02037	0	16	       CLA     D.KZRO       STORE DELTA TIME CLOCK RDNG IN FLIGHT DATAB
+0	00	0	175	674	01637	0	16	       CLA     D.KB25
+0	00	0	176	675	01312	0	16	       PIO     026          SELECT T-SYNC DOM CONTROL                 I
+0	00	0	177	676	06760	0	16	       HOP     GRIHC        EXIT HOP GRIHC                            X
+0	00	0	200	677	00000	0	16	MLC    HOP     MLHC
+0	00	0	201	678	00040	0	16	SSC    HOP     SSHC
+0	00	0	202	679	00100	0	16	CIU    HOP     CIUHC
+0	00	0	203	680	06620	0	16	CRI    HOP     CRAIHC
+0	00	0	204	681	00140	0	16	S2PD   HOP     PDHC
+0	00	0	205	682	00140	0	16	S1PD   HOP     PDHC
+0	00	0	206	683	00200	0	16	S4BEO  HOP     EOHC
+0	00	0	207	684	00240	0	16	RCAI   HOP     FBHC
+0	00	0	210	685	00300	0	16	LLS    HOP     LLSHC
+0	01	0	114	705	05317	0	03	PFDA   CLA     =O31
+0	01	0	115	706	03640	0	03	       HOP     ISS          ISSUE STATUS CODE                         P
+0	01	0	116	707	01637	0	03	       CLA     D.KB25
+0	01	0	117	708	01312	0	03	       PIO     026          SELECT T-SYNC DOM CONTROL                 I
+0	01	0	120	709	06760	0	03	       HOP     GRIHC        EXIT TO FLT PROG                          X
+0	01	1	213	726	17773	0	03	RIS    STO     777          ENTER FROM CALL RT                        B
+0	01	1	214	727	17777	0	03	       CLA     777
+0	01	1	215	728	01213	0	03	       STO     RISRT
+0	01	1	216	729	13477	0	03	       CLA     V.STAT
+0	01	1	217	730	01353	0	03	       STO     RISTAT
+0	01	1	220	731	02037	0	03	RIS1   CLA     D.KZRO       INITIALIZE TO OBTAIN DELTA TIME           B
+0	01	1	221	732	01253	0	03	       STO     RISDT
+0	01	1	222	733	04152	0	03	       PIO     103
+0	01	1	223	734	17673	0	03	       STO     775
+0	01	1	224	735	02752	0	03	RIS2   PIO     057
+0	01	1	225	736	01526	0	03	       AND     D.KB23       IS SYNC ON                                Q
+0	01	1	226	737	12024	0	03	       TNZ     RIS3                                                   Y
+0	01	1	227	738	05340	0	03	       HOP     ATS          ABORT TEST                                P
+0	01	1	230	739	05400	0	03	       HOP     RTS          REAL TIME DELTA                           P
+0	01	1	231	740	01247	0	03	       ADD     RISDT        UPDATE DELTA TIME                         B
+0	01	1	232	741	01253	0	03	       STO     RISDT
+0	01	1	233	742	05442	0	03	       SUB     =1040253.952 HAVE 256 SECONDS ELAPSED YET?       Q
+0	01	1	234	743	11234	0	03	       TMI     RIS2                                                   N
+0	01	1	235	744	05517	0	03	       CLA     =O45
+0	01	1	236	745	03640	0	03	       HOP     ISS          ISSUE OVERTIME STATUS CODE                P
+0	01	1	237	746	11030	0	03	       TRA     RIS1
+0	01	1	240	747	02152	0	03	RIS3   PIO     043          READ IN RCA-110A INPUT DATA               I
+0	01	1	241	748	05546	0	03	       AND     =O77776
+0	01	1	242	749	01313	0	03	       STO     RISCMD
+0	01	1	243	750	04000	0	03	       HOP     SRS          SYNC RESET                                P
+0	01	1	244	751	01317	0	03	       CLA     RISCMD       IS INPUT DATA                             Q
+0	01	1	245	752	12734	0	03	       TMI     RIS5                                                   N
+0	01	1	246	753	01357	0	03	       CLA     RISTAT
+0	01	1	247	754	13462	0	03	       SUB     V.STAT
+0	01	1	250	755	12524	0	03	       TNZ     *+2
+0	01	1	251	756	12630	0	03	       TRA     RIS4
+0	01	1	252	757	01357	0	03	       CLA     RISTAT       RE-ESTABLISH STATUS CODE OF CALLING PGM
+0	01	1	253	758	03640	0	03	       HOP     ISS
+0	01	1	254	759	01317	0	03	RIS4   CLA     RISCMD       PLACE RCA-110A DATA IN ACCUMULATOR        B
+0	01	1	255	760	01200	0	03	       HOP     RISRT        HOP ON HOP SV                             X
+0	01	1	256	761	01317	0	03	RIS5   CLA     RISCMD
+0	01	1	257	762	14073	0	03	       STO     V.EMR
+0	01	1	260	763	03137	0	03	       CLA     RIEM1        INPUT IS MODE                             B
+0	01	1	261	764	04300	0	03	       HOP     EMSR         ERROR MESSAGE                             P
+0	01	1	262	765	02137	0	03	       CLA     INPTL        IS PREPARE TO LAUNCH INDICATED?           Q
+0	01	1	263	766	13264	0	03	       TNZ     *+2
+0	01	1	264	767	04040	0	03	       HOP     MDSRT        EXIT TO MODE SORT                         X
+0	01	1	265	768	04040	0	03	       HOP     MDSRT        FIXME: THIS SHOULD GO TO PTL
+0	01	0	121	785	17773	0	03	SRS    STO     777
+0	01	0	122	786	17777	0	03	       CLA     777
+0	01	0	123	787	01413	0	03	       STO     SRSRT
+0	01	0	124	788	00777	0	03	       CLA     D.KB12
+0	01	0	125	789	00712	0	03	       PIO     016          SET DISCRETE OUTPUT 1                     I
+0	01	0	126	790	02752	0	03	SRS1   PIO     057
+0	01	0	127	791	01526	0	03	       AND     D.KB23       IS SYNC OFF                               Q
+0	01	0	130	792	05604	0	03	       TNZ     SRS2                                                   N
+0	01	0	131	793	00777	0	03	       CLA     D.KB12                                                 Y
+0	01	0	132	794	00512	0	03	       PIO     012          RESET DISCRETE OUTPUT 1                   I
+0	01	0	133	795	01400	0	03	       HOP     SRSRT        RET TO CAL RT                             X
+0	01	0	134	796	05600	0	03	SRS2   HOP     PRUS         PTL REALTIME UPDATE SUBR.                 P
+0	01	0	135	797	05310	0	03	       TRA     SRS1
+0	00	0	211	821	17773	0	03	EMSR   STO     777          ENTER WITH EMW IN ACC, ERROR IN V.EMR
+0	00	0	212	822	17453	0	03	       STO     V.EMW
+0	00	0	213	823	17777	0	03	       CLA     777
+0	00	0	214	824	01653	0	03	       STO     EMSRT
+0	00	0	215	825	12350	0	03	       TRA     EMS1
+0	00	0	216	826	17773	0	03	EMS    STO     777          SAVE RETURN HOP CONSTANT                  B
+0	00	0	217	827	17453	0	03	       STO     V.EMW        SAVE ERROR MESSAGE WORD
+0	00	0	220	828	17777	0	03	       CLA     777
+0	00	0	221	829	01653	0	03	       STO     EMSRT
+0	00	0	222	830	02552	0	03	       PIO     053          READ DISR                                 I
+0	00	0	223	831	05646	0	03	       AND     =O0000006    MASK OUT UNWANTED DISR BITS AND SAVE      B
+0	00	0	224	832	01453	0	03	       STO     DISR
+0	00	0	225	833	01152	0	03	       PIO     023          READ ERROR MONITOR REGISTER               I
+0	00	0	226	834	14073	0	03	       STO     V.EMR
+0	00	0	227	835	00146	0	03	       AND     EMCON        MASK OUT UNWANTED EMR BITS AND SAVE       B
+0	00	0	230	836	01513	0	03	       STO     EMRM
+0	00	0	231	837	17457	0	03	       CLA     V.EMW        WAS ENTRY TO TELEMETER ERROR MESSAGE      Q
+0	00	0	232	838	12344	0	03	       TNZ     EMS1                                                   Y
+0	00	0	233	839	01517	0	03	       CLA     EMRM         DOES MASKED EMR INDICATE BITS OTHER       Q
+0	00	0	234	840	05706	0	03	       AND     =O777776776  THAN SCB
+0	00	0	235	841	12344	0	03	       TNZ     EMS1                                                   Y
+0	00	0	236	842	01517	0	03	       CLA     EMRM
+0	00	0	237	843	01226	0	03	       AND     D.KB17
+0	00	0	240	844	01447	0	03	       ADD     DISR
+0	00	0	241	845	05751	0	03	       XOR     =O0000012    DO BOTH EMR + DISR INDICATE SCB           Q
+0	00	0	242	846	12204	0	03	       TNZ     *+2                                                    N
+0	00	0	243	847	12350	0	03	       TRA     EMS1                                                   Y
+0	00	0	244	848	01517	0	03	       CLA     EMRM         WAS THE MASKED EMR ZERO                   Q
+0	00	0	245	849	12344	0	03	       TNZ     EMS1                                                   N
+0	00	0	246	850	01640	0	03	       HOP     EMSRT        HOP RETURN                                X
+0	00	0	247	851	01637	0	03	EMS1   CLA     D.KB25
+0	00	0	250	852	01112	0	03	       PIO     022          SET ICR1 SELECT G-SYNC CONTROL            I
+0	00	0	251	853	13477	0	03	       CLA     V.STAT       SAVE CALLING ROUTINE STATUS CODE          B
+0	00	0	252	854	01613	0	03	       STO     EMSTAT
+0	00	0	253	855	02137	0	03	       CLA     INPTL        WAS ENTRY FROM PTL                        Q
+0	00	0	254	856	12704	0	03	       TNZ     *+2                                                    Y
+0	00	0	255	857	13010	0	03	       TRA     EMS2                                                   N
+0	00	0	256	858	00177	0	03	       CLA     D.KBSG                                                 Y
+0	00	0	257	859	00712	0	03	       PIO     016          SET D.O. 13                               I
+0	00	0	260	860	17457	0	03	EMS2   CLA     V.EMW        WAS ENTRY TO TELEMETER ERROR MESSAGE      Q
+0	00	0	261	861	13144	0	03	       TNZ     EMS3                                                   Y
+0	00	0	262	862	13250	0	03	       TRA     EMS4                                                   N
+0	00	0	263	863	17452	0	03	EMS3   PIO     371          TELEMETER ERROR MESSAGE                   I
+0	00	0	264	864	13310	0	03	       TRA     EMS5
+0	00	0	265	865	14072	0	03	EMS4   PIO     701          TELEMETER RAW EMR READING                 I
+0	00	0	266	866	06017	0	03	EMS5   CLA     =O47
+0	00	0	267	867	03640	0	03	       HOP     ISS          ISSUE STATUS CODE                         P
+0	00	0	270	868	17457	0	03	       CLA     V.EMW        WAS ENTRY TO TELEMETER ERROR MESSAGE      Q
+0	00	0	271	869	13544	0	03	       TNZ     *+2
+0	00	0	272	870	13650	0	03	       TRA     EMS6
+0	00	0	273	871	17452	0	03	       PIO     371          TELEMETER ERROR MESSAGE                   I
+0	00	0	274	872	03740	0	03	       HOP     OIGS         OUTPUT INTERRUPT GEN.                     P
+0	00	0	275	873	14072	0	03	EMS6   PIO     701          TELEMETER RAW EMR READING                 I
+0	00	0	276	874	03740	0	03	       HOP     OIGS         OUTPUT INTERRUPT GEN.                     P
+0	00	0	277	875	02752	0	03	EMS7   PIO     057
+0	00	0	300	876	01526	0	03	       AND     D.KB23       IS SYNC ON                                Q
+0	00	0	301	877	14204	0	03	       TNZ     EMS8                                                   Y
+0	00	0	302	878	05600	0	03	       HOP     PRUS         PTL REALTIME UPDATE SUBROUTINE            P
+0	00	0	303	879	13750	0	03	       TRA     EMS7
+0	00	0	304	880	02137	0	03	EMS8   CLA     INPTL        WAS ENTRY FROM PTL                        Q
+0	00	0	305	881	14344	0	03	       TNZ     *+2                                                    Y
+0	00	0	306	882	14450	0	03	       TRA     EMS9                                                   N
+0	00	0	307	883	04000	0	03	       HOP     SRS          RESET SYNC                                P
+0	00	0	310	884	14750	0	03	       TRA     EMS10
+0	00	0	311	885	02152	0	03	EMS9   PIO     043          READ RCA-110A REGISTER                    I
+0	00	0	312	886	05546	0	03	       AND     =O77776
+0	00	0	313	887	01553	0	03	       STO     EMSCMD
+0	00	0	314	888	04000	0	03	       HOP     SRS          RESET SYNC                                P
+0	00	0	315	889	01557	0	03	       CLA     EMSCMD       DOES RCA COMMAND=00                       Q
+0	00	0	316	890	15244	0	03	       TNZ     EMS11                                                  N
+0	00	0	317	891	01617	0	03	EMS10  CLA     EMSTAT       DOES ROUTINE EXIT TO MODE SORT            Q
+0	00	0	320	892	15104	0	03	       TNZ     *+2                                                    N
+0	00	0	321	893	01640	0	03	       HOP     EMSRT        EXIT TO MODE SORT                         X
+0	00	0	322	894	01617	0	03	       CLA     EMSTAT       RESTORE PREV STATUS CODE                  P
+0	00	0	323	895	03640	0	03	       HOP     ISS
+0	00	0	324	896	01640	0	03	       HOP     EMSRT        EXIT HOP RETURN                           X
+0	00	0	325	897	06051	0	03	EMS11  XOR     =O576        IS RCA COMMAND = 77                       Q
+0	00	0	326	898	13744	0	03	       TNZ     EMS7                                                   N
+0	00	0	327	899	06117	0	03	       CLA     =O7          SET EMCON AND EMCON1 = 700000000          B
+0	00	0	330	900	00153	0	03	       STO     EMCON
+0	00	0	331	901	00133	0	03	       STO     EMCON1
+0	00	0	332	902	03440	0	03	       HOP     FBR1         EXIT FORCED BEGIN                         X
+0	01	0	136	920	17773	0	03	ISS    STO     777
+0	01	0	137	921	13473	0	03	       STO     V.STAT
+0	01	0	140	922	13472	0	03	       PIO     671          TELEMETER PRESENT STATUS CODE             B
+0	01	0	141	923	00312	0	03	       PIO     006          PLACE THE PRESENT STATUS CODE IN THE MODE B
+0	01	0	142	925	17777	0	03	       CLA     777
+0	01	0	143	926	01713	0	03	       STO     ISSRT
+0	01	0	144	927	03740	0	03	       HOP     OIGS         GENERATE OUTPUT INTERRUPT                 P
+0	01	0	145	928	06157	0	03	       CLA     =O045        DELAY 6 MS                                B
+0	01	0	146	929	00562	0	03	       SUB     D.KB8
+0	01	0	147	930	06304	0	03	       TNZ     *-1
+0	01	0	150	931	01700	0	03	       HOP     ISSRT        RET TO CAL RT                             X
+0	01	0	151	948	17773	0	03	OIGS   STO     777
+0	01	0	152	949	17777	0	03	       CLA     777
+0	01	0	153	950	01753	0	03	       STO     OIGSRT
+0	01	0	154	951	05600	0	03	       HOP     PRUS         PTL REALTIME UPDATE SUBR.                 P
+0	01	0	155	952	00737	0	03	       CLA     D.KB11
+0	01	0	156	953	00712	0	03	       PIO     016          SET DISCRETE OUTPUT NUMBER 2              I
+0	01	0	157	954	06217	0	03	       CLA     =O5
+0	01	0	160	955	00262	0	03	OIGS1  SUB     =O1          HAS 1 MS ELAPSED                          Q
+0	01	0	161	956	07004	0	03	       TNZ     OIGS1                                                  N
+0	01	0	162	957	00737	0	03	       CLA     D.KB11                                                 Y
+0	01	0	163	958	00512	0	03	       PIO     012          RESET DISCRETE OUTPUT NUMBER 2            I
+0	01	0	164	959	02752	0	03	OIGS2  PIO     057
+0	01	0	165	960	01526	0	03	       AND     D.KB23       IS SYNC DISCRETE ON                       Q
+0	01	0	166	961	07404	0	03	       TNZ     *+2                                                    Y
+0	01	0	167	962	07210	0	03	       TRA     OIGS2                                                  N
+0	01	0	170	963	04000	0	03	       HOP     SRS          SYNC RESET SUBROUTINE                     P
+0	01	0	171	964	01740	0	03	       HOP     OIGSRT       RET TO CAL RT                             X
+0	03	1	040	987	17773	0	03	IEDA   STO     777          SAVE RETURN HOP CONSTANT                  B
+0	03	1	041	988	02153	0	03	       STO     CW           STORE INST                                B
+0	03	1	042	989	17677	0	03	       CLA     775          OBTAIN DATA WORD TO BE OPERATED ON, IF ANYB
+0	03	1	043	990	00000	0	03	CW     HOP     0            EXECUTE PROGRAM BUILT INSTRUCTIONS        B
+0	03	1	044	991	02150	0	03	       TRA     IEDA1
+0	03	0	043	994	00000	0	03	IEDA1  HOP     0
+0	03	0	044	995	03016	0	03	       CDS     L.IEDA
+0	03	0	045	996	17760	0	03	       HOP     777          HOP TO PEP                                X
+0	03	1	050	1022	04016	0	03	CWCLA  CDS     LVBUF
+0	03	0	050	1023	11617	0	03	       CLA     LVBUF
+0	02	0	053	1025	17773	0	03	CWS    STO     777
+0	02	0	054	1026	17777	0	03	       CLA     777
+0	02	0	055	1027	02313	0	03	       STO     CWSRT
+0	02	0	056	1028	00617	0	03	       CLA     LDPEND
+0	02	0	057	1029	03144	0	03	       TNZ     CWS1         LOADING                                   Q
+0	02	0	060	1031	17677	0	03	       CLA     775          PLACE CONTROL WRD TO BE EXECUTED IN       N
+0	02	0	061	1033	04400	0	03	       HOP     IEDA
+0	02	0	062	1034	02300	0	03	       HOP     CWSRT        EXIT HOP TO CR                            X
+0	02	0	063	1036	02417	0	03	CWS1   CLA     CWCLA                                                  Y
+0	02	0	064	1037	02353	0	03	       STO     CWPTR
+0	02	0	065	1038	02357	0	03	CWS2   CLA     CWPTR
+0	02	0	066	1039	01367	0	03	       ADD     D.KB20
+0	02	0	067	1040	04400	0	03	       HOP     IEDA         PICKUP DATA TO LOAD                       P
+0	02	0	070	1041	17673	0	03	       STO     775
+0	02	0	071	1042	02357	0	03	       CLA     CWPTR
+0	02	0	072	1043	04400	0	03	       HOP     IEDA         PICKUP CTRL WORD TO LOAD                  P
+0	02	0	073	1044	04400	0	03	       HOP     IEDA         EXEC CTRL WORD AND LOAD                   P
+0	02	0	074	1045	02357	0	03	       CLA     CWPTR        UPDATE CNTR ALLOWING PICKUP OF SEQ LOC IN B
+0	02	0	075	1046	01327	0	03	       ADD     D.KB19       TEMP STOR                                 B
+0	02	0	076	1047	02353	0	03	       STO     CWPTR
+0	02	0	077	1048	00617	0	03	       CLA     LDPEND
+0	02	0	100	1049	01322	0	03	       SUB     D.KB19
+0	02	0	101	1050	00613	0	03	       STO     LDPEND
+0	02	0	102	1051	03244	0	03	       TNZ     CWS2         ALL WORDS LOADED                          Q
+0	02	0	103	1052	02300	0	03	       HOP     CWSRT        EXIT HOP TO CR                            X
+0	01	0	172	1063	17773	0	03	AMS    STO     777
+0	01	0	173	1065	17760	0	03	       HOP     777
+0	01	0	174	1079	17773	0	03	PRUS   STO     777          SAVE RETURN HOP CONSTANT
+0	01	0	175	1082	17760	0	03	       HOP     777
+0	01	0	176	1098	17773	0	03	RINIT  STO     777          SAVE HOP RETURN                           B
+0	01	0	177	1099	06257	0	03	       CLA     =O777776774
+0	01	0	200	1100	01312	0	03	       PIO     026          RESET ALL ICR BITS EXCEPT 1 AND 9         I
+0	01	0	201	1101	01771	0	03	       XOR     D.KONS
+0	01	0	202	1102	01112	0	03	       PIO     022          SET ICR BITS 1 AND 9                      I
+0	01	0	203	1103	01777	0	03	       CLA     D.KONS
+0	01	0	204	1104	00512	0	03	       PIO     012          RESET ALL DISCRETE OUTPUT REGISTER BITS   I
+0	01	0	205	1105	02037	0	03	       CLA     D.KZRO
+0	01	0	206	1106	01712	0	03	       PIO     036          RESET ALL SWITCH SELECTOR REGISTER BITS   I
+0	01	0	207	1107	07512	0	03	       PIO     172          CLAMP LADDERS TO ZERO                     I
+0	01	0	210	1109	06317	0	03	       CLA     =O006        FIXME: LESS DELAY FOR SIM
+0	01	0	211	1110	00562	0	03	       SUB     D.KB8        DELAY 50 MSEC.                            B
+0	01	0	212	1111	10444	0	03	       TNZ     *-1
+0	01	0	213	1112	07512	0	03	       PIO     172          CLAMP LADDERS TO ZERO                     I
+0	01	0	214	1113	00777	0	03	       CLA     D.KB12
+0	01	0	215	1114	01112	0	03	       PIO     022          SET ICR BIT 14 TO SELECT CONVERTER A      I
+0	01	0	216	1115	01152	0	03	       PIO     023          READ EMR TO CLEAR SCB BIT                 I
+0	01	0	217	1116	17760	0	03	       HOP     777          RETURN                                    X
+0	00	0	333	1132	17773	0	03	RTS    STO     777          SAVE RETURN HOP CONSTANT                  B
+0	00	0	334	1133	17677	0	03	       CLA     775          OBT PREV DET VALUE OF REAL TIME FROM      B
+0	00	0	335	1134	02453	0	03	       STO     OLDT         PQ VALUE                                  B
+0	00	0	336	1135	04152	0	03	       PIO     103          OBTAIN CURRENT VALUE OF REAL TIME AND     I
+0	00	0	337	1137	17673	0	03	       STO     775          PUT CURRENT REAL TIME IN PQ REGISTER      B
+0	00	0	340	1138	02442	0	03	       SUB     OLDT         PUT DELTA TIME IN ACCUMULATOR             B
+0	00	0	341	1139	01726	0	03	       AND     D.KSY0
+0	00	0	342	1140	17760	0	03	       HOP     777          EXIT HOP TO CR                            X
+0	01	0	220	1151	17773	0	03	STS    STO     777
+0	01	0	221	1153	17760	0	03	       HOP     777
+0	00	0	343	1164	17773	0	03	DAS    STO     777
+0	00	0	344	1166	17760	0	03	       HOP     777
+0	03	1	056	1185	04016	0	03	LVCLA  CDS     LVBUF
+0	03	0	056	1186	11617	0	03	       CLA     LVBUF
+0	03	1	057	1187	06016	0	03	GENCLA CDS     GENBUF
+0	03	0	057	1188	11617	0	03	       CLA     GENBUF
+0	03	1	060	1189	02027	0	03	SENDCW ADD     D.KZRO
+0	03	0	060	1190	00012	0	03	       PIO     000
+0	01	1	266	1192	17773	0	03	OS     STO     777          ENTER FROM NORM OP                        B
+0	01	1	267	1193	02553	0	03	       STO     WORDCT
+0	01	1	270	1194	02757	0	03	       CLA     GENCLA       INITIALIZE CONSTANTS AND OBTAIN           B
+0	01	1	271	1195	02653	0	03	       STO     OSCW         CONTROL WORD                              B
+0	01	1	272	1196	13770	0	03	       TRA     OS1
+0	01	1	273	1197	17773	0	03	OSLV   STO     777          ENTER FROM V+P TO L                       B
+0	01	1	274	1198	02553	0	03	       STO     WORDCT
+0	01	1	275	1199	02717	0	03	       CLA     LVCLA        INITIALIZE CONSTANTS AND OBTAIN           B
+0	01	1	276	1200	02653	0	03	       STO     OSCW         CONTROL WORD                              B
+0	01	1	277	1201	17777	0	03	OS1    CLA     777
+0	01	1	300	1202	02513	0	03	       STO     OSRT
+0	01	1	301	1203	02557	0	03	OS2    CLA     WORDCT       ARE THERE 32 OR MORE WORDS TO TELEMETER   Q
+0	01	1	302	1204	01122	0	03	       SUB     =32B20
+0	01	1	303	1205	14374	0	03	       TMI     OS3                                                    N
+0	01	1	304	1206	06357	0	03	       CLA     =31B18     SET TAG COUNTER TO MAXIMUM VALUE (31)     B
+0	01	1	305	1207	02613	0	03	       STO     TAGCT
+0	01	1	306	1208	15030	0	03	       TRA     OS5
+0	01	1	307	1209	02557	0	03	OS3    CLA     WORDCT       PLACE THE NUMBER OF WORDS TO TELEMETER    B
+0	01	1	310	1210	02036	0	03	       SHL     2
+0	01	1	311	1211	01262	0	03	       SUB     D.KB18
+0	01	1	312	1212	02613	0	03	       STO     TAGCT
+0	01	1	313	1213	02557	0	03	OS4    CLA     WORDCT
+0	01	1	314	1214	01362	0	03	       SUB     D.KB20
+0	01	1	315	1215	15024	0	03	       TNZ     OS5          IS THIS THE LAST OR ONLY WORD TO TELEMETERQ
+0	01	1	316	1216	01437	0	03	       CLA     D.KB21       SET A9=1 ON LAST WORD                     Y
+0	01	1	317	1217	02613	0	03	       STO     TAGCT
+0	01	1	320	1218	02657	0	03	OS5    CLA     OSCW
+0	01	1	321	1219	04400	0	03	       HOP     IEDA         EXECUTE CONTROL WORD                      P
+0	01	1	322	1220	17673	0	03	       STO     775
+0	01	1	323	1221	03017	0	03	       CLA     SENDCW
+0	01	1	324	1222	02607	0	03	       ADD     TAGCT
+0	01	1	325	1223	04400	0	03	       HOP     IEDA
+0	01	1	326	1224	03740	0	03	       HOP     OIGS         OUTPUT INTERRUPT GENERATE                 P
+0	01	1	327	1225	02557	0	03	       CLA     WORDCT       DECREMENT WORD COUNTER                    B
+0	01	1	330	1226	01362	0	03	       SUB     D.KB20
+0	01	1	331	1227	02553	0	03	       STO     WORDCT
+0	01	1	332	1228	02657	0	03	       CLA     OSCW         UPDATE CONTROL WORD                       B
+0	01	1	333	1229	01367	0	03	       ADD     D.KB20
+0	01	1	334	1230	02653	0	03	       STO     OSCW
+0	01	1	335	1231	02617	0	03	       CLA     TAGCT        IS TAG COUNTER EQUAL ZERO                 Q
+0	01	1	336	1232	06346	0	03	       AND     =31B18
+0	01	1	337	1233	16164	0	03	       TNZ     OS6                                                    N
+0	01	1	340	1234	02557	0	03	       CLA     WORDCT       IS WORD COUNTER EQUAL ZERO                Q
+0	01	1	341	1235	14064	0	03	       TNZ     OS2                                                    N
+0	01	1	342	1236	02500	0	03	       HOP     OSRT         EXIT HOP TO CR                            X
+0	01	1	343	1237	01262	0	03	OS6    SUB     D.KB18       DECREMENT TAG COUNTER                     B
+0	01	1	344	1238	02613	0	03	       STO     TAGCT
+0	01	1	345	1239	14570	0	03	       TRA     OS4
+0	03	1	064	1258	00016	0	03	ININST CDSS    0,0
+0	03	0	064	1259	00033	0	03	       STO     400
+0	01	0	222	1261	17773	0	03	KIN400 STO     777
+0	01	0	223	1262	17777	0	03	       CLA     777
+0	01	0	224	1263	03053	0	03	       STO     IN400S       STORE HOP RETURN IN IN400S                B
+0	01	0	225	1264	00077	0	03	       CLA     MESMAP       PICK UP MESMAP TO DETERMINE MODULES IN USEB
+0	01	0	226	1265	06406	0	03	       AND     =O776        MASK OUT ALL BUT VALID MODULE BITS (S-8)  B
+0	01	0	227	1266	03153	0	03	       STO     MODMSK       STORE MODULE MAP FOR DOWNSTREAM REFERENCE B
+0	01	0	230	1267	02037	0	03	       CLA     D.KZRO
+0	01	0	231	1268	03113	0	03	       STO     MODCNT       INITIALIZE MODULE COUNTER
+0	01	0	232	1269	03157	0	03	       CLA     MODMSK
+0	01	0	233	1270	12014	0	03	IN400A TMI     IN400B       DOES MOD. MAP SHOW MOD. UNDER TEST PRESENTQ
+0	01	0	234	1271	12244	0	03	       TNZ     IN400C       DO ANY OTHER MODULES REMAIN               Q
+0	01	0	235	1274	00017	0	03	       CLA     000          PERFORM CLA 000 FROM ODD DATA MODULE      B
+0	01	0	236	1276	03016	0	03	       CDS     IN400S       CDS BACK FOR HOP EXIT                     B
+0	01	0	237	1277	03040	0	03	       HOP     IN400S       HOP BACK                                  X
+0	01	0	240	1278	02077	0	03	IN400B CLA     INHOPC                                                 Y
+0	01	0	241	1279	17673	0	03	       STO     775          SET PQ = INTERRUPT PROCESSING HOP CONSTANTB
+0	01	0	242	1280	03217	0	03	       CLA     ININST       PICK UP USE DAT OF COS 0,0 AND STO 400    B
+0	01	0	243	1281	03111	0	03	       XOR     MODCNT       INSERT MODULE COUNTER                     B
+0	01	0	244	1282	04400	0	03	       HOP     IEDA         STO INT HPC IN MODULE X                   B
+0	01	0	245	1283	03117	0	03	IN400C CLA     MODCNT
+0	01	0	246	1284	00467	0	03	       ADD     D.KB6        INCREMENT MODULE COUNTER BY 1             M
+0	01	0	247	1285	03113	0	03	       STO     MODCNT
+0	01	0	250	1286	03157	0	03	       CLA     MODMSK
+0	01	0	251	1287	01036	0	03	       SHL     1            ROTATE MODULE MAP LEFT 1 POSITION         M
+0	01	0	252	1288	03153	0	03	       STO     MODMSK
+0	01	0	253	1289	11550	0	03	       TRA     IN400A       GO TO TEST FOR NEXT MODULE PRESENT        B
+0	00	0	345	1305	17773	0	03	TLC    STO     777
+0	00	0	346	1306	17777	0	03	       CLA     777          SAVE HOP RETURN                           B
+0	00	0	347	1307	03253	0	03	       STO     TLCRT
+0	00	0	350	1308	01152	0	03	       PIO     023
+0	00	0	351	1309	06106	0	03	       AND     =O7          HAS TLC, EAM, OR EBM OCCURRED             Q
+0	00	0	352	1310	16604	0	03	       TNZ     *+2                                                    Y
+0	00	0	353	1311	03240	0	03	       HOP     TLCRT                                                  N
+0	00	0	354	1312	00377	0	03	       CLA     D.KB4        ISSUE TLC LIMITING BIT TO RESET INTERRUPT
+0	00	0	355	1313	01512	0	03	       PIO     032
+0	00	0	356	1314	02157	0	03	       CLA     CW           PICK UP ROLLOVER CW                       B
+0	00	0	357	1315	00136	0	03	       SHR     2
+0	00	0	360	1315	00076	0	03	       SHR     1
+0	00	0	361	1316	06446	0	03	       AND     =O00000377
+0	00	0	362	1317	17453	0	03	       STO     V.EMW
+0	00	0	363	1318	02157	0	03	       CLA     CW
+0	00	0	364	1319	00136	0	03	       SHR     2
+0	00	0	365	1319	00136	0	03	       SHR     2
+0	00	0	366	1319	00136	0	03	       SHR     2
+0	00	0	367	1319	00136	0	03	       SHR     2
+0	00	0	370	1319	00076	0	03	       SHR     1
+0	00	0	371	1320	06506	0	03	       AND     =O000774
+0	00	0	372	1321	17451	0	03	       XOR     V.EMW
+0	00	0	373	1322	02671	0	03	       XOR     LVEM7        INSERT BITS INTO ERROR MESSAGE            B
+0	00	0	374	1323	04140	0	03	       HOP     EMS          ERROR MONITOR                             P
+0	00	0	375	1324	03240	0	03	       HOP     TLCRT        EXIT ON HOP RETURN                        X
+0	01	0	254	1335	17773	0	03	ATS    STO     777
+0	01	0	255	1337	17760	0	03	       HOP     777
